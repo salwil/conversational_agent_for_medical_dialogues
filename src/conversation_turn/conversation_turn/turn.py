@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# main.py
+# question.py
 
 """
 Bachelor-Thesis: Conversational agent for querying orofacial pain patients
@@ -10,17 +10,10 @@ Matrikel-Nr: 10-289-544
 University of Zurich
 Institute for Computational Linguistics
 
-- main module for maintaining conversation with user
+- Data class for conversation turn
 
 """
 
-from .cli import CLI
-
-cli = CLI()
-
-def main():
-    cli.talk()
-
-
-
-
+class turn:
+    def __init__(self, turn_number):
+        self.turn_number = turn_number;
