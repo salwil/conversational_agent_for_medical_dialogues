@@ -1,0 +1,12 @@
+.csv
+.ipynb
+.ipynb_checkpoints/
+survey_data/
+docs/
+.idea/
+__pycache__/
+*.egg-info/
+.txt
+build
+scripts/
+.venv/
