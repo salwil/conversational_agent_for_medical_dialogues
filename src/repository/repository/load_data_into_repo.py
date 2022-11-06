@@ -15,31 +15,43 @@ Institute for Computational Linguistics
 """
 from enum import Enum
 import sys
-from question_repo import
+import csv
+from src.conversation_turn.conversation_turn.conversation_element import Question
+from src.conversation_turn.conversation_turn.topic import Topic
+from src.preprocess.preprocess.preprocess import Preprocessor
+from src.preprocess.preprocess.lemmatize import EnglishLemmatizer
+import src.helpers.helpers.helpers as helpers
 
 class Repository(Enum):
     QUESTIONS = 'question_repo'
     TOPICS = 'topic_repo'
 
+
 class DataLoader:
-    def __init__(self, repository: Repository):
+    def __init__(self):
+        self.question_repo = {}
+        self.topic_repo = {}
+        self.preprocessor = Preprocessor(lemmatizer=EnglishLemmatizer())
+        self.path = helpers.get_project_path() + '/src/repository/data/';
+
+    def load_data_into_repository(self, repository: Repository):
         if repository is Repository.QUESTIONS:
-            with open('../data/questions.txt') as questions_file:
+            with open(self.path + 'questions.csv') as questions_file:
+                question_reader = csv.reader(questions_file, delimiter='\t', quotechar='"')
+                for question in question_reader:
+                    q = Question(question[0], 0,  question[1])
+                    self.preprocessor.preprocess(q, ['lemmatize',
+                                                     'tokenize',
+                                                     'remove_punctuation',
+                                                     'remove_stopwords'])
+                    self.question_repo[q.content_preprocessed] = q
 
         elif repository is Repository.TOPICS:
-            pass
+            with open('../../data/topics.txt') as questions_file:
+                topics = questions_file.readlines()
+                for keywords in topics:
+                    keyword_list = keywords.split(',')
+                    t = Topic(0.0, keyword_list)
         else:
             sys.exit('Repository not known: ' + repository.value)
 
-
-    with open(attributes_file, 'r') as txtfile:
-        relevant_attributes = []
-        attributes = txtfile.readlines()
-        for attribute in attributes:
-            if attribute.startswith('\t\t') or attribute.startswith('\t'):
-                if attribute.startswith('\tMC:'):
-                    pass
-                else:
-                    attribute = attribute.replace('\n', '')
-                    attribute = attribute.replace('\t', '')
-                    relevant_attributes.append(attribute)

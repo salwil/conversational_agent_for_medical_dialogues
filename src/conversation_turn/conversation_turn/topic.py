@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# topic_repo.py
+# topic.py
 
 """
 Bachelor-Thesis: Conversational agent for querying orofacial pain patients
@@ -10,11 +10,12 @@ Matrikel-Nr: 10-289-544
 University of Zurich
 Institute for Computational Linguistics
 
-- Repository containing topics
+- Data class for topic
 
 """
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 @dataclass
-class TopicRepository:
-    questions: dict
+class Topic:
+    keywords: list
+    relevance: float

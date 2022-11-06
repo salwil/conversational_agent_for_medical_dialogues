@@ -16,7 +16,7 @@ Institute for Computational Linguistics
 
 from enum import Enum
 from dataclasses import dataclass, field
-from answer import Answer
+from conversation_element import Answer
 from turn import Turn
 
 class Intro:
@@ -42,8 +42,8 @@ class Question:
     question_type: QuestionType
 
     # References to other objects
-    intro: Intro
-    answer: Answer
+    intro: Intro = field(init = False, repr = False)
+    answer: Answer = field(init = False, repr = False)
     #follow_up_question: Question = field(init = False, repr = False)
     conversation_turn: Turn = field(init = False, repr = False)
 

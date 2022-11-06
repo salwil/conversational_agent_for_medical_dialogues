@@ -17,10 +17,4 @@ from dataclasses import dataclass, field
 
 @dataclass
 class QuestionRepository:
-    key: str # short (preprocessed question)
-    answer_preprocessed: str # or list?
-    relevance: float = field(init=False, repr=False)
-    number_of_usage: int
-
-    # References to other objects
-    conversation_turn = None
+    questions: dict
