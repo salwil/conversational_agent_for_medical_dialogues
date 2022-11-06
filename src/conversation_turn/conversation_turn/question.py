@@ -14,7 +14,10 @@ Institute for Computational Linguistics
 
 """
 
+from enum import Enum
+from dataclasses import dataclass, field
 from answer import Answer
+from turn import Turn
 
 class Intro:
     def __init__(self):
@@ -23,17 +26,24 @@ class Intro:
         #mental state that asks for this intro
         self.mental_state = None
 
-class Question:
-    def __init__(self, question: str, answer: Answer, intro: Intro):
-        self.question = question
-        self.question_preprocessed = ' '
-        self.probability = ' '
-        self.generated = False
-        self.asked = False
+class QuestionType(Enum):
+    INTRO = 'intro'
+    MANDATORY = 'mandatory'
+    FALLBACK = 'fallback'
+    MOREDETAIL = 'moredetail'
 
-        # References to other objects
-        self.intro = intro
-        self.answer = answer
-        self.follow_up_question = None #Of type question
-        self.conversation_turn = None
+@dataclass
+class Question:
+    question: str
+    question_preprocessed: str = field(init = False, repr = False)
+    probability: float = field(init = False, repr = False)
+    generated = False
+    asked = False
+    question_type: QuestionType
+
+    # References to other objects
+    intro: Intro
+    answer: Answer
+    #follow_up_question: Question = field(init = False, repr = False)
+    conversation_turn: Turn = field(init = False, repr = False)
 

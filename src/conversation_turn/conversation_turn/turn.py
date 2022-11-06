@@ -14,6 +14,10 @@ Institute for Computational Linguistics
 
 """
 
-class turn:
+class Turn:
     def __init__(self, turn_number):
         self.turn_number = turn_number;
+
+        # References to other objects
+        self.mental_state = None
+        self.input = None

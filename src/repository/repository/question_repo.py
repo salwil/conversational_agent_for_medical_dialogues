@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# answer.py
+# question_repo.py
 
 """
 Bachelor-Thesis: Conversational agent for querying orofacial pain patients
@@ -10,14 +10,14 @@ Matrikel-Nr: 10-289-544
 University of Zurich
 Institute for Computational Linguistics
 
-- Data class for answer (patient's input)
+- Repository containing questions
 
 """
 from dataclasses import dataclass, field
 
 @dataclass
-class Answer:
-    answer: str
+class QuestionRepository:
+    key: str # short (preprocessed question)
     answer_preprocessed: str # or list?
     relevance: float = field(init=False, repr=False)
     number_of_usage: int
