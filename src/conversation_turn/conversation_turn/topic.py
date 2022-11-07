@@ -17,5 +17,6 @@ from dataclasses import dataclass
 
 @dataclass
 class Topic:
+    topic_number: int
     keywords: list
     relevance: float

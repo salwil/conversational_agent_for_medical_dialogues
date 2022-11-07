@@ -47,11 +47,14 @@ class DataLoader:
                     self.question_repo[q.content_preprocessed] = q
 
         elif repository is Repository.TOPICS:
-            with open('../../data/topics.txt') as questions_file:
+            with open(self.path + 'topics.txt') as questions_file:
                 topics = questions_file.readlines()
+                topic_number = 1
                 for keywords in topics:
-                    keyword_list = keywords.split(',')
-                    t = Topic(0.0, keyword_list)
+                    keyword_list = keywords.split(', ')
+                    keyword_list_clean = [k.rstrip("\n") for k in keyword_list]
+                    t = Topic(topic_number, keyword_list_clean, 0.0)
+                    self.topic_repo[topic_number] = t
+                    topic_number += 1
         else:
             sys.exit('Repository not known: ' + repository.value)
-
