@@ -1,5 +1,5 @@
 import unittest
-from src.repository.repository.load_data_into_repo import DataLoader, Repository
+from src.repository.repository.load_data_into_repo import DataLoader, Repository, mentalStates
 from src.conversation_turn.conversation_turn.conversation_element import Question
 from src.conversation_turn.conversation_turn.topic import Topic
 
@@ -25,3 +25,11 @@ class ConversationElementTest(unittest.TestCase):
         self.data_loader.load_data_into_repository(Repository.TOPICS)
         self.assertEqual(2, len(tr))
         self.assertEqual(repr(t_exp), repr(tr[1]))
+
+    def test_data_loader_mental_states(self):
+        # Note: ms has to be assigned after the loader, else it's None!
+        self.data_loader.load_data_into_repository(Repository.MENTALSTATES)
+        ms = self.data_loader.mental_state_repo
+        for mental_state in mentalStates:
+            self.assertTrue(mental_state in ms)
+

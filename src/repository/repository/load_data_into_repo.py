@@ -18,6 +18,7 @@ import sys
 import csv
 from src.conversation_turn.conversation_turn.conversation_element import Question
 from src.conversation_turn.conversation_turn.topic import Topic
+from .mental_state_repo import mentalStates
 from src.preprocess.preprocess.preprocess import Preprocessor
 from src.preprocess.preprocess.lemmatize import EnglishLemmatizer
 import src.helpers.helpers.helpers as helpers
@@ -25,12 +26,14 @@ import src.helpers.helpers.helpers as helpers
 class Repository(Enum):
     QUESTIONS = 'question_repo'
     TOPICS = 'topic_repo'
+    MENTALSTATES = 'mental_state_repo'
 
 
 class DataLoader:
     def __init__(self):
         self.question_repo = {}
         self.topic_repo = {}
+        self.mental_state_repo = None
         self.preprocessor = Preprocessor(lemmatizer=EnglishLemmatizer())
         self.path = helpers.get_project_path() + '/src/repository/data/';
 
@@ -56,5 +59,8 @@ class DataLoader:
                     t = Topic(topic_number, keyword_list_clean, 0.0)
                     self.topic_repo[topic_number] = t
                     topic_number += 1
+        elif repository is Repository.MENTALSTATES:
+            self.mental_state_repo = mentalStates
+            print(self.mental_state_repo)
         else:
             sys.exit('Repository not known: ' + repository.value)
