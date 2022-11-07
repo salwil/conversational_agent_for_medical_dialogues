@@ -15,19 +15,22 @@ Institute for Computational Linguistics
 """
 
 from .cli import CLI
-from src.repository.repository.load_data_into_repo import DataLoader, Repository
+from .conversation import Conversation
+from .termination_criterion import TerminationCriterion
+from src.conversation_turn.conversation_turn.turn import Turn
+
 
 cli = CLI()
-data_loader = DataLoader()
+conversation = Conversation()
+termination_criterion = TerminationCriterion()
+
 
 def main():
     cli.talk()
-    load_repositories()
+    conversation.load_repositories()
+    conversation.load_models()
+    while (termination_criterion.ongoing()):
+        conversation_turn = Turn()
 
 
-
-def load_repositories():
-    data_loader.load_data_into_repository(Repository.QUESTIONS)
-    data_loader.load_data_into_repository(Repository.TOPICS)
-    data_loader.load_data_into_repository(Repository.MENTALSTATES)
 

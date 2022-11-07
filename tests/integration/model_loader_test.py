@@ -9,9 +9,9 @@ class ConversationElementTest(unittest.TestCase):
         self.classification_loader = SequenceClassificationModelLoader()
 
     def test_model_loader_bart_squad_qg_hl(self):
-        self.assertIsNotNone(self.seq2seq_loader.load_model(Model.BART_HLSQQ))
-        self.assertIsNotNone(self.seq2seq_loader.load_tokenizer(Model.BART_HLSQQ))
+        self.assertIsNotNone(self.seq2seq_loader.load_model(Model.QUESTION_GENERATION))
+        self.assertIsNotNone(self.seq2seq_loader.load_tokenizer(Model.QUESTION_GENERATION))
 
     def test_model_loader_bart_mnli(self):
-        self.assertIsNotNone(self.classification_loader.load_model(Model.BART_MNLI))
-        self.assertIsNotNone(self.classification_loader.load_tokenizer(Model.BART_MNLI))
+        self.assertIsNotNone(self.classification_loader.load_model(Model.SENTIMENT_DETECTION))
+        self.assertIsNotNone(self.classification_loader.load_tokenizer(Model.SENTIMENT_DETECTION))

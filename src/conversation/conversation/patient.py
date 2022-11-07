@@ -16,7 +16,7 @@ Institute for Computational Linguistics
 
 from dataclasses import dataclass, field
 from enum import Enum
-from datetime import date
+import datetime
 
 class Gender(Enum):
     FEM = 'feminin',
@@ -25,12 +25,14 @@ class Gender(Enum):
 
 @dataclass
 class Patient:
-    first_name: str
-    surname: str
-    gender: Gender.NA
-    date_of_birth: str
-    height_in_cm: int
-    weight_in_kg: int
-    medical_care_provider: str
-    date_of_conversation: date = date.today()
+    first_name: str = field(init = False)
+    surname: str = field(init = False)
+    gender: Gender.NA = field(init = False)
+    date_of_birth: str = field(init = False)
+    height_in_cm: int = field(init = False)
+    weight_in_kg: int = field(init = False)
+    medical_care_provider: str = field(init = False)
+    creation_timestamp: datetime = datetime.datetime.now()
+    creation_timestamp_formatted: str = creation_timestamp.strftime("%m-%d-%Y-%H-%M-%S")
+
 
