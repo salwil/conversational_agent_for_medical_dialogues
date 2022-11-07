@@ -10,7 +10,7 @@ Matrikel-Nr: 10-289-544
 University of Zurich
 Institute for Computational Linguistics
 
-- Data class for answer (patient's input)
+- Data class for conversation elements: answer (patient's input), question, question intro, question type
 
 """
 from dataclasses import dataclass, field
@@ -39,10 +39,11 @@ class ConversationIntro(ConversationElement):
         self.mental_state = None
 
 class QuestionType(Enum):
-    INTRO = 'intro'
+    PROFILE = 'profile'
     MANDATORY = 'mandatory'
     FALLBACK = 'fallback'
     MOREDETAIL = 'moredetail'
+
 
 @dataclass
 class Question(ConversationElement):

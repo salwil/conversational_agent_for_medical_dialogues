@@ -17,7 +17,7 @@ Institute for Computational Linguistics
 import sys
 import argparse
 
-class CLI:
+class CLI ():
     def __init__(self):
         parser = argparse.ArgumentParser('conversation', description='Interact with conversational agent')
         parser.add_argument('--start', required=False, action="store_true",
@@ -28,6 +28,6 @@ class CLI:
 
     def talk(self):
         if (self.arguments['start']):
-            print("Welcome!!! ")
+            print("Welcome!!! Please wait a moment until someone has time for you. ")
         else:
             print("Byebye!")

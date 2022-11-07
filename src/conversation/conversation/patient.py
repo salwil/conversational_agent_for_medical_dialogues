@@ -14,9 +14,23 @@ Institute for Computational Linguistics
 
 """
 
+from dataclasses import dataclass, field
+from enum import Enum
+from datetime import date
+
+class Gender(Enum):
+    FEM = 'feminin',
+    MASC = 'masculin'
+    NA = 'none'
+
+@dataclass
 class Patient:
-    def __init__(self):
-        self.name = ' '
-        self.surname = ' '
-        self.age = 0
-        self.gender = ' '
+    first_name: str
+    surname: str
+    gender: Gender.NA
+    date_of_birth: str
+    height_in_cm: int
+    weight_in_kg: int
+    medical_care_provider: str
+    date_of_conversation: date = date.today()
+

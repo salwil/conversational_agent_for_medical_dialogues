@@ -14,7 +14,11 @@ Institute for Computational Linguistics
 
 """
 from dataclasses import dataclass, field
+from enum import Enum
+from src.conversation_turn.conversation_turn.conversation_element import QuestionType
+
 
 @dataclass
 class QuestionRepository:
-    questions: dict
+    question_type: QuestionType
+    questions: {}

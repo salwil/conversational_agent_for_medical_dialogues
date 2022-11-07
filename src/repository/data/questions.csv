@@ -1,1 +1,8 @@
-How do you feel today?	intro
+What is your first name?	profile
+What is your surname?	profile
+What is your gender?	profile
+What is your birthday?	profile
+What is your height in cm?	profile
+What is your weight in kg?	profile
+What is your medical care provider?	profile
+Please describe your chief complaint for which you seek consultation.	mandatory

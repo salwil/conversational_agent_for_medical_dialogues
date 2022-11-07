@@ -22,6 +22,7 @@ import sys
 import csv
 from src.conversation_turn.conversation_turn.conversation_element import Question
 from src.conversation_turn.conversation_turn.topic import Topic
+from .question_repo import QuestionType, QuestionRepository
 from .mental_state_repo import MentalStates
 from src.preprocess.preprocess.preprocess import Preprocessor
 from src.preprocess.preprocess.lemmatize import EnglishLemmatizer
@@ -35,23 +36,27 @@ class Repository(Enum):
 
 class DataLoader:
     def __init__(self):
-        self.question_repo = {}
+        self.profile_question_repo = QuestionRepository(QuestionType.PROFILE, {})
+        self.mandatory_question_repo = QuestionRepository(QuestionType.MANDATORY, {})
+        self.fallback_question_repo = QuestionRepository(QuestionType.FALLBACK, {})
+        self.modedetail_question_repo = QuestionRepository(QuestionType.MOREDETAIL, {})
         self.topic_repo = {}
         self.mental_state_repo = None
         self.path = helpers.get_project_path() + '/src/repository/data/';
 
     def load_data_into_repository(self, repository: Repository):
         if repository is Repository.QUESTIONS:
-            preprocessor = Preprocessor(lemmatizer=EnglishLemmatizer)
+            preprocessor = Preprocessor(lemmatizer=EnglishLemmatizer())
             with open(self.path + 'questions.csv') as questions_file:
                 question_reader = csv.reader(questions_file, delimiter='\t', quotechar='"')
                 for question in question_reader:
-                    q = Question(question[0], 0,  question[1])
+                    question_type = self.determine_question_type(question[1])
+                    q = Question(question[0], 0,  question_type)
                     preprocessor.preprocess(q, ['lemmatize',
                                                 'tokenize',
                                                 'remove_punctuation',
                                                 'remove_stopwords'])
-                    self.question_repo[q.content_preprocessed] = q
+                    self.select_repository(question_type=question_type).questions[q.content_preprocessed] = q
 
         elif repository is Repository.TOPICS:
             with open(self.path + 'topics.txt') as questions_file:
@@ -68,3 +73,27 @@ class DataLoader:
             print(self.mental_state_repo)
         else:
             sys.exit('Repository not known: ' + repository.value)
+
+    def determine_question_type(self, question_type: str):
+        if question_type == QuestionType.PROFILE.value:
+            return QuestionType.PROFILE
+        elif question_type == QuestionType.MANDATORY.value:
+            return QuestionType.MANDATORY
+        elif question_type == QuestionType.FALLBACK.value:
+            return QuestionType.FALLBACK
+        elif question_type == QuestionType.MOREDETAIL.value:
+            return QuestionType.MOREDETAIL
+        else:
+            sys.exit("No repo found for this question type: " + question_type)
+
+    def select_repository(self, question_type: QuestionType):
+        if question_type is QuestionType.PROFILE:
+            return self.profile_question_repo
+        elif question_type is QuestionType.MANDATORY:
+            return self.mandatory_question_repo
+        elif question_type is QuestionType.FALLBACK:
+            return self.mandatory_question_repo
+        elif question_type is QuestionType.MOREDETAIL:
+            return self.modedetail_question_repo
+        else:
+            sys.exit("No repo found for this question type: " + question_type)
