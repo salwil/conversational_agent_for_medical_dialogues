@@ -20,3 +20,7 @@ def get_project_path():
         return os.path.dirname(path.parent.parent.parent.parent.parent.parent)
     else:
         return os.path.dirname((path))
+
+def create_directory_if_not_exists(filepath):
+    if not os.path.exists(filepath):
+        os.makedirs(filepath)
