@@ -14,12 +14,12 @@ Institute for Computational Linguistics
 
 """
 from enum import Enum
-from src.repository.repository.mental_state_repo import mentalStates
+from src.repository.repository.mental_state_repo import MentalStates
 
 class mentalState:
     def __init__(self, answer: str):
         self.answer = answer
-        self.mentalState = mentalStates.NEUTRAL
+        self.mentalState = MentalStates.NEUTRAL
         self.propability = 0.0
 
     def determine_mental_state(self):

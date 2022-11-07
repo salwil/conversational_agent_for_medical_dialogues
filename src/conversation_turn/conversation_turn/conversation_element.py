@@ -29,6 +29,8 @@ class ConversationElement:
 
 @dataclass
 class Answer(ConversationElement):
+    # when instantiating an oject of answers, the preprocessed content has to be provided already:
+    content_preprocessed: list
     relevance: float = field(init=False, repr=False)
 
 class ConversationIntro(ConversationElement):

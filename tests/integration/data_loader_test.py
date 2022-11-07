@@ -1,5 +1,5 @@
 import unittest
-from src.repository.repository.load_data_into_repo import DataLoader, Repository, mentalStates
+from src.repository.repository.load_data_into_repo import DataLoader, Repository, MentalStates
 from src.conversation_turn.conversation_turn.conversation_element import Question
 from src.conversation_turn.conversation_turn.topic import Topic
 
@@ -30,6 +30,6 @@ class ConversationElementTest(unittest.TestCase):
         # Note: ms has to be assigned after the loader, else it's None!
         self.data_loader.load_data_into_repository(Repository.MENTALSTATES)
         ms = self.data_loader.mental_state_repo
-        for mental_state in mentalStates:
+        for mental_state in MentalStates:
             self.assertTrue(mental_state in ms)
 

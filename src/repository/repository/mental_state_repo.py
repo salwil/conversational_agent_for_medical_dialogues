@@ -16,8 +16,9 @@ Institute for Computational Linguistics
 
 from enum import Enum
 
-class mentalStates(Enum):
-    NEUTRAL = 'neutral' #default
+
+class MentalStates(Enum):
+    NEUTRAL = 'neutral'  # default
     SAD = 'sad'
     HAPPY = 'happy'
     AFRAID = 'afraid'

@@ -8,6 +8,6 @@ class ConversationElementTest(unittest.TestCase):
         self.answer_preprocessed = "Kopfschmerz"
 
     def test_answer(self):
-        answer = Answer(self.answer, self.answer_preprocessed, 1, "blabla")
+        answer = Answer(self.answer, self.answer_preprocessed, 1)
         self.assertEqual(answer.content, "Ich habe Kopfschmerzen")
         self.assertEqual(answer.number_of_usage, 1)
