@@ -21,4 +21,4 @@ from src.conversation_turn.conversation_turn.conversation_element import Questio
 @dataclass
 class QuestionRepository:
     question_type: QuestionType
-    questions: {}
+    questions: {} # key: preprocessed question, value: Question

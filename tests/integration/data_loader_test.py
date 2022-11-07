@@ -26,7 +26,7 @@ class ConversationElementTest(unittest.TestCase):
                          number_of_usage=0,
                          question_type=QuestionType.MANDATORY)
         self.data_loader.load_data_into_repository(Repository.QUESTIONS)
-        self.assertEqual(1, len(qr.questions))
+        self.assertEqual(5, len(qr.questions))
         self.assertEqual(repr(q_exp), repr(qr.questions['please describe chief complaint seek consultation']))
 
     def test_data_loader_topic(self):
@@ -39,7 +39,7 @@ class ConversationElementTest(unittest.TestCase):
         self.assertEqual(repr(t_exp), repr(tr[1]))
 
     def test_data_loader_mental_states(self):
-        # Note: ms has to be assigned after the loader, else it's None!
+        # Note: ms has to be assigned after the loader, else it's None! (don't know why...)
         self.data_loader.load_data_into_repository(Repository.MENTALSTATES)
         ms = self.data_loader.mental_state_repo
         for mental_state in MentalStates:

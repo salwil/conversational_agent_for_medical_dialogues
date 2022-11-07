@@ -40,7 +40,7 @@ class DataLoader:
         self.mandatory_question_repo = QuestionRepository(QuestionType.MANDATORY, {})
         self.fallback_question_repo = QuestionRepository(QuestionType.FALLBACK, {})
         self.modedetail_question_repo = QuestionRepository(QuestionType.MOREDETAIL, {})
-        self.topic_repo = {}
+        self.topic_repo = {} # fuer spaeter ev: = TopicRepository({}), aber ev. overengineered
         self.mental_state_repo = None
         self.path = helpers.get_project_path() + '/src/repository/data/';
 

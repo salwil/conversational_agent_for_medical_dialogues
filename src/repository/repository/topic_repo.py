@@ -17,4 +17,4 @@ from dataclasses import dataclass, field
 
 @dataclass
 class TopicRepository:
-    questions: dict
+    topics: dict # key: topic number, value: Topic
