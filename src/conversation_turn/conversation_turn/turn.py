@@ -14,8 +14,7 @@ Institute for Computational Linguistics
 
 """
 from src.conversation.conversation.conversation import Conversation
-from src.conversation_turn.conversation_turn.conversation_element import Answer
-from src.repository.repository.repositories import AnswerRepository
+from src.conversation_turn.conversation_turn.conversation_element import Answer, Question
 
 
 class ConversationTurn:
@@ -26,13 +25,17 @@ class ConversationTurn:
         self.mental_state = None
         self.patient_input = patient_input
         self.answer: Answer = None
-        self.question = None
+        self.question: Question = None
         self.conversation = conversation
 
-    def process_input(self):
-        preprocessed_answer = self.conversation.preprocessor.preprocess(self.patient_input,
-                                                                        self.conversation.preprocessing_parameters)
-        self.answer = Answer(self.patient_input, 1, preprocessed_answer)
+    def capture_input(self):
+        self.conversation.data_loader.store_data_in_repository(self.input)
+
+    def determine_mental_state(self):
+        self.conversation.sentiment_detector.determine_mental_state(self.patient_input)
+
+    def generate_question(self):
+        pass
 
 
     def write_turn_to_archive(self):

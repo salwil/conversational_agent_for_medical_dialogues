@@ -31,10 +31,10 @@ class Conversation:
         self.preprocessor = Preprocessor(lemmatizer=self.english_lemmatizer)
         # lemmatizer is needed when loading questions (original and preprocessed format) from file into repository
         self.data_loader = DataLoader(self.preprocessing_parameters, self.preprocessor)
-        self.translator_de_en = None
-        self.translator_en_de = None
-        self.sentiment_detector = None
-        self.question_generator = None
+        self.translator_de_en: TranslatorDeEn = None
+        self.translator_en_de: TranslatorEnDe = None
+        self.sentiment_detector: SentimentDetector = None
+        self.question_generator: QuestionGenerator = None
         self.patient = Patient()
         self.conversation_archive = ConversationArchival(self.patient.creation_timestamp_formatted)
 
@@ -46,5 +46,5 @@ class Conversation:
     def load_models(self):
         self.translator_de_en = TranslatorDeEn()
         self.translator_en_de = TranslatorEnDe()
-        self.sentiment_detector = SentimentDetector()
+        self.sentiment_detector = SentimentDetector([mental_state for mental_state in self.data_loader.mental_state_repo])
         self.question_generator = QuestionGenerator()

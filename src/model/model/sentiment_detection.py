@@ -14,10 +14,19 @@ Institute for Computational Linguistics
 
 """
 
-from transformers import AutoTokenizer, AutoModelForSequenceClassification
+from transformers import AutoTokenizer, AutoModelForSequenceClassification, pipeline
 
 class SentimentDetector:
-    def __init__(self):
-        self.tokenizer = AutoTokenizer.from_pretrained('facebook/bart-large-mnli')
-        self.model = AutoModelForSequenceClassification.from_pretrained('facebook/bart-large-mnli')
+    def __init__(self, candidate_labels):
+        #self.tokenizer = AutoTokenizer.from_pretrained('facebook/bart-large-mnli')
+        #self.model = AutoModelForSequenceClassification.from_pretrained('facebook/bart-large-mnli')
+        self.candidate_labels = candidate_labels
+        self.classifier = pipeline("zero-shot-classification",
+                              model="facebook/bart-large-mnli")
+
+    def determine_mental_state(self, sentence):
+        mental_states = self.classifier(sentence, self.candidate_labels)
+        scores = mental_states['scores']
+        max_index = [index for index, item in enumerate(scores) if item == max(scores)]
+        return mental_states['labels'][max_index[0]]
 
