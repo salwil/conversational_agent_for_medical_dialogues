@@ -40,4 +40,3 @@ class Conversation:
         self.translator_en_de = TranslatorEnDe()
         self.sentiment_detector = SentimentDetector()
         self.question_generator = QuestionGenerator()
-

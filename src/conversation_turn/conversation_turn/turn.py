@@ -26,4 +26,4 @@ class Turn:
 
     def write_turn_to_archive(self):
         archive_record = {'answer': self.input, 'question': self.question}
-        self.conversation_archive.write_archive_record(self, archive_record)
+        self.conversation_archive.write(self, archive_record)
