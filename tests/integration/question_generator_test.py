@@ -31,6 +31,11 @@ class QuestionGenerationTest(unittest.TestCase):
         answer = "[HL] My jaw [HL] hurts when I eat food."
         self.assertTrue(self.question_generator.generate(answer).startswith("What"))
 
+    def test_generate_since_question(self):
+        answer = "[HL] Since one year [HL] my jaw hurts when I eat food."
+        self.assertTrue('since' in self.question_generator.generate(answer).lower())
+
+
     # open: whom, whose, which
     # Note: When sentence is very short (e.g. [HL] My jaw [HL] hurts.) the highlighted part may not be "strong" enough
     # to trigger the desired wh-question.
