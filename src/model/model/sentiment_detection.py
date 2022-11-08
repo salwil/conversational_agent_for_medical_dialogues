@@ -24,9 +24,8 @@ class SentimentDetector:
         self.classifier = pipeline("zero-shot-classification",
                               model="facebook/bart-large-mnli")
 
-    def determine_mental_state(self, sentence):
+    def predict_mental_state(self, sentence):
         mental_states = self.classifier(sentence, self.candidate_labels)
         scores = mental_states['scores']
         max_index = [index for index, item in enumerate(scores) if item == max(scores)]
         return mental_states['labels'][max_index[0]]
-

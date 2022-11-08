@@ -32,10 +32,10 @@ class ConversationTurn:
         self.conversation.data_loader.store_data_in_repository(self.input)
 
     def determine_mental_state(self):
-        self.conversation.sentiment_detector.determine_mental_state(self.patient_input)
+        self.conversation.sentiment_detector.predict_mental_state(self.patient_input)
 
     def generate_question(self):
-        pass
+        self.conversation.question_generator.generate(self.patient_input)
 
 
     def write_turn_to_archive(self):
