@@ -17,46 +17,48 @@ Institute for Computational Linguistics
 - mental_state_repo provides collection of mental states (datatype mentalState)
 
 """
+import warnings
 from enum import Enum
 import sys
 import csv
-from src.conversation_turn.conversation_turn.conversation_element import Question
+from src.conversation_turn.conversation_turn.conversation_element import Question, Answer
 from src.conversation_turn.conversation_turn.topic import Topic
-from .question_repo import QuestionType, QuestionRepository
-from .mental_state_repo import MentalStates
-from src.preprocess.preprocess.preprocess import Preprocessor
-from src.preprocess.preprocess.lemmatize import EnglishLemmatizer
+from .repositories import QuestionType, QuestionRepository, MentalStates, AnswerRepository
 import src.helpers.helpers.helpers as helpers
 
 class Repository(Enum):
     QUESTIONS = 'question_repo'
+    ANSWERS = 'answer_repo'
     TOPICS = 'topic_repo'
     MENTALSTATES = 'mental_state_repo'
 
 
 class DataLoader:
-    def __init__(self):
+    def __init__(self, preprocessing_parameters: list, preprocessor = None):
         self.profile_question_repo = QuestionRepository(QuestionType.PROFILE, {})
         self.mandatory_question_repo = QuestionRepository(QuestionType.MANDATORY, {})
         self.fallback_question_repo = QuestionRepository(QuestionType.FALLBACK, {})
         self.modedetail_question_repo = QuestionRepository(QuestionType.MOREDETAIL, {})
         self.topic_repo = {} # fuer spaeter ev: = TopicRepository({}), aber ev. overengineered
         self.mental_state_repo = None
+        self.answer_repo = AnswerRepository({})
         self.path = helpers.get_project_path() + '/src/repository/data/';
+        self.preprocessing_parameters = preprocessing_parameters
+        self.preprocessor = preprocessor
 
+    # load data from file into repository
     def load_data_into_repository(self, repository: Repository):
         if repository is Repository.QUESTIONS:
-            preprocessor = Preprocessor(lemmatizer=EnglishLemmatizer())
-            with open(self.path + 'questions.csv') as questions_file:
-                question_reader = csv.reader(questions_file, delimiter='\t', quotechar='"')
-                for question in question_reader:
-                    question_type = self.determine_question_type(question[1])
-                    q = Question(question[0], 0,  question_type)
-                    preprocessor.preprocess(q, ['lemmatize',
-                                                'tokenize',
-                                                'remove_punctuation',
-                                                'remove_stopwords'])
-                    self.select_repository(question_type=question_type).questions[q.content_preprocessed] = q
+            if self.preprocessor:
+                with open(self.path + 'questions.csv') as questions_file:
+                    question_reader = csv.reader(questions_file, delimiter='\t', quotechar='"')
+                    for question in question_reader:
+                        question_type = self.determine_question_type(question[1])
+                        q = Question(question[0], 0,  question_type)
+                        self.preprocessor.preprocess(q, self.preprocessing_parameters)
+                        self.select_repository(question_type=question_type).questions[q.content_preprocessed] = q
+            else:
+                raise Exception("Please provide a valid preprocessor instance for loading questions into repository.")
 
         elif repository is Repository.TOPICS:
             with open(self.path + 'topics.txt') as questions_file:
@@ -72,7 +74,15 @@ class DataLoader:
             self.mental_state_repo = MentalStates
             print(self.mental_state_repo)
         else:
-            sys.exit('Repository not known: ' + repository.value)
+            warnings.warn('There is no data to load for this repository: ' + repository.value, ResourceWarning)
+
+    # store data (e.g. from user input) in repository
+    def store_data_in_repository(self, repository: Repository, data: str):
+        if repository is Repository.ANSWERS:
+            a = Answer(data, 1)
+            self.preprocessor.preprocess(a, self.preprocessing_parameters)
+            self.answer_repo.answers[a.content_preprocessed] = a
+
 
     def determine_question_type(self, question_type: str):
         if question_type == QuestionType.PROFILE.value:

@@ -17,8 +17,7 @@ Institute for Computational Linguistics
 from .cli import CLI
 from .conversation import Conversation
 from .termination_criterion import TerminationCriterion
-from src.conversation_turn.conversation_turn.turn import Turn
-
+from src.conversation_turn.conversation_turn.turn import ConversationTurn
 
 cli = CLI()
 conversation = Conversation()
@@ -29,8 +28,11 @@ def main():
     cli.talk()
     conversation.load_repositories()
     conversation.load_models()
-    while (termination_criterion.ongoing()):
-        conversation_turn = Turn()
+    maintain_conversation()
 
 
-
+def maintain_conversation():
+    turn_number = 1
+    while termination_criterion.verify():
+        ConversationTurn(turn_number, conversation)
+        turn_number += 1

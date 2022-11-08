@@ -19,10 +19,18 @@ from src.model.model.question_generation import QuestionGenerator
 from src.repository.repository.load_data_into_repo import DataLoader, Repository
 from src.repository.repository.conversation_archive import ConversationArchival
 from .patient import Patient
+from ...preprocess.preprocess.lemmatize import EnglishLemmatizer
+from ...preprocess.preprocess.preprocess import Preprocessor
+
 
 class Conversation:
     def __init__(self):
-        self.data_loader = DataLoader()
+        self.english_lemmatizer = EnglishLemmatizer()
+        # preprocessing parameters are maintained centrally, to ensure the same are used for both questions and answers
+        self.preprocessing_parameters = ['lemmatize', 'tokenize', 'remove_punctuation', 'remove_stopwords']
+        self.preprocessor = Preprocessor(lemmatizer=self.english_lemmatizer)
+        # lemmatizer is needed when loading questions (original and preprocessed format) from file into repository
+        self.data_loader = DataLoader(self.preprocessing_parameters, self.preprocessor)
         self.translator_de_en = None
         self.translator_en_de = None
         self.sentiment_detector = None

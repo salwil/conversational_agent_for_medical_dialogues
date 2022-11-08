@@ -1,13 +1,21 @@
 import unittest
+
+from src.preprocess.preprocess.lemmatize import EnglishLemmatizer
+from src.preprocess.preprocess.preprocess import Preprocessor
 from src.repository.repository.load_data_into_repo import DataLoader, Repository, MentalStates
-from src.conversation_turn.conversation_turn.conversation_element import Question, QuestionType
+from src.conversation_turn.conversation_turn.conversation_element import Question, QuestionType, Answer
 from src.conversation_turn.conversation_turn.topic import Topic
 
 
 class ConversationElementTest(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.data_loader = DataLoader()
+        self.preprocessing_parameters = ['lemmatize', 'tokenize', 'remove_punctuation', 'remove_stopwords']
+        self.lemmatizer = EnglishLemmatizer()
+        self.preprocessor = Preprocessor(self.lemmatizer)
+        self.data_loader = DataLoader(preprocessing_parameters=self.preprocessing_parameters,
+                                      preprocessor=self.preprocessor)
+
 
     def test_data_loader_profile_question(self):
         # Note: this test only works as long as the Question 'How do you feel today?' is available
@@ -44,3 +52,21 @@ class ConversationElementTest(unittest.TestCase):
         ms = self.data_loader.mental_state_repo
         for mental_state in MentalStates:
             self.assertTrue(mental_state in ms)
+
+    def test_data_loader_nothing_to_load(self):
+        with self.assertWarns(ResourceWarning):
+            self.data_loader.load_data_into_repository(Repository.ANSWERS)
+
+    def test_data_loader_store_answers(self):
+        answer ="I have jaw pain."
+        ar = self.data_loader.answer_repo
+        self.data_loader.store_data_in_repository(Repository.ANSWERS, answer)
+        stored_answers = ar.answers
+        self.assertEqual(1, len(stored_answers))
+        self.assertTrue('jaw pain' in stored_answers)
+        self.assertEqual(stored_answers['jaw pain'].content, "I have jaw pain.")
+        self.assertEqual(stored_answers['jaw pain'].number_of_usage, 1)
+        #self.assertEqual(answer.content, "Ich habe Kopfschmerzen")
+        #self.assertEqual(answer.number_of_usage, 1)
+
+

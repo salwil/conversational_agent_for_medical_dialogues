@@ -15,7 +15,6 @@ Institute for Computational Linguistics
 """
 from dataclasses import dataclass, field
 from enum import Enum
-from .turn import Turn
 
 @dataclass
 class ConversationElement:
@@ -24,13 +23,10 @@ class ConversationElement:
     content_tokenized: list = field(init=False, repr=False)
     number_of_usage: int
 
-    # Reference to other objects
-    conversation_turn: Turn = field(init=False, repr=False)
-
 @dataclass
 class Answer(ConversationElement):
     # when instantiating an oject of answers, the preprocessed content has to be provided already:
-    content_preprocessed: list
+    # content_preprocessed: list
     relevance: float = field(init=False, repr=False)
 
 class ConversationIntro(ConversationElement):
