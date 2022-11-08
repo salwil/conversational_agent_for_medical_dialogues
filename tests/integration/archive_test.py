@@ -23,6 +23,14 @@ class ConversationArchiveTest(unittest.TestCase):
         self.assertEqual(['answer', 'question'], header)
         self.assertEqual(['I have headache', 'When do you have headache?'], first_row)
 
+    def test_write_bad_format_to_archive(self):
+        archive_record = {'aswer': 'I have headache', 'q': 'When do you have headache?'}
+        with self.assertRaises(TypeError) as context:
+            self.archive.write(archive_record)
+        self.assertEqual("Archive record has to be of format dict with the following keys: answer, question",
+                         str(context.exception))
+        self.archive.terminate()
+
     def test_terminate_archive(self):
         self.archive.terminate()
         self.assertFalse(self.archive.is_ready)

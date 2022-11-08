@@ -57,7 +57,10 @@ class ConversationArchival:
 
     def write(self, archive_record: ArchiveRecord):
         if self.is_ready:
-            self.archive_writer.writerow(archive_record)
+            try:
+                self.archive_writer.writerow(archive_record)
+            except ValueError:
+                raise TypeError("Archive record has to be of format dict with the following keys: answer, question")
         else:
             sys.exit("Start archive before writing to archive by using the start_archive() method.")
 
