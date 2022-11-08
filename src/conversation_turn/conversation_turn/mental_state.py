@@ -14,7 +14,7 @@ Institute for Computational Linguistics
 
 """
 from enum import Enum
-from src.repository.repository.mental_state_repo import MentalStates
+from src.repository.repository.repositories import MentalStates
 
 class mentalState:
     def __init__(self, answer: str):

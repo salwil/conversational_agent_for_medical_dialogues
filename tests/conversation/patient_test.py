@@ -2,6 +2,7 @@ import unittest
 import datetime
 from src.conversation.conversation.patient import Patient
 
+
 class ConversationElementTest(unittest.TestCase):
 
     def setUp(self) -> None:
