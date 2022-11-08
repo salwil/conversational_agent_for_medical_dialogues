@@ -24,26 +24,62 @@ class ConversationTurn:
         # References to other objects
         self.mental_state = None
         self.patient_input = patient_input
+        self.generated_question: str = None
         self.answer: Answer = None
         self.question: Question = None
         self.conversation = conversation
 
-    def capture_input(self):
-        self.conversation.data_loader.store_data_in_repository(self.input)
+    def process_question_and_answer_for_patient_profile(self, question: str):
+        """
+        Here the questions are predefined, so the sentiment analysis and question generation steps can be skipped,
+        also the question must not be stored in the question repository, it was already loaded when the application
+        started.
+        :return:
+        """
+        self.create_answer_object_and_store()
+        self.generated_question = question
+        self.write_turn_to_archive()
 
-    def determine_mental_state(self):
-        self.conversation.sentiment_detector.predict_mental_state(self.patient_input)
+    def process_answer_and_create_follow_up_question(self):
+        self.predict_mental_state()
+        self.create_answer_object_and_store()
+        self.generate_question()
+        self.create_question_object_and_store()
+        self.write_turn_to_archive()
 
-    def generate_question(self):
-        self.conversation.question_generator.generate(self.patient_input)
+    def __create_answer_object_and_store(self):
+        """
+        Creates an answer object and stores it in the corresponding repository
+        :return:
+        """
+        self.answer = self\
+            .conversation\
+            .data_loader\
+            .create_and_store_conversation_element_in_repository(self, 'answer_repo', self.patient_input)
 
-    def german_to_english(self, text):
+    def __create_question_object_and_store(self):
+        """
+        Creates an question object and stores it in the corresponding repository
+        :param text: question content (original generated question, not preprocessed)
+        :return:
+        """
+        self.question = self\
+            .conversation\
+            .data_loader\
+            .create_and_store_conversation_element_in_repository(self, 'question_repo', self.generated_question)
+
+    def __predict_mental_state(self):
+        self.mental_state = self.conversation.sentiment_detector.predict_mental_state(self.patient_input)
+
+    def __generate_question(self):
+        self.generated_question = self.conversation.question_generator.generate(self.patient_input)
+
+    def __german_to_english(self, text):
         self.conversation.translator_de_en.translate(text)
 
-    def english_to_german(self, text):
+    def __english_to_german(self, text):
         self.conversation.translator_en_de.translate(text)
 
-
-    def write_turn_to_archive(self):
-        archive_record = {'answer': self.patient_input, 'question': self.question}
+    def __write_turn_to_archive(self):
+        archive_record = {'answer': self.patient_input, 'question': self.generated_question}
         self.conversation_archive.write(self, archive_record)

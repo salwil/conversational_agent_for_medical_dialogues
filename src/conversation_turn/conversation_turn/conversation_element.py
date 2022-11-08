@@ -39,6 +39,7 @@ class QuestionType(Enum):
     MANDATORY = 'mandatory'
     FALLBACK = 'fallback'
     MOREDETAIL = 'moredetail'
+    GENERATED = 'generated'
 
 
 @dataclass

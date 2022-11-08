@@ -48,3 +48,8 @@ class Conversation:
         self.translator_en_de = TranslatorEnDe()
         self.sentiment_detector = SentimentDetector([mental_state for mental_state in self.data_loader.mental_state_repo])
         self.question_generator = QuestionGenerator()
+
+    def ask_questions_for_patient_instantiation(self):
+        for question in self.data_loader.profile_question_repo.questions:
+            answer = print(question.content_in_german)
+

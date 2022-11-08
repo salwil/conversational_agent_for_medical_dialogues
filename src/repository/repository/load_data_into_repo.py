@@ -21,7 +21,7 @@ import warnings
 from enum import Enum
 import sys
 import csv
-from src.conversation_turn.conversation_turn.conversation_element import Question, ProfileQuestion, Answer
+from src.conversation_turn.conversation_turn.conversation_element import ConversationElement, Question, ProfileQuestion, Answer
 from src.conversation_turn.conversation_turn.topic import Topic
 from .repositories import QuestionType, QuestionRepository, MentalStates, AnswerRepository
 import src.helpers.helpers.helpers as helpers
@@ -40,6 +40,7 @@ class DataLoader:
         self.mandatory_question_repo = QuestionRepository(QuestionType.MANDATORY, {})
         self.fallback_question_repo = QuestionRepository(QuestionType.FALLBACK, {})
         self.modedetail_question_repo = QuestionRepository(QuestionType.MOREDETAIL, {})
+        self.generated_question_repo = QuestionRepository(QuestionType.GENERATED, {})
         self.topic_repo = {}  # fuer spaeter ev: = TopicRepository({}), aber ev. overengineered
         self.mental_state_repo = None
         self.answer_repo = AnswerRepository({})
@@ -81,13 +82,19 @@ class DataLoader:
             warnings.warn('There is no data to load for this repository: ' + repository.value, ResourceWarning)
 
     # store data (e.g. from user input) in repository
-    def store_data_in_repository(self, repository: Repository, data: str):
-        if repository is Repository.ANSWERS:
+    def create_and_store_conversation_element_in_repository(self, repository: str, data: str) -> ConversationElement or None:
+        if repository == Repository.ANSWERS.value:
             a = Answer(data, 1)
             self.preprocessor.preprocess(a, self.preprocessing_parameters)
             self.answer_repo.answers[a.content_preprocessed] = a
+            return a
+        elif repository == Repository.QUESTIONS.value:
+            q = Question(data, 1, QuestionType.GENERATED)
+            self.preprocessor.preprocess(q, self.preprocessing_parameters)
+            self.generated_question_repo.questions[q.content_preprocessed] = q
+            return q
         else:
-            warnings.warn('Repository: '+ repository.value + ' is not foreseen to store values other than from file.',
+            warnings.warn('Repository: '+ repository + ' is not foreseen to store values other than from file.',
                           ResourceWarning)
 
     def determine_question_type(self, question_type: str):

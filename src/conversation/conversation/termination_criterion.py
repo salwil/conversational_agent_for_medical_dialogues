@@ -25,5 +25,5 @@ class TerminationCriterion:
 
     def update(self, conversation: Conversation):
         # do checks whether any termination criterion is reached, and if yes, set ongoing flag to False
-        if conversation.current_turn.turn_number > 10:
+        if conversation.current_turn.turn_number > 20:
             self.conversation_ongoing = False

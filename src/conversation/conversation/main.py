@@ -23,16 +23,25 @@ cli = CLI()
 conversation = Conversation()
 termination_criterion = TerminationCriterion()
 
-
 def main():
     cli.talk()
     conversation.load_repositories()
     conversation.load_models()
     maintain_conversation()
 
-
 def maintain_conversation():
     turn_number = 1
+    start_question = 'Hello, welcome, blabla'
+    answer = print(start_question)
+    for profile_question in conversation.data_loader.profile_question_repo:
+        ct = ConversationTurn(turn_number, conversation, answer)
+        ct.process_question_and_answer_for_patient_profile(profile_question.content)
+        turn_number += 1
+    next_question = 'Eingangsfrage (tbd).'
+    answer = print(next_question)
     while termination_criterion.verify():
-        ConversationTurn(turn_number, conversation)
+        ct = ConversationTurn(turn_number, conversation, answer)
+        ct.process_answer_and_create_follow_up_question()
+        next_question = ct.generated_question
+        answer = print(next_question)
         turn_number += 1
