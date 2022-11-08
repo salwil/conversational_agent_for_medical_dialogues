@@ -10,3 +10,4 @@ __pycache__/
 build
 scripts/
 .venv/
+*/language_models/

@@ -15,6 +15,7 @@ Institute for Computational Linguistics
 """
 
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+import torch
 
 class QuestionGenerator:
     def __init__(self):
@@ -22,10 +23,8 @@ class QuestionGenerator:
         self.model = AutoModelForSeq2SeqLM.from_pretrained('p208p2002/bart-squad-qg-hl')
 
     def generate(self, text):
-        import torch
-        #text = "In the night you can't sleep, [HL]because i have ear pain [HL]."
         input_ids = self.tokenizer.encode(text)
         question_ids = self.model.generate(torch.tensor([input_ids]))
         decode = self.tokenizer.decode(question_ids.squeeze().tolist(), skip_special_tokens=True)
-        #return decode.replace(' # # ', '').replace('  ', ' ').replace(' ##', '')
+        #print(decode)
         return decode

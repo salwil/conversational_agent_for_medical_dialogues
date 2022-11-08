@@ -37,6 +37,12 @@ class ConversationTurn:
     def generate_question(self):
         self.conversation.question_generator.generate(self.patient_input)
 
+    def german_to_english(self, text):
+        self.conversation.translator_de_en.translate(text)
+
+    def english_to_german(self, text):
+        self.conversation.translator_en_de.translate(text)
+
 
     def write_turn_to_archive(self):
         archive_record = {'answer': self.patient_input, 'question': self.question}
