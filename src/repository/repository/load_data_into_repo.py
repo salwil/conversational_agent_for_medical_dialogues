@@ -21,10 +21,11 @@ import warnings
 from enum import Enum
 import sys
 import csv
-from src.conversation_turn.conversation_turn.conversation_element import Question, Answer
+from src.conversation_turn.conversation_turn.conversation_element import Question, ProfileQuestion, Answer
 from src.conversation_turn.conversation_turn.topic import Topic
 from .repositories import QuestionType, QuestionRepository, MentalStates, AnswerRepository
 import src.helpers.helpers.helpers as helpers
+
 
 class Repository(Enum):
     QUESTIONS = 'question_repo'
@@ -34,15 +35,15 @@ class Repository(Enum):
 
 
 class DataLoader:
-    def __init__(self, preprocessing_parameters: list, preprocessor = None):
+    def __init__(self, preprocessing_parameters: list, preprocessor=None):
         self.profile_question_repo = QuestionRepository(QuestionType.PROFILE, {})
         self.mandatory_question_repo = QuestionRepository(QuestionType.MANDATORY, {})
         self.fallback_question_repo = QuestionRepository(QuestionType.FALLBACK, {})
         self.modedetail_question_repo = QuestionRepository(QuestionType.MOREDETAIL, {})
-        self.topic_repo = {} # fuer spaeter ev: = TopicRepository({}), aber ev. overengineered
+        self.topic_repo = {}  # fuer spaeter ev: = TopicRepository({}), aber ev. overengineered
         self.mental_state_repo = None
         self.answer_repo = AnswerRepository({})
-        self.path = helpers.get_project_path() + '/src/repository/data/';
+        self.path = helpers.get_project_path() + '/src/repository/data/'
         self.preprocessing_parameters = preprocessing_parameters
         self.preprocessor = preprocessor
 
@@ -54,7 +55,10 @@ class DataLoader:
                     question_reader = csv.reader(questions_file, delimiter='\t', quotechar='"')
                     for question in question_reader:
                         question_type = self.determine_question_type(question[1])
-                        q = Question(question[0], 0,  question_type)
+                        if question_type is QuestionType.PROFILE:
+                            q = ProfileQuestion(question[0], 0, question_type, question[2])
+                        else:
+                            q = Question(question[0], 0, question_type)
                         self.preprocessor.preprocess(q, self.preprocessing_parameters)
                         self.select_repository(question_type=question_type).questions[q.content_preprocessed] = q
             else:
@@ -82,7 +86,9 @@ class DataLoader:
             a = Answer(data, 1)
             self.preprocessor.preprocess(a, self.preprocessing_parameters)
             self.answer_repo.answers[a.content_preprocessed] = a
-
+        else:
+            warnings.warn('Repository: '+ repository.value + ' is not foreseen to store values other than from file.',
+                          ResourceWarning)
 
     def determine_question_type(self, question_type: str):
         if question_type == QuestionType.PROFILE.value:
@@ -106,4 +112,4 @@ class DataLoader:
         elif question_type is QuestionType.MOREDETAIL:
             return self.modedetail_question_repo
         else:
-            sys.exit("No repo found for this question type: " + question_type)
+            sys.exit("No repo found for this question type: " + question_type.value)

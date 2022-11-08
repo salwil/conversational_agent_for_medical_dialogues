@@ -52,3 +52,12 @@ class Question(ConversationElement):
     intro: ConversationIntro = field(init = False, repr = False)
     answer: Answer = field(init = False, repr = False)
     #follow_up_question: Question = field(init = False, repr = False)
+
+
+@dataclass
+class ProfileQuestion(Question):
+    """
+    Special class for representing the profile questions. Because they are predefined, question is available and must be
+    stored in english as well as in german.
+    """
+    content_in_german: str

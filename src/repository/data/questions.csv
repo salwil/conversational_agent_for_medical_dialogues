@@ -1,10 +1,10 @@
-What is your first name?	profile
-What is your surname?	profile
-What is your gender?	profile
-What is your birthday?	profile
-What is your height in cm?	profile
-What is your weight in kg?	profile
-What is your medical care provider?	profile
+What is your first name?	profile	Was ist Ihr Vorname?
+What is your surname?	profile	Was ist Ihr Nachname?
+What is your gender?	profile	Welchem Geschlecht fühlen Sie sich zugehörig?
+What is your birthday?	profile	Was ist Ihr Geburtsdatum?
+What is your height in cm?	profile	Was ist Ihre Grösse in cm?
+What is your weight in kg?	profile	Was ist Ihr Gewicht in kg?
+What is your medical care provider?	profile	Wer ist Ihr medizinischer Leistungserbringer?
 Please describe your chief complaint for which you seek consultation.	mandatory
 What does your chief complaint stop you from doing?	mandatory
 What do you expect as the result of the examinations and treatments in our clinic?	mandatory

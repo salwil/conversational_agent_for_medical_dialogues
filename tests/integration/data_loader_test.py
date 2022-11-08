@@ -3,7 +3,7 @@ import unittest
 from src.preprocess.preprocess.lemmatize import EnglishLemmatizer
 from src.preprocess.preprocess.preprocess import Preprocessor
 from src.repository.repository.load_data_into_repo import DataLoader, Repository, MentalStates
-from src.conversation_turn.conversation_turn.conversation_element import Question, QuestionType, Answer
+from src.conversation_turn.conversation_turn.conversation_element import Question, ProfileQuestion, QuestionType
 from src.conversation_turn.conversation_turn.topic import Topic
 
 
@@ -21,9 +21,13 @@ class ConversationElementTest(unittest.TestCase):
         # Note: this test only works as long as the Question 'How do you feel today?' is available
         # inside the questions.csv file!
         qr = self.data_loader.profile_question_repo
-        q_exp = Question(content='What is your first name?', number_of_usage=0, question_type=QuestionType.PROFILE)
+        q_exp = ProfileQuestion(content='What is your first name?',
+                                number_of_usage=0,
+                                question_type=QuestionType.PROFILE,
+                                content_in_german="Was ist Ihr Vorname?")
         self.data_loader.load_data_into_repository(Repository.QUESTIONS)
         self.assertEqual(7, len(qr.questions))
+        self.assertEqual(q_exp.content_in_german, qr.questions['first name'].content_in_german)
         self.assertEqual(repr(q_exp), repr(qr.questions['first name']))
 
     def test_data_loader_mandatory_question(self):
@@ -66,7 +70,6 @@ class ConversationElementTest(unittest.TestCase):
         self.assertTrue('jaw pain' in stored_answers)
         self.assertEqual(stored_answers['jaw pain'].content, "I have jaw pain.")
         self.assertEqual(stored_answers['jaw pain'].number_of_usage, 1)
-        #self.assertEqual(answer.content, "Ich habe Kopfschmerzen")
-        #self.assertEqual(answer.number_of_usage, 1)
+
 
 
