@@ -22,7 +22,7 @@ from enum import Enum
 import sys
 import csv
 from src.conversation_turn.conversation_turn.conversation_element \
-    import ConversationElement, Question, ProfileQuestion, Answer
+    import ConversationElement, Question, PredefinedQuestion, Answer
 from src.conversation_turn.conversation_turn.topic import Topic
 from .repositories import QuestionType, QuestionRepository, MentalStates, AnswerRepository
 import src.helpers.helpers.helpers as helpers
@@ -33,7 +33,6 @@ class Repository(Enum):
     ANSWERS = 'answer_repo'
     TOPICS = 'topic_repo'
     MENTALSTATES = 'mental_state_repo'
-
 
 class DataLoader:
     def __init__(self, preprocessing_parameters: list, preprocessor=None):
@@ -58,7 +57,7 @@ class DataLoader:
                     for question in question_reader:
                         question_type = self.determine_question_type(question[1])
                         if question_type is QuestionType.PROFILE:
-                            q = ProfileQuestion(question[0], 0, question_type, question[2])
+                            q = PredefinedQuestion(question[0], 0, question_type, question[2])
                         else:
                             q = Question(question[0], 0, question_type)
                         self.preprocessor.preprocess(q, self.preprocessing_parameters)

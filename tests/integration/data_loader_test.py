@@ -3,7 +3,7 @@ import unittest
 from src.preprocess.preprocess.lemmatize import EnglishLemmatizer
 from src.preprocess.preprocess.preprocess import Preprocessor
 from src.repository.repository.load_data_into_repo import DataLoader, Repository, MentalStates
-from src.conversation_turn.conversation_turn.conversation_element import Question, ProfileQuestion, QuestionType
+from src.conversation_turn.conversation_turn.conversation_element import Question, PredefinedQuestion, QuestionType
 from src.conversation_turn.conversation_turn.topic import Topic
 
 
@@ -20,10 +20,10 @@ class ConversationElementTest(unittest.TestCase):
         # Note: this test only works as long as the Question 'How do you feel today?' is available
         # inside the questions.csv file!
         qr = self.data_loader.profile_question_repo
-        q_exp = ProfileQuestion(content='What is your first name?',
-                                number_of_usage=0,
-                                question_type=QuestionType.PROFILE,
-                                content_in_german="Was ist Ihr Vorname?")
+        q_exp = PredefinedQuestion(content='What is your first name?',
+                                   number_of_usage=0,
+                                   question_type=QuestionType.PROFILE,
+                                   content_in_german="Was ist Ihr Vorname?")
         self.data_loader.load_data_into_repository(Repository.QUESTIONS)
         self.assertEqual(7, len(qr.questions))
         self.assertEqual(q_exp.content_in_german, qr.questions['first name'].content_in_german)

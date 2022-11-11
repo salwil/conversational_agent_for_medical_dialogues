@@ -16,7 +16,7 @@ Institute for Computational Linguistics
 from abc import abstractmethod, ABC
 
 from src.conversation.conversation.conversation import Conversation
-from src.conversation_turn.conversation_turn.conversation_element import Question, ProfileQuestion, QuestionType
+from src.conversation_turn.conversation_turn.conversation_element import Question, PredefinedQuestion, QuestionType
 
 
 class Builder(ABC):
@@ -58,14 +58,14 @@ class ConversationBuilder(Builder):
         return conversation
 
     def with_profile_question(self, question_de: str, question_en: str, preprocessed_en: str) -> None:
-        profile_question = ProfileQuestion(question_de, 1, question_de, QuestionType.PROFILE)
+        profile_question = PredefinedQuestion(question_de, 1, question_de, QuestionType.PROFILE)
         profile_question.content_preprocessed = preprocessed_en
         self._conversation.data_loader.profile_question_repo.questions[profile_question.content_preprocessed]\
             = profile_question
         return self
 
     def with_mandatory_question(self, question_de: str, question_en: str, preprocessed_en: str) -> None:
-        mandatory_question = ProfileQuestion(question_de, 1, question_de, QuestionType.PROFILE)
+        mandatory_question = PredefinedQuestion(question_de, 1, question_de, QuestionType.PROFILE)
         mandatory_question.content_preprocessed = preprocessed_en
         self._conversation.data_loader.profile_question_repo.questions[mandatory_question.content_preprocessed]\
             = mandatory_question

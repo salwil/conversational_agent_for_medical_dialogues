@@ -5,7 +5,7 @@ from conversation.conversation.conversation import Conversation
 from conversation.conversation.termination_criterion import TerminationCriterionForConversation
 from conversation_turn.conversation_turn.turn import ConversationTurn
 
-class PatientTest(unittest.TestCase):
+class TerminationCriterionTest(unittest.TestCase):
 
     def setUp(self) -> None:
         self.termination_criterion =TerminationCriterionForConversation()

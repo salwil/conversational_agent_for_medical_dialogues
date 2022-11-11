@@ -16,6 +16,9 @@ Institute for Computational Linguistics
 from dataclasses import dataclass, field
 from enum import Enum
 
+from conversation_turn.conversation_turn.topic import Topic
+
+
 @dataclass
 class ConversationElement:
     content: str
@@ -28,6 +31,7 @@ class Answer(ConversationElement):
     # when instantiating an oject of answers, the preprocessed content has to be provided already:
     # content_preprocessed: list
     relevance: float = field(init=False, repr=False)
+    topic: Topic = field(init=False, repr=False)
 
 class ConversationIntro(ConversationElement):
     def __init__(self):
@@ -56,9 +60,9 @@ class Question(ConversationElement):
 
 
 @dataclass
-class ProfileQuestion(Question):
+class PredefinedQuestion(Question):
     """
-    Special class for representing the profile questions. Because they are predefined, question is available and must be
-    stored in english as well as in german.
+    Special class for the predefined questions (profile, mandatory and more detail questions). They are available in
+    english as well as in german in the file they're read from.
     """
     content_in_german: str

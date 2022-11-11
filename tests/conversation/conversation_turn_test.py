@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
 
-from conversation_turn.conversation_turn.conversation_element import ProfileQuestion, QuestionType, Question, Answer
+from conversation_turn.conversation_turn.conversation_element import PredefinedQuestion, QuestionType, Question, Answer
 from conversation_turn.conversation_turn.turn import ConversationTurn
 from util.conversation_builder import ConversationBuilder
 
