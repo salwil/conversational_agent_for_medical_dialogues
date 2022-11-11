@@ -15,7 +15,7 @@ Institute for Computational Linguistics
 """
 
 from src.conversation.conversation.conversation import Conversation
-from src.conversation.conversation.termination_criterion import TerminationCriterion
+from src.conversation.conversation.termination_criterion import TerminationCriterionForConversation
 from src.conversation_turn.conversation_turn.turn import ConversationTurn
 
 
@@ -26,7 +26,7 @@ def main():
     maintain_conversation(conversation)
 
 def maintain_conversation(conversation):
-    termination_criterion = TerminationCriterion()
+    termination_criterion = TerminationCriterionForConversation()
     turn_number = 1
     print('Hello, welcome.')
     print('Whenever you want to stop the conversation, you can write q! or quit!')

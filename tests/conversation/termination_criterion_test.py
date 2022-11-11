@@ -2,13 +2,13 @@ import unittest
 import datetime
 
 from conversation.conversation.conversation import Conversation
-from conversation.conversation.termination_criterion import TerminationCriterion
+from conversation.conversation.termination_criterion import TerminationCriterionForConversation
 from conversation_turn.conversation_turn.turn import ConversationTurn
 
 class PatientTest(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.termination_criterion =TerminationCriterion()
+        self.termination_criterion =TerminationCriterionForConversation()
         self.conversation = Conversation()
         self.current_turn_last = ConversationTurn(21, self.conversation, 'When have you been to the doctor?')
         self.current_turn_not_last = ConversationTurn(15, self.conversation, 'When have you been to the doctor?')
