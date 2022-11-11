@@ -18,7 +18,7 @@ from src.conversation_turn.conversation_turn.conversation_element import Answer,
 
 
 class ConversationTurn:
-    def __init__(self, turn_number, conversation: Conversation, patient_input: str):
+    def __init__(self, turn_number:int, conversation: Conversation, patient_input: str):
         self.turn_number = turn_number
 
         # References to other objects
@@ -36,16 +36,16 @@ class ConversationTurn:
         started.
         :return:
         """
-        self.create_answer_object_and_store()
+        self.__create_answer_object_and_store()
         self.generated_question = question
-        self.write_turn_to_archive()
+        self.__write_turn_to_archive()
 
     def process_answer_and_create_follow_up_question(self):
-        self.predict_mental_state()
-        self.create_answer_object_and_store()
-        self.generate_question()
-        self.create_question_object_and_store()
-        self.write_turn_to_archive()
+        self.__predict_mental_state()
+        self.__create_answer_object_and_store()
+        self.__generate_question()
+        self.__create_question_object_and_store()
+        self.__write_turn_to_archive()
 
     def __create_answer_object_and_store(self):
         """
@@ -55,7 +55,7 @@ class ConversationTurn:
         self.answer = self\
             .conversation\
             .data_loader\
-            .create_and_store_conversation_element_in_repository(self, 'answer_repo', self.patient_input)
+            .create_and_store_conversation_element('answer_repo', self.patient_input)
 
     def __create_question_object_and_store(self):
         """
@@ -66,7 +66,7 @@ class ConversationTurn:
         self.question = self\
             .conversation\
             .data_loader\
-            .create_and_store_conversation_element_in_repository(self, 'question_repo', self.generated_question)
+            .create_and_store_conversation_element('question_repo', self.generated_question)
 
     def __predict_mental_state(self):
         self.mental_state = self.conversation.sentiment_detector.predict_mental_state(self.patient_input)
@@ -82,4 +82,4 @@ class ConversationTurn:
 
     def __write_turn_to_archive(self):
         archive_record = {'answer': self.patient_input, 'question': self.generated_question}
-        self.conversation_archive.write(self, archive_record)
+        self.conversation.conversation_archive.write(archive_record)
