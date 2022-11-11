@@ -18,12 +18,12 @@ from src.conversation.conversation.conversation import Conversation
 
 class TerminationCriterion:
     def __init__(self):
-        self.conversation_ongoing = True
+        self.terminate_conversation = False
 
-    def verify(self):
-        return self.conversation_ongoing
+    def given(self):
+        return self.terminate_conversation
 
     def update(self, conversation: Conversation):
         # do checks whether any termination criterion is reached, and if yes, set ongoing flag to False
         if conversation.current_turn.turn_number > 20:
-            self.conversation_ongoing = False
+            self.terminate_conversation = True

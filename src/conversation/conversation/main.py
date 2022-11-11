@@ -20,34 +20,38 @@ from src.conversation.conversation.termination_criterion import TerminationCrite
 from src.conversation_turn.conversation_turn.turn import ConversationTurn
 
 cli = CLI()
-conversation = Conversation()
-termination_criterion = TerminationCriterion()
+
 
 
 def main():
-    cli.talk()
+    #cli.talk()
+    conversation = Conversation()
     conversation.load_repositories()
-    #conversation.load_models()
-    #maintain_conversation()
+    conversation.load_models()
+    maintain_conversation(conversation)
 
 
 def maintain_conversation(conversation):
+    termination_criterion = TerminationCriterion()
     turn_number = 1
     start_question = 'Hello, welcome, blabla'
-    answer = print(start_question)
-    answer = 'I am ok today.'
+    print(start_question)
+    answer = input()
     for profile_question in conversation.data_loader.profile_question_repo.questions.values():
         ct = ConversationTurn(turn_number, conversation, answer)
-        print(profile_question)
+        print(profile_question.content)
         ct.process_question_and_answer_for_patient_profile(profile_question.content)
+        answer = input()
         turn_number += 1
     next_question = 'Eingangsfrage (tbd).'
-    answer = print(next_question)
-    while termination_criterion.verify():
+    print(next_question)
+    answer = input()
+    while not termination_criterion.given():
         ct = ConversationTurn(turn_number, conversation, answer)
         ct.process_answer_and_create_follow_up_question()
         next_question = ct.generated_question
-        answer = print(next_question)
+        print(next_question)
+        answer = input()
         turn_number += 1
 
 if __name__ == "__main__":
