@@ -13,7 +13,7 @@ Institute for Computational Linguistics
 - Class for modeling termination criteria of a topic conversation or of the whole conversation
 
 """
-from src.conversation.conversation.conversation import Conversation
+from conversation_turn.conversation_turn.turn import ConversationTurn
 
 
 class TerminationCriterion:
@@ -23,7 +23,11 @@ class TerminationCriterion:
     def given(self):
         return self.terminate_conversation
 
-    def update(self, conversation: Conversation):
+    def update(self, current_turn: ConversationTurn):
         # do checks whether any termination criterion is reached, and if yes, set ongoing flag to False
-        if conversation.current_turn.turn_number > 20:
+        if current_turn.turn_number > 20:
+            self.terminate_conversation = True
+
+    def check_user_terminate(self, input):
+        if input == 'q!' or input == 'quit!':
             self.terminate_conversation = True
