@@ -15,8 +15,6 @@ Institute for Computational Linguistics
 """
 from enum import Enum
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, AutoModelForSequenceClassification
-from dataclasses import dataclass
-
 
 class Model(Enum):
     TRANSLATION_DE_EN = 'translation-de-en' #replace with real model name / path to model?

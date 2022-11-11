@@ -19,8 +19,8 @@ from src.model.model.question_generation import QuestionGenerator
 from src.repository.repository.load_data_into_repo import DataLoader, Repository
 from src.repository.repository.conversation_archive import ConversationArchival
 from .patient import Patient
-from ...preprocess.preprocess.lemmatize import EnglishLemmatizer
-from ...preprocess.preprocess.preprocess import Preprocessor
+from src.preprocess.preprocess.lemmatize import EnglishLemmatizer
+from src.preprocess.preprocess.preprocess import Preprocessor
 
 
 class Conversation:
@@ -46,10 +46,10 @@ class Conversation:
     def load_models(self):
         self.translator_de_en = TranslatorDeEn()
         self.translator_en_de = TranslatorEnDe()
-        self.sentiment_detector = SentimentDetector([mental_state for mental_state in self.data_loader.mental_state_repo])
+        self.sentiment_detector = SentimentDetector([mental_state
+                                                     for mental_state in self.data_loader.mental_state_repo])
         self.question_generator = QuestionGenerator()
 
     def ask_questions_for_patient_instantiation(self):
         for question in self.data_loader.profile_question_repo.questions:
             answer = print(question.content_in_german)
-

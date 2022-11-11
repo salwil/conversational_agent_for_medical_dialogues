@@ -21,7 +21,8 @@ import warnings
 from enum import Enum
 import sys
 import csv
-from src.conversation_turn.conversation_turn.conversation_element import ConversationElement, Question, ProfileQuestion, Answer
+from src.conversation_turn.conversation_turn.conversation_element \
+    import ConversationElement, Question, ProfileQuestion, Answer
 from src.conversation_turn.conversation_turn.topic import Topic
 from .repositories import QuestionType, QuestionRepository, MentalStates, AnswerRepository
 import src.helpers.helpers.helpers as helpers
@@ -82,7 +83,7 @@ class DataLoader:
             warnings.warn('There is no data to load for this repository: ' + repository.value, ResourceWarning)
 
     # store data (e.g. from user input) in repository
-    def create_and_store_conversation_element_in_repository(self, repository: str, data: str) -> ConversationElement or None:
+    def create_and_store_conversation_element(self, repository: str, data: str) -> ConversationElement or None:
         if repository == Repository.ANSWERS.value:
             a = Answer(data, 1)
             self.preprocessor.preprocess(a, self.preprocessing_parameters)
@@ -94,7 +95,7 @@ class DataLoader:
             self.generated_question_repo.questions[q.content_preprocessed] = q
             return q
         else:
-            warnings.warn('Repository: '+ repository + ' is not foreseen to store values other than from file.',
+            warnings.warn('Repository: ' + repository + ' is not foreseen to store values other than from file.',
                           ResourceWarning)
 
     def determine_question_type(self, question_type: str):

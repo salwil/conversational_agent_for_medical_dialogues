@@ -14,27 +14,31 @@ Institute for Computational Linguistics
 
 """
 
-from .cli import CLI
-from .conversation import Conversation
-from .termination_criterion import TerminationCriterion
+from src.conversation.conversation.cli import CLI
+from src.conversation.conversation.conversation import Conversation
+from src.conversation.conversation.termination_criterion import TerminationCriterion
 from src.conversation_turn.conversation_turn.turn import ConversationTurn
 
 cli = CLI()
 conversation = Conversation()
 termination_criterion = TerminationCriterion()
 
+
 def main():
     cli.talk()
     conversation.load_repositories()
-    conversation.load_models()
-    maintain_conversation()
+    #conversation.load_models()
+    #maintain_conversation()
 
-def maintain_conversation():
+
+def maintain_conversation(conversation):
     turn_number = 1
     start_question = 'Hello, welcome, blabla'
     answer = print(start_question)
-    for profile_question in conversation.data_loader.profile_question_repo:
+    answer = 'I am ok today.'
+    for profile_question in conversation.data_loader.profile_question_repo.questions.values():
         ct = ConversationTurn(turn_number, conversation, answer)
+        print(profile_question)
         ct.process_question_and_answer_for_patient_profile(profile_question.content)
         turn_number += 1
     next_question = 'Eingangsfrage (tbd).'
@@ -45,3 +49,6 @@ def maintain_conversation():
         next_question = ct.generated_question
         answer = print(next_question)
         turn_number += 1
+
+if __name__ == "__main__":
+    main()

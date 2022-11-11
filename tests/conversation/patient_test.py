@@ -3,7 +3,7 @@ import datetime
 from src.conversation.conversation.patient import Patient
 
 
-class ConversationElementTest(unittest.TestCase):
+class PatientTest(unittest.TestCase):
 
     def setUp(self) -> None:
         self.patient = Patient()

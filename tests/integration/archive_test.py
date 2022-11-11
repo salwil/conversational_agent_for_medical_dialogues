@@ -2,6 +2,7 @@ import unittest
 import csv
 from src.repository.repository.conversation_archive import ConversationArchival, ArchiveOperation
 
+
 class ConversationArchiveTest(unittest.TestCase):
 
     def setUp(self) -> None:
@@ -19,7 +20,7 @@ class ConversationArchiveTest(unittest.TestCase):
         self.archive.start(ArchiveOperation.READ)
         reader = csv.reader(self.archive.archive_file, delimiter='\t', quotechar='"')
         header = next(reader)
-        first_row = next(reader) #
+        first_row = next(reader)  #
         self.assertEqual(['answer', 'question'], header)
         self.assertEqual(['I have headache', 'When do you have headache?'], first_row)
 
