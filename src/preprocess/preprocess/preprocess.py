@@ -46,6 +46,9 @@ class Preprocessor:
     def preprocess(self, data_record: ConversationElement, preprocessing_arguments: list) -> None:
         self.data_record = data_record
 
+        if 'tokenize' in preprocessing_arguments:
+            self.tokenize()
+            self.tokenized = True
         if 'lemmatize' in preprocessing_arguments:
             self.lemmatize()
             self.lemmatized = True
@@ -55,20 +58,16 @@ class Preprocessor:
         if 'remove_stopwords' in preprocessing_arguments:
             self.removeStopwords()
             self.remove_stopwords = True
-        if 'tokenize' in preprocessing_arguments:
-            self.tokenize()
-            self.tokenized = True
 
     def lemmatize(self):
         data_record_lemmatized=self.lemmatizer.lemmatize(self.data_record.content)
         self.data_record.content_preprocessed = data_record_lemmatized
 
-    def tokenize(self):
-        try:
-            self.data_record.content_tokenized = word_tokenize(self.data_record.content_preprocessed)
-        # in case no other preprocessing step has been done so far, ConversationElement has no attribute
-        # content_preprocessed, but only content
-        except AttributeError:
+    def tokenize(self, input = None) -> str or None:
+        if input:
+            return word_tokenize(self.data_record.content_preprocessed)
+        else:
+            # tokenization is foreseen for the original content, not a preprocessed content
             self.data_record.content_tokenized = word_tokenize(self.data_record.content)
 
 
@@ -78,9 +77,10 @@ class Preprocessor:
         self.data_record.content_preprocessed = ' '.join(self.regexp_tokenizer.tokenize(self.data_record.content_preprocessed))
 
     def removeStopwords(self):
-        # Tokenization is precondition for stopwords removal
-        self.tokenize()
-        self.data_record.content_preprocessed = ' '.join(w for w in self.data_record.content_tokenized if not w.lower() in self.stop_words)
+        # Tokenization is precondition for stopwords removal, but we have to call the tokenization method with an input
+        # to make sure the previously tokenized data record is not overwritten
+        tokenized = self.tokenize(self.data_record.content_preprocessed)
+        self.data_record.content_preprocessed = ' '.join(w for w in tokenized if not w.lower() in self.stop_words)
 
     def getTokenizedRecord(self):
         if self.tokenized:

@@ -21,7 +21,6 @@ from src.conversation_turn.conversation_turn.turn import ConversationTurn
 
 def main():
     conversation = Conversation()
-    conversation.load_nlp()
     conversation.load_repositories()
     conversation.load_models()
     maintain_conversation(conversation)
@@ -31,7 +30,8 @@ def maintain_conversation(conversation):
     turn_number = 1
     print('Hello, welcome.')
     print('Whenever you want to stop the conversation, you can write q! or quit!')
-    answer = input()
+
+    """answer = input()
     for profile_question in conversation.data_loader.profile_question_repo.questions.values():
         ct = ConversationTurn(turn_number, conversation, answer)
         print(profile_question.content)
@@ -40,6 +40,7 @@ def maintain_conversation(conversation):
         termination_criterion.check_user_terminate(answer)
         termination_criterion.update(current_turn=ct)
         turn_number += 1
+        """
     next_question = 'Eingangsfrage (tbd).'
     print(next_question)
     answer = input()

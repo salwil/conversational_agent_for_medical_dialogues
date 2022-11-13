@@ -37,13 +37,20 @@ class QuestionGenerationRules:
     def replace_pronouns(self, last_answer: Answer) -> Answer:
         doc = self.nlp(last_answer.content)
         self.preprocessor.preprocess(last_answer, ['tokenize'])
+        print("Tokenized content: ")
+        print(last_answer.content_tokenized)
         index = 0
         forms = {'am': 'are', 'i': 'you', 'mine': 'yours', 'me': 'you', 'my': 'your', "'m": "'re"}  # More?
         for token in doc:
             if len(token.morph.get("PronType")) > 0 and token.morph.get("Person") == ['1'] or \
                     len(token.morph.get("VerbForm")) > 0 and token.morph.get("Mood") == ['Ind']:
                 pronoun = last_answer.content_tokenized[index].lower()
-                last_answer.content_tokenized[index] = forms[pronoun]
+                try:
+                    last_answer.content_tokenized[index] = forms[pronoun]
+                except KeyError:
+                    # the verb 'have' for example can remain as is
+                    pass
+            print(index)
             index += 1
         last_answer.content_in_2nd_pers = " ".join(last_answer.content_tokenized)
         return last_answer

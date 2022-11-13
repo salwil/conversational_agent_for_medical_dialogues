@@ -48,5 +48,13 @@ class QuestionGenerationRulesTest(unittest.TestCase):
         pronouns_replaced = question_generation_rules.replace_pronouns(answer)
         self.assertEqual("When you 're at home , your health gets better .", pronouns_replaced.content_in_2nd_pers)
         self.assertEqual("When I'm at home, my health gets better.", pronouns_replaced.content)
+        answer = Answer("I often have headache.", 1)
+        pronouns_replaced = question_generation_rules.replace_pronouns(answer)
+        self.assertEqual("you often have headache .", pronouns_replaced.content_in_2nd_pers)
+        self.assertEqual("I often have headache.", pronouns_replaced.content)
+        answer = Answer("I often have headache. Sometimes I also have jaw tension. Especially during the night.", 1)
+        pronouns_replaced = question_generation_rules.replace_pronouns(answer)
+        self.assertEqual("you often have headache . Sometimes you also have jaw tension . Especially during the night .", pronouns_replaced.content_in_2nd_pers)
+        self.assertEqual("I often have headache. Sometimes I also have jaw tension. Especially during the night.", pronouns_replaced.content)
 
 
