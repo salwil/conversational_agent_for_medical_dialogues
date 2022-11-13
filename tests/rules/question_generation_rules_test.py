@@ -39,6 +39,14 @@ class QuestionGenerationRulesTest(unittest.TestCase):
     def test_replace_pronouns(self):
         preprocessor = Preprocessor(EnglishLemmatizer(nlp), nlp)
         question_generation_rules = QuestionGenerationRules(preprocessor, nlp)
-        answer = Answer("When I am at home I feel better.", 0)
-        question_generation_rules.replace_pronouns(answer)
+        answer = Answer("When I am at home I feel better.", 1)
+        pronouns_replaced = question_generation_rules.replace_pronouns(answer)
+        self.assertEqual('When you are at home you feel better .', pronouns_replaced.content_in_2nd_pers)
+        # assert that original content is still there
+        self.assertEqual("When I am at home I feel better.", pronouns_replaced.content)
+        answer = Answer("When I'm at home, my health gets better.", 1)
+        pronouns_replaced = question_generation_rules.replace_pronouns(answer)
+        self.assertEqual("When you 're at home , your health gets better .", pronouns_replaced.content_in_2nd_pers)
+        self.assertEqual("When I'm at home, my health gets better.", pronouns_replaced.content)
+
 

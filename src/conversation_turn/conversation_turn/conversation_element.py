@@ -18,7 +18,6 @@ from enum import Enum
 
 from conversation_turn.conversation_turn.topic import Topic
 
-
 @dataclass
 class ConversationElement:
     content: str

@@ -38,7 +38,7 @@ class QuestionGenerationRules:
         doc = self.nlp(last_answer.content)
         self.preprocessor.preprocess(last_answer, ['tokenize'])
         index = 0
-        forms = {'am': 'are', 'i': 'you', 'mine': 'yours', 'me': 'you', 'my': 'your', 'm': 're'}  # More?
+        forms = {'am': 'are', 'i': 'you', 'mine': 'yours', 'me': 'you', 'my': 'your', "'m": "'re"}  # More?
         for token in doc:
             if len(token.morph.get("PronType")) > 0 and token.morph.get("Person") == ['1'] or \
                     len(token.morph.get("VerbForm")) > 0 and token.morph.get("Mood") == ['Ind']:
