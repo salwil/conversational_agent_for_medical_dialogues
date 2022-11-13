@@ -26,11 +26,11 @@ from nltk.tokenize import word_tokenize, RegexpTokenizer
 from src.conversation_turn.conversation_turn.conversation_element import ConversationElement
 
 class Preprocessor:
-    def __init__(self, lemmatizer):
+    def __init__(self, lemmatizer=None, nlp=None):
         self.data_record = None
         # if tokenization is required, the values of every column (small texts) are tokenized,
         # meaning word, punctuation separation
-
+        self.nlp = nlp
         #Preprocessing Steps
         self.tokenized = False
         self.remove_punctuation = False
@@ -64,7 +64,13 @@ class Preprocessor:
         self.data_record.content_preprocessed = data_record_lemmatized
 
     def tokenize(self):
-        self.data_record.content_tokenized = word_tokenize(self.data_record.content_preprocessed)
+        try:
+            self.data_record.content_tokenized = word_tokenize(self.data_record.content_preprocessed)
+        # in case no other preprocessing step has been done so far, ConversationElement has no attribute
+        # content_preprocessed, but only content
+        except AttributeError:
+            self.data_record.content_tokenized = word_tokenize(self.data_record.content)
+
 
     # Note: if we apply this method, values of date / time attributes will be hardly readable
     # CR/LF are also removed with this method

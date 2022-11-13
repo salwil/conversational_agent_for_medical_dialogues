@@ -30,6 +30,7 @@ class ConversationElement:
 class Answer(ConversationElement):
     # when instantiating an oject of answers, the preprocessed content has to be provided already:
     # content_preprocessed: list
+    content_in_2nd_pers: str = field(init=False, repr = False)
     relevance: float = field(init=False, repr=False)
     topic: Topic = field(init=False, repr=False)
 

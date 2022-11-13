@@ -39,9 +39,9 @@ class GermanLemmatizer(Lemmatizer):
 
 class EnglishLemmatizer(Lemmatizer):
 
-    def __init__(self):
+    def __init__(self, nlp):
         try:
-            self.nlp = spacy.load('en_core_web_sm')
+            self.nlp = nlp
         except(IOError):
             traceback.print_exc()
             sys.exit("Have you downloaded en_core_web_sm to your environment?")

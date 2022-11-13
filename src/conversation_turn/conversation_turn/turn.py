@@ -14,7 +14,7 @@ Institute for Computational Linguistics
 
 """
 from src.conversation.conversation.conversation import Conversation
-from src.conversation_turn.conversation_turn.conversation_element import Answer, Question
+from src.conversation_turn.conversation_turn.conversation_element import Answer, Question, QuestionType
 
 
 class ConversationTurn:
@@ -28,6 +28,8 @@ class ConversationTurn:
         self.answer: Answer = None
         self.question: Question = None
         self.conversation = conversation
+        self.preprocessor = conversation.preprocessor
+        self.nlp = conversation.nlp
 
     def process_question_and_answer_for_patient_profile(self, question: str):
         """
@@ -52,10 +54,11 @@ class ConversationTurn:
         Creates an answer object and stores it in the corresponding repository
         :return:
         """
-        self.answer = self\
-            .conversation\
+        self.answer = Answer(self.patient_input, 1)
+        self.conversation.preprocessor.preprocess(self.answer, self.conversation.preprocessing_parameters)
+        self.conversation\
             .data_loader\
-            .create_and_store_conversation_element('answer_repo', self.patient_input)
+            .store_conversation_element('answer_repo', self.answer)
 
     def __create_question_object_and_store(self):
         """
@@ -63,16 +66,17 @@ class ConversationTurn:
         :param text: question content (original generated question, not preprocessed)
         :return:
         """
-        self.question = self\
-            .conversation\
+        self.question = Question(self.generated_question, 1, QuestionType.GENERATED)
+        self.conversation.preprocessor.preprocess(self.question, self.conversation.preprocessing_parameters)
+        self.conversation\
             .data_loader\
-            .create_and_store_conversation_element('question_repo', self.generated_question)
+            .store_conversation_element('question_repo', self.question)
 
     def __predict_mental_state(self):
         self.mental_state = self.conversation.sentiment_detector.predict_mental_state(self.patient_input)
 
     def __generate_question(self):
-        self.generated_question = self.conversation.question_generator.generate(self.patient_input)
+        self.generated_question = self.conversation.question_generator.generate(self.answer)
 
     def __german_to_english(self, text):
         self.conversation.translator_de_en.translate(text)

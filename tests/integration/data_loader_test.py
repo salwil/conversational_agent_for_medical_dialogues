@@ -1,20 +1,26 @@
 import unittest
 
+import en_core_web_sm
+
 from src.preprocess.preprocess.lemmatize import EnglishLemmatizer
 from src.preprocess.preprocess.preprocess import Preprocessor
 from src.repository.repository.load_data_into_repo import DataLoader, Repository, MentalStates
-from src.conversation_turn.conversation_turn.conversation_element import Question, PredefinedQuestion, QuestionType
+from src.conversation_turn.conversation_turn.conversation_element import Question, PredefinedQuestion, QuestionType, \
+    Answer
 from src.conversation_turn.conversation_turn.topic import Topic
+
+# load computation-intensive classes only once
+preprocessing_parameters = ['lemmatize', 'tokenize', 'remove_punctuation', 'remove_stopwords']
+nlp = en_core_web_sm.load()
+lemmatizer = EnglishLemmatizer(nlp)
+preprocessor = Preprocessor(lemmatizer, nlp)
 
 
 class ConversationElementTest(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.preprocessing_parameters = ['lemmatize', 'tokenize', 'remove_punctuation', 'remove_stopwords']
-        self.lemmatizer = EnglishLemmatizer()
-        self.preprocessor = Preprocessor(self.lemmatizer)
-        self.data_loader = DataLoader(preprocessing_parameters=self.preprocessing_parameters,
-                                      preprocessor=self.preprocessor)
+        self.data_loader = DataLoader(preprocessing_parameters=preprocessing_parameters,
+                                 preprocessor=preprocessor)
 
     def test_data_loader_profile_question(self):
         # Note: this test only works as long as the Question 'How do you feel today?' is available
@@ -61,9 +67,10 @@ class ConversationElementTest(unittest.TestCase):
             self.data_loader.load_data_into_repository(Repository.ANSWERS)
 
     def test_data_loader_store_answers(self):
-        answer = "I have jaw pain."
+        answer = Answer("I have jaw pain.", 1)
+        answer.content_preprocessed = "jaw pain"
         ar = self.data_loader.answer_repo
-        self.data_loader.create_and_store_conversation_element('answer_repo', answer)
+        self.data_loader.store_conversation_element('answer_repo', answer)
         stored_answers = ar.answers
         self.assertEqual(1, len(stored_answers))
         self.assertTrue('jaw pain' in stored_answers)
@@ -71,9 +78,10 @@ class ConversationElementTest(unittest.TestCase):
         self.assertEqual(stored_answers['jaw pain'].number_of_usage, 1)
 
     def test_data_loader_store_generated_question(self):
-        question = "When do you have headache?"
+        question = Question("When do you have headache?", 1, QuestionType.GENERATED)
+        question.content_preprocessed = "headache"
         qr = self.data_loader.generated_question_repo
-        self.data_loader.create_and_store_conversation_element('question_repo', question)
+        self.data_loader.store_conversation_element('question_repo', question)
         stored_questions = qr.questions
         print(stored_questions)
         self.assertEqual(1, len(stored_questions))

@@ -21,6 +21,7 @@ from src.conversation_turn.conversation_turn.turn import ConversationTurn
 
 def main():
     conversation = Conversation()
+    conversation.load_nlp()
     conversation.load_repositories()
     conversation.load_models()
     maintain_conversation(conversation)

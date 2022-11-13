@@ -82,17 +82,13 @@ class DataLoader:
             warnings.warn('There is no data to load for this repository: ' + repository.value, ResourceWarning)
 
     # store data (e.g. from user input) in repository
-    def create_and_store_conversation_element(self, repository: str, data: str) -> ConversationElement or None:
+    def store_conversation_element(self, repository: str, conversation_element: Answer or Question):
         if repository == Repository.ANSWERS.value:
-            a = Answer(data, 1)
-            self.preprocessor.preprocess(a, self.preprocessing_parameters)
-            self.answer_repo.answers[a.content_preprocessed] = a
-            return a
+            #a = Answer(data, 1)
+            #self.preprocessor.preprocess(a, self.preprocessing_parameters)
+            self.answer_repo.answers[conversation_element.content_preprocessed] = conversation_element
         elif repository == Repository.QUESTIONS.value:
-            q = Question(data, 1, QuestionType.GENERATED)
-            self.preprocessor.preprocess(q, self.preprocessing_parameters)
-            self.generated_question_repo.questions[q.content_preprocessed] = q
-            return q
+            self.generated_question_repo.questions[conversation_element.content_preprocessed] = conversation_element
         else:
             warnings.warn('Repository: ' + repository + ' is not foreseen to store values other than from file.',
                           ResourceWarning)

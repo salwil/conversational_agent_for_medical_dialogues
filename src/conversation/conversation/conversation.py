@@ -13,6 +13,11 @@ Institute for Computational Linguistics
 - Class for maintaining conversation with patient
 
 """
+import sys
+import traceback
+
+import en_core_web_sm
+
 from src.model.model.translation import TranslatorDeEn, TranslatorEnDe
 from src.model.model.sentiment_detection import SentimentDetector
 from src.model.model.question_generation import QuestionGenerator
@@ -25,10 +30,14 @@ from src.preprocess.preprocess.preprocess import Preprocessor
 
 class Conversation:
     def __init__(self):
-        self.english_lemmatizer = EnglishLemmatizer()
-        # preprocessing parameters are maintained centrally, to ensure the same are used for both questions and answers
         self.preprocessing_parameters = ['lemmatize', 'tokenize', 'remove_punctuation', 'remove_stopwords']
-        self.preprocessor = Preprocessor(lemmatizer=self.english_lemmatizer)
+        try:
+            self.nlp = en_core_web_sm.load()
+        except(IOError):
+            traceback.print_exc()
+            sys.exit("Have you downloaded en_core_web_sm to your environment?")
+        self.english_lemmatizer = EnglishLemmatizer(self.nlp)
+        self.preprocessor = Preprocessor(lemmatizer=self.english_lemmatizer, nlp=self.nlp)
         # lemmatizer is needed when loading questions (original and preprocessed format) from file into repository
         self.data_loader = DataLoader(self.preprocessing_parameters, self.preprocessor)
         self.translator_de_en: TranslatorDeEn = None
@@ -43,12 +52,13 @@ class Conversation:
         self.data_loader.load_data_into_repository(Repository.TOPICS)
         self.data_loader.load_data_into_repository(Repository.MENTALSTATES)
 
+
     def load_models(self):
         self.translator_de_en = TranslatorDeEn()
         self.translator_en_de = TranslatorEnDe()
         self.sentiment_detector = SentimentDetector([mental_state
                                                      for mental_state in self.data_loader.mental_state_repo])
-        self.question_generator = QuestionGenerator()
+        self.question_generator = QuestionGenerator(self.preprocessor, self.nlp)
 
     def ask_questions_for_patient_instantiation(self):
         for question in self.data_loader.profile_question_repo.questions:
