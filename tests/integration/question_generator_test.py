@@ -4,6 +4,8 @@ from unittest.mock import patch, MagicMock
 import en_core_web_sm
 
 from conversation_turn.conversation_turn.conversation_element import Answer
+from rules.rules.interrogative_pronouns import Position
+from rules.rules.question_generation_rules import QuestionGenerationRules
 from src.model.model.question_generation import QuestionGenerator
 
 # load computation-intensive classes only once
@@ -13,89 +15,151 @@ class QuestionGenerationTest(unittest.TestCase):
     """
     This test class demonstrates how the defined triggers perfectly work for generating a question starting with the
     desired interrogative pronoun.
-    Note that the private __generate_highlight method is not controllable as it generates the highlight on a random
-    base. Therefore, the return value of this method is mocked: we rely on a highlight that is always the same for
-    making valuable assertions on the interrogative pronoun.
+    Note that the we mock the interrogative pronoun, because in the real method it's chosen on a random base what would
+    make it impossible to make meaningful assertions.
+    Consequently THIS TEST DOES NOT TEST THE SELECTION OF THE INTERROGATIVE PRONOUN, but the method is tested in
+    question_generation_rules_test.py
     """
 
     def setUp(self) -> None:
         # the preprocessor is needed for pronoun replacement only, but this is tested in question_generation_rules and
         # therefore we mock the preprocessor (and also the pronoun replacement method in the below tests)
         self.preprocessor = MagicMock()
-        self.question_generator = QuestionGenerator(self.preprocessor, nlp)
 
     def test_generate_why_question(self):
-        answer = Answer("In the night I can't sleep ", 0)
-        hl = "[HL]because ... [HL]."
-        with patch.object(self.question_generator, '_QuestionGenerator__generate_highlight', return_value=answer.content + hl)\
-                as __generate_highlight:
-            # no need for replacing the pronoun for these tests, it's only performance overhead
-            with patch.object(self.question_generator, '_QuestionGenerator__replace_pronouns_first_person'):
-                self.assertTrue(self.question_generator.generate(answer).startswith("Why"))
+        answer = Answer("In the night I can't sleep ", 1)
+        answer.content_in_2nd_pers = "In the night you can't sleep"
+        question_generator = QuestionGenerator(answer, self.preprocessor, nlp)
+        hl = "[HL] because [HL]."
+        with patch.object(QuestionGenerationRules,
+                          '_QuestionGenerationRules__select_interrogative_pronoun_for_next_question',
+                          return_value="why")\
+                as __select_interrogative_pronoun_for_next_question:
+            # we set the content in 2nd person manually (above) and patch the below method as we only have a mocked
+            # preprocessor (the tokenization method call would not work)
+            with patch.object(QuestionGenerationRules, 'create_2nd_person_sentence_from_1st_person'):
+                self.assertTrue(question_generator.generate().startswith("Why"))
+                self.assertTrue(hl in answer.content_with_hl)
 
     def test_generate_when_question(self):
-        answer = "I often have ear pain, "
-        hl = "[HL]during ... [HL]."
-        with patch.object(self.question_generator, '_QuestionGenerator__generate_highlight', return_value=answer + hl)\
-                as __generate_highlight:
-            with patch.object(self.question_generator, '_QuestionGenerator__replace_pronouns_first_person'):
-                self.assertTrue(self.question_generator.generate(answer).startswith("When"))
+        answer = Answer("I often have ear pain, ", 1)
+        answer.content_in_2nd_pers = "You often have ear pain"
+        question_generator = QuestionGenerator(answer, self.preprocessor, nlp)
+        hl = "[HL] during [HL]."
+        with patch.object(QuestionGenerationRules,
+                          '_QuestionGenerationRules__select_interrogative_pronoun_for_next_question',
+                          return_value="when")\
+                as __select_interrogative_pronoun_for_next_question:
+            # we set the content in 2nd person manually (above) and patch the below method as we only have a mocked
+            # preprocessor (the tokenization method call would not work)
+            with patch.object(QuestionGenerationRules, 'create_2nd_person_sentence_from_1st_person'):
+                self.assertTrue(question_generator.generate().startswith("When"))
+                self.assertTrue(hl in answer.content_with_hl)
 
     def test_generate_where_question(self):
-        answer = "I often have pain, "
-        hl = "[HL]in London ... [HL]."
-        with patch.object(self.question_generator, '_QuestionGenerator__generate_highlight', return_value=answer + hl)\
-                as __generate_highlight:
-            with patch.object(self.question_generator, '_QuestionGenerator__replace_pronouns_first_person'):
-                self.assertTrue(self.question_generator.generate(answer).startswith("Where"))
+        answer = Answer("I often have pain, ", 1)
+        answer.content_in_2nd_pers = "You often have pain, "
+        question_generator = QuestionGenerator(answer, self.preprocessor, nlp)
+        hl = "[HL] at the University Hospital [HL]."
+        with patch.object(QuestionGenerationRules,
+                          '_QuestionGenerationRules__select_interrogative_pronoun_for_next_question',
+                          return_value="where")\
+                as __select_interrogative_pronoun_for_next_question:
+            # we set the content in 2nd person manually (above) and patch the below method as we only have a mocked
+            # preprocessor (the tokenization method call would not work)
+            with patch.object(QuestionGenerationRules, 'create_2nd_person_sentence_from_1st_person'):
+                self.assertTrue(question_generator.generate().startswith("Where"))
+                self.assertTrue(hl in answer.content_with_hl)
 
     def test_generate_how_question(self):
-        answer = "I often have pain, "
-        hl = "[HL] in form of ... [HL]."
-        with patch.object(self.question_generator, '_QuestionGenerator__generate_highlight', return_value=answer + hl)\
-                as __generate_highlight:
-            with patch.object(self.question_generator, '_QuestionGenerator__replace_pronouns_first_person'):
-                self.assertTrue(self.question_generator.generate(answer).startswith("How"))
+        answer = Answer("I often have pain, ", 1)
+        answer.content_in_2nd_pers = "You often have pain"
+        question_generator = QuestionGenerator(answer, self.preprocessor, nlp)
+        hl = "[HL] in form of [HL]."
+        with patch.object(QuestionGenerationRules,
+                          '_QuestionGenerationRules__select_interrogative_pronoun_for_next_question',
+                          return_value="how")\
+                as __select_interrogative_pronoun_for_next_question:
+            # we set the content in 2nd person manually (above) and patch the below method as we only have a mocked
+            # preprocessor (the tokenization method call would not work)
+            with patch.object(QuestionGenerationRules, 'create_2nd_person_sentence_from_1st_person'):
+                self.assertTrue(question_generator.generate().startswith("How"))
+                self.assertTrue(hl in answer.content_with_hl)
 
     def test_generate_who_question(self):
-        answer = " says that I have to stay in bed."
-        hl = "[HL] Dr. Peter Muller [HL]"
-        with patch.object(self.question_generator, '_QuestionGenerator__generate_highlight', return_value=hl + answer)\
-                as __generate_highlight:
-            with patch.object(self.question_generator, '_QuestionGenerator__replace_pronouns_first_person'):
-                self.assertTrue(self.question_generator.generate(answer).startswith("Who"))
+        answer = Answer(" says that I have to stay in bed.", 1)
+        answer.content_in_2nd_pers = "says that you have to stay in bed."
+        question_generator = QuestionGenerator(answer, self.preprocessor, nlp)
+        hl = "[HL] Your Doctor [HL]"
+        with patch.object(QuestionGenerationRules,
+                          '_QuestionGenerationRules__select_interrogative_pronoun_for_next_question',
+                          return_value="who")\
+                as __select_interrogative_pronoun_for_next_question:
+            # we set the content in 2nd person manually (above) and patch the below method as we only have a mocked
+            # preprocessor (the tokenization method call would not work)
+            with patch.object(QuestionGenerationRules, 'create_2nd_person_sentence_from_1st_person'):
+                self.assertTrue(question_generator.generate().startswith("Who"))
+                self.assertTrue(hl in answer.content_with_hl)
 
     def test_generate_what_question(self):
-        answer = " hurts when I eat food."
-        hl = "[HL] My jaw [HL]"
-        with patch.object(self.question_generator, '_QuestionGenerator__generate_highlight', return_value=hl + answer)\
-                as __generate_highlight:
-            with patch.object(self.question_generator, '_QuestionGenerator__replace_pronouns_first_person'):
-                self.assertTrue(self.question_generator.generate(answer).startswith("What"))
+        answer = Answer(" hurts when I eat food.", 1)
+        answer.content_in_2nd_pers = " hurts when you eat food"
+        question_generator = QuestionGenerator(answer, self.preprocessor, nlp)
+        hl = "[HL] Your jaw [HL]"
+        with patch.object(QuestionGenerationRules,
+                          '_QuestionGenerationRules__select_interrogative_pronoun_for_next_question',
+                          return_value="what")\
+                as __select_interrogative_pronoun_for_next_question:
+            # we set the content in 2nd person manually (above) and patch the below method as we only have a mocked
+            # preprocessor (the tokenization method call would not work)
+            with patch.object(QuestionGenerationRules, 'create_2nd_person_sentence_from_1st_person'):
+                self.assertTrue(question_generator.generate().startswith("What"))
+                self.assertTrue(hl in answer.content_with_hl)
 
-    def test_generate_since_question(self):
-        answer = " my jaw hurts when I eat food."
-        hl = "[HL] Since one year [HL]"
-        with patch.object(self.question_generator, '_QuestionGenerator__generate_highlight', return_value=hl + answer)\
-                as __generate_highlight:
-            with patch.object(self.question_generator, '_QuestionGenerator__replace_pronouns_first_person'):
-                self.assertTrue('since' in self.question_generator.generate(answer))
+    def test_generate_how_long_question(self):
+        answer = Answer(" my jaw hurts when I eat food.", 1)
+        answer.content_in_2nd_pers = " your jaw hurts when you eat food"
+        question_generator = QuestionGenerator(answer, self.preprocessor, nlp)
+        hl = "[HL] since one year [HL]"
+        with patch.object(QuestionGenerationRules,
+                          '_QuestionGenerationRules__select_interrogative_pronoun_for_next_question',
+                          return_value="since")\
+                as __select_interrogative_pronoun_for_next_question:
+            # we set the content in 2nd person manually (above) and patch the below method as we only have a mocked
+            # preprocessor (the tokenization method call would not work)
+            with patch.object(QuestionGenerationRules, 'create_2nd_person_sentence_from_1st_person'):
+                self.assertTrue(question_generator.generate().startswith('How long'))
+                self.assertTrue(hl in answer.content_with_hl)
 
     def test_generate_how_often_question(self):
-        answer = " my jaw hurts."
-        hl = "[HL] Once a day [HL]"
-        with patch.object(self.question_generator, '_QuestionGenerator__generate_highlight', return_value=hl + answer)\
-                as __generate_highlight:
-            with patch.object(self.question_generator, '_QuestionGenerator__replace_pronouns_first_person'):
-                self.assertTrue(self.question_generator.generate(answer).startswith("How often"))
+        answer = Answer(" my jaw hurts.", 1)
+        answer.content_in_2nd_pers = " your jaw hurts"
+        question_generator = QuestionGenerator(answer, self.preprocessor, nlp)
+        hl = "[HL] once a day [HL]"
+        with patch.object(QuestionGenerationRules,
+                          '_QuestionGenerationRules__select_interrogative_pronoun_for_next_question',
+                          return_value="how often")\
+                as __select_interrogative_pronoun_for_next_question:
+            # we set the content in 2nd person manually (above) and patch the below method as we only have a mocked
+            # preprocessor (the tokenization method call would not work)
+            with patch.object(QuestionGenerationRules, 'create_2nd_person_sentence_from_1st_person'):
+                self.assertTrue(question_generator.generate().startswith('How often'))
+                self.assertTrue(hl in answer.content_with_hl)
 
     def test_generate_how_m_question(self):
-        answer = " my teeth hurt."
+        answer = Answer(" my teeth hurt.", 1)
+        answer.content_in_2nd_pers = " your teeth hurt"
+        question_generator = QuestionGenerator(answer, self.preprocessor, nlp)
         hl = "[HL] 5 of [HL]"
-        with patch.object(self.question_generator, '_QuestionGenerator__generate_highlight', return_value=hl + answer)\
-                as __generate_highlight:
-            with patch.object(self.question_generator, '_QuestionGenerator__replace_pronouns_first_person'):
-                self.assertTrue(self.question_generator.generate(answer).startswith("How m"))
+        with patch.object(QuestionGenerationRules,
+                          '_QuestionGenerationRules__select_interrogative_pronoun_for_next_question',
+                          return_value="how many")\
+                as __select_interrogative_pronoun_for_next_question:
+            # we set the content in 2nd person manually (above) and patch the below method as we only have a mocked
+            # preprocessor (the tokenization method call would not work)
+            with patch.object(QuestionGenerationRules, 'create_2nd_person_sentence_from_1st_person'):
+                self.assertTrue(question_generator.generate().startswith('How m'))
+                self.assertTrue(hl in answer.content_with_hl)
 
     # open: whom, whose, which
     # Note: When sentence is very short (e.g. [HL] My jaw [HL] hurts.) the highlighted part may not be "strong" enough

@@ -45,13 +45,13 @@ class InterrogativePronoun():
     interrogative_pronouns_with_trigger = {
         'why': ('because', Position.EOS),
         'when': ('during', Position.EOS),
-        'where': ('in London', Position.EOS),
-        'what': ('My jaw', Position.BOS),
-        'who': ('My Doctor', Position.BOS),
+        'where': ('at the University Hospital', Position.EOS),
+        'what': ('Your jaw', Position.BOS),
+        'who': ('Your Doctor', Position.BOS),
         'how': ('in form of', Position.EOS),
         'how often': ('once a day', Position.BOS),
         'how many': ('5 of', Position.BOS),
-        'since': ('Since one year', Position.BOS)
+        'since': ('since one year', Position.EOS)
     }
 
     ne_type_for_interrogative_pronouns = {

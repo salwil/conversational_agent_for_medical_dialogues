@@ -24,27 +24,32 @@ from rules.rules.question_generation_rules import QuestionGenerationRules
 
 
 class QuestionGenerator:
-    def __init__(self, preprocessor: Preprocessor, nlp):
+    def __init__(self, answer: Answer, preprocessor: Preprocessor, nlp):
         self.tokenizer = AutoTokenizer.from_pretrained('p208p2002/bart-squad-qg-hl')
         self.model = AutoModelForSeq2SeqLM.from_pretrained('p208p2002/bart-squad-qg-hl')
-        self.rules = QuestionGenerationRules(preprocessor, nlp)
+        self.answer = answer
+        self.rules = QuestionGenerationRules(answer, preprocessor, nlp)
 
-    def generate(self, answer: Answer):
-        answer_with_replaced_pronouns = self.__replace_pronouns_first_person(answer)
-        answer_with_hl = self.__generate_highlight(answer_with_replaced_pronouns)
-        input_ids = self.tokenizer.encode(answer_with_hl)
+    def generate(self):
+        #answer_with_replaced_pronouns = self.__replace_pronouns_first_person(answer)
+        #self.__replace_pronouns_first_person()
+        #self.__generate_highlight()
+        self.rules.create_2nd_person_sentence_from_1st_person()
+        self.rules.generate_highlight()
+        input_ids = self.tokenizer.encode(self.answer.content_with_hl)
         question_ids = self.model.generate(torch.tensor([input_ids]))
         decode = self.tokenizer.decode(question_ids.squeeze().tolist(), skip_special_tokens=True)
         return decode
 
-    # this method has to remain public because it is mocked in question_generator_test
-    def __generate_highlight(self, text: str):
-        trigger = self.rules.generate_highlight(text)
+"""
+    def __generate_highlight(self):
+        trigger = self.rules.generate_highlight()
         if trigger[1] is Position.BOS:
-            return  text + '[HL] ' + trigger[0] + ' [HL]'
+            self.answer.content_with_hl = self.answer.content_in_2nd_pers + '[HL] ' + trigger[0] + ' [HL]'
         else:
-            return '[HL] ' + trigger[0] + ' [HL]' + text
+            self.answer.content_with_hl = '[HL] ' + trigger[0] + ' [HL]' + self.answer.content_in_2nd_pers
 
-    def __replace_pronouns_first_person(self, answer: Answer):
-        return self.rules.replace_pronouns(answer)
+    def __replace_pronouns_first_person(self):
+        self.rules.replace_pronouns()
+        """
 

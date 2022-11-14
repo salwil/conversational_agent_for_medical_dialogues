@@ -19,43 +19,46 @@ import en_core_web_sm
 
 from conversation_turn.conversation_turn.conversation_element import Answer
 from preprocess.preprocess.preprocess import Preprocessor
-from rules.rules.interrogative_pronouns import InterrogativePronoun
+from rules.rules.interrogative_pronouns import InterrogativePronoun, Position
+
 
 class QuestionGenerationRules:
-    def __init__(self, preprocessor: Preprocessor, nlp):
+    def __init__(self, answer: Answer, preprocessor: Preprocessor, nlp):
         self.interrogative_pronouns = InterrogativePronoun()
         self.found_named_entities = None
         # class variable only for test purposes
         self.allowed_pronouns = None
+        self.answer = answer
         self.preprocessor = preprocessor
         self.nlp = nlp
 
-    def generate_highlight(self, last_answer) -> str:
-        pronoun = self.__select_interrogative_pronoun_for_next_question(last_answer)
-        return self.interrogative_pronouns.interrogative_pronouns_with_trigger[pronoun]
+    def generate_highlight(self) -> str:
+        pronoun = self.__select_interrogative_pronoun_for_next_question()
+        trigger = self.interrogative_pronouns.interrogative_pronouns_with_trigger[pronoun]
+        if trigger[1] is Position.BOS:
+            self.answer.content_with_hl = '[HL] ' + trigger[0] + ' [HL] ' + self.answer.content_in_2nd_pers
+        else:
+            self.answer.content_with_hl = self.answer.content_in_2nd_pers + ' [HL] ' + trigger[0] + ' [HL].'
 
-    def replace_pronouns(self, last_answer: Answer) -> Answer:
-        doc = self.nlp(last_answer.content)
-        self.preprocessor.preprocess(last_answer, ['tokenize'])
-        print("Tokenized content: ")
-        print(last_answer.content_tokenized)
+
+    def create_2nd_person_sentence_from_1st_person(self) -> None:
+        doc = self.nlp(self.answer.content)
+        self.preprocessor.preprocess(self.answer, ['tokenize'])
         index = 0
         forms = {'am': 'are', 'i': 'you', 'mine': 'yours', 'me': 'you', 'my': 'your', "'m": "'re"}  # More?
         for token in doc:
             if len(token.morph.get("PronType")) > 0 and token.morph.get("Person") == ['1'] or \
                     len(token.morph.get("VerbForm")) > 0 and token.morph.get("Mood") == ['Ind']:
-                pronoun = last_answer.content_tokenized[index].lower()
+                pronoun = self.answer.content_tokenized[index].lower()
                 try:
-                    last_answer.content_tokenized[index] = forms[pronoun]
+                    self.answer.content_tokenized[index] = forms[pronoun]
                 except KeyError:
                     # the verb 'have' for example can remain as is
                     pass
-            print(index)
             index += 1
-        last_answer.content_in_2nd_pers = " ".join(last_answer.content_tokenized)
-        return last_answer
+        self.answer.content_in_2nd_pers = " ".join(self.answer.content_tokenized)
 
-    def __determine_sentence_ne(self, text):
+    def __determine_sentence_ne(self, text: str) -> None:
         doc = self.nlp(text)
         named_entity_types = self.interrogative_pronouns.ne_type_for_interrogative_pronouns
         found_entities = []
@@ -66,8 +69,8 @@ class QuestionGenerationRules:
             self.found_named_entities = found_entities
         print(self.found_named_entities)
 
-    def __select_interrogative_pronoun_for_next_question(self, last_answer: str) -> str:
-        self.__determine_sentence_ne(last_answer)
+    def __select_interrogative_pronoun_for_next_question(self) -> str:
+        self.__determine_sentence_ne(self.answer.content)
         if self.found_named_entities is None:
             # all pronouns allowed
             self.allowed_pronouns = [p for p in self.interrogative_pronouns.interrogative_pronouns_with_trigger.keys()]
