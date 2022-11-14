@@ -55,6 +55,8 @@ class ConversationTurn:
         :return:
         """
         self.answer = Answer(self.patient_input, 1)
+        # as soon as we have created the answer object, we have to update the QuestionGenerator object with it
+        self.conversation.question_generator.set_answer(self.answer)
         self.conversation.preprocessor.preprocess(self.answer, self.conversation.preprocessing_parameters)
         self.conversation\
             .data_loader\
@@ -76,7 +78,7 @@ class ConversationTurn:
         self.mental_state = self.conversation.sentiment_detector.predict_mental_state(self.patient_input)
 
     def __generate_question(self):
-        self.generated_question = self.conversation.question_generator.generate(self.answer)
+        self.generated_question = self.conversation.question_generator.generate()
 
     def __german_to_english(self, text):
         self.conversation.translator_de_en.translate(text)
