@@ -21,10 +21,11 @@ import warnings
 from enum import Enum
 import sys
 import csv
+
 from src.conversation_turn.conversation_turn.conversation_element \
-    import ConversationElement, Question, PredefinedQuestion, Answer
+    import Question, PredefinedQuestion, Answer, QuestionIntro
 from src.conversation_turn.conversation_turn.topic import Topic
-from .repositories import QuestionType, QuestionRepository, MentalStates, AnswerRepository
+from .repositories import QuestionType, QuestionRepository, AnswerRepository, QuestionIntroRepository
 import src.helpers.helpers.helpers as helpers
 
 
@@ -32,7 +33,7 @@ class Repository(Enum):
     QUESTIONS = 'question_repo'
     ANSWERS = 'answer_repo'
     TOPICS = 'topic_repo'
-    MENTALSTATES = 'mental_state_repo'
+    INTRO = 'question_intro_repo'
 
 class DataLoader:
     def __init__(self, preprocessing_parameters: list, preprocessor=None):
@@ -42,7 +43,7 @@ class DataLoader:
         self.modedetail_question_repo = QuestionRepository(QuestionType.MOREDETAIL, {})
         self.generated_question_repo = QuestionRepository(QuestionType.GENERATED, {})
         self.topic_repo = {}  # fuer spaeter ev: = TopicRepository({}), aber ev. overengineered
-        self.mental_state_repo = None
+        self.question_intro_repo = QuestionIntroRepository({})
         self.answer_repo = AnswerRepository({})
         self.path = helpers.get_project_path() + '/src/repository/data/'
         self.preprocessing_parameters = preprocessing_parameters
@@ -75,9 +76,17 @@ class DataLoader:
                     t = Topic(topic_number, keyword_list_clean, 0.0)
                     self.topic_repo[topic_number] = t
                     topic_number += 1
-        elif repository is Repository.MENTALSTATES:
-            self.mental_state_repo = MentalStates
-            print(self.mental_state_repo)
+        elif repository is Repository.INTRO:
+            with open(self.path + 'mental_states_with_intros.csv') as mental_states_file:
+                mental_states_reader = csv.reader(mental_states_file, delimiter='\t', quotechar='"')
+                for mental_state in mental_states_reader:
+                    i = QuestionIntro(mental_state[1], 0, mental_state[2], mental_state[0])
+                    if mental_state[0] in self.question_intro_repo.mental_states:
+                        self.question_intro_repo.mental_states[mental_state[0]].append(i)
+                    else:
+                        self.question_intro_repo.mental_states[mental_state[0]] = [i]
+            #self.mental_state_repo = MentalStates
+            #print(self.mental_state_repo)
         else:
             warnings.warn('There is no data to load for this repository: ' + repository.value, ResourceWarning)
 

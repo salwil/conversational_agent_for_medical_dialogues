@@ -16,6 +16,7 @@ Institute for Computational Linguistics
 from dataclasses import dataclass, field
 from enum import Enum
 
+from conversation_turn.conversation_turn.mental_state import MentalState
 from conversation_turn.conversation_turn.topic import Topic
 
 @dataclass
@@ -34,10 +35,11 @@ class Answer(ConversationElement):
     relevance: float = field(init=False, repr=False)
     topic: Topic = field(init=False, repr=False)
 
-class ConversationIntro(ConversationElement):
-    def __init__(self):
-        #mental state that asks for this intro
-        self.mental_state = None
+@dataclass
+class QuestionIntro(ConversationElement):
+    content_in_german: str
+    #mental state that asks for this intro
+    mental_state: str
 
 class QuestionType(Enum):
     PROFILE = 'profile'
@@ -45,7 +47,6 @@ class QuestionType(Enum):
     FALLBACK = 'fallback'
     MOREDETAIL = 'moredetail'
     GENERATED = 'generated'
-
 
 @dataclass
 class Question(ConversationElement):
@@ -55,7 +56,7 @@ class Question(ConversationElement):
     question_type: QuestionType
 
     # References to other objects
-    intro: ConversationIntro = field(init = False, repr = False)
+    intro: QuestionIntro = field(init = False, repr = False)
     answer: Answer = field(init = False, repr = False)
     #follow_up_question: Question = field(init = False, repr = False)
 

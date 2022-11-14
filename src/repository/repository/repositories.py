@@ -31,15 +31,7 @@ class AnswerRepository:
 class TopicRepository:
     topics: dict # key: topic number, value: Topic
 
-class MentalStates(Enum):
-    NEUTRAL = 'neutral'  # default
-    SAD = 'sad'
-    HAPPY = 'happy'
-    AFRAID = 'afraid'
-    ANGRY = 'angry'
-    SURPRISED = 'surprised'
-    DISGUSTED = 'discusted'
-    DISAPPOINTED = 'disappointed'
-    DISPAIRED = 'dispaired'
-    ILL = 'ill'
-    CONFUSED = 'confused'
+@dataclass
+class QuestionIntroRepository:
+    # repo contains question intros per mental state
+    mental_states: {}

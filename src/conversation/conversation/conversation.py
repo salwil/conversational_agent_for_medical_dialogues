@@ -50,13 +50,13 @@ class Conversation:
     def load_repositories(self):
         self.data_loader.load_data_into_repository(Repository.QUESTIONS)
         self.data_loader.load_data_into_repository(Repository.TOPICS)
-        self.data_loader.load_data_into_repository(Repository.MENTALSTATES)
+        self.data_loader.load_data_into_repository(Repository.INTRO)
 
     def load_models(self):
         self.translator_de_en = TranslatorDeEn()
         self.translator_en_de = TranslatorEnDe()
         self.sentiment_detector = SentimentDetector([mental_state
-                                                     for mental_state in self.data_loader.mental_state_repo])
+                                                     for mental_state in self.data_loader.question_intro_repo])
         self.question_generator = QuestionGenerator(self.nlp, self.preprocessor, None)
 
     def ask_questions_for_patient_instantiation(self):

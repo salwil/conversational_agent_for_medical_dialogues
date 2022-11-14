@@ -14,13 +14,10 @@ Institute for Computational Linguistics
 
 """
 from enum import Enum
-from src.repository.repository.repositories import MentalStates
 
-class mentalState:
-    def __init__(self, answer: str):
-        self.answer = answer
-        self.mentalState = MentalStates.NEUTRAL
-        self.propability = 0.0
+class MentalState:
+    def __init__(self, mental_state):
+        self.mentalState = mental_state
 
     def determine_mental_state(self):
         # TODO: determine mental state with bart-mnli based on given answer

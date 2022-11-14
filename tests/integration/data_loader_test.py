@@ -4,7 +4,7 @@ import en_core_web_sm
 
 from src.preprocess.preprocess.lemmatize import EnglishLemmatizer
 from src.preprocess.preprocess.preprocess import Preprocessor
-from src.repository.repository.load_data_into_repo import DataLoader, Repository, MentalStates
+from src.repository.repository.load_data_into_repo import DataLoader, Repository
 from src.conversation_turn.conversation_turn.conversation_element import Question, PredefinedQuestion, QuestionType, \
     Answer
 from src.conversation_turn.conversation_turn.topic import Topic
@@ -56,11 +56,11 @@ class ConversationElementTest(unittest.TestCase):
         self.assertEqual(repr(t_exp), repr(tr[1]))
 
     def test_data_loader_mental_states(self):
-        # Note: ms has to be assigned after the loader, else it's None! (don't know why...)
-        self.data_loader.load_data_into_repository(Repository.MENTALSTATES)
-        ms = self.data_loader.mental_state_repo
-        for mental_state in MentalStates:
-            self.assertTrue(mental_state in ms)
+        self.data_loader.load_data_into_repository(Repository.INTRO)
+        ci = self.data_loader.question_intro_repo
+        stored_intros = ci.mental_states
+        self.assertEqual(8, len(ci.mental_states))
+        self.assertTrue('happy' in stored_intros)
 
     def test_data_loader_nothing_to_load(self):
         with self.assertWarns(ResourceWarning):
