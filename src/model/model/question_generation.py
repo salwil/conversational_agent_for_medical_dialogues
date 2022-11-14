@@ -24,11 +24,11 @@ from rules.rules.question_generation_rules import QuestionGenerationRules
 
 
 class QuestionGenerator:
-    def __init__(self, answer: Answer, preprocessor: Preprocessor, nlp):
+    def __init__(self, preprocessor: Preprocessor, nlp, answer: Answer = None):
         self.tokenizer = AutoTokenizer.from_pretrained('p208p2002/bart-squad-qg-hl')
         self.model = AutoModelForSeq2SeqLM.from_pretrained('p208p2002/bart-squad-qg-hl')
         self.answer = answer
-        self.rules = QuestionGenerationRules(answer, preprocessor, nlp)
+        self.rules = QuestionGenerationRules(nlp, preprocessor, answer)
 
     def generate(self):
         #answer_with_replaced_pronouns = self.__replace_pronouns_first_person(answer)
@@ -40,6 +40,13 @@ class QuestionGenerator:
         question_ids = self.model.generate(torch.tensor([input_ids]))
         decode = self.tokenizer.decode(question_ids.squeeze().tolist(), skip_special_tokens=True)
         return decode
+
+    def set_answer(self, answer):
+        # meanwhile the QuestionGeneration object is instantiated once during the conversation lifecycle, this object
+        # as well as the QuestionGenerationRules object have to be updated, for every conversation turn with the new
+        # answer
+        self.answer = answer
+        self.rules.answer = answer
 
 """
     def __generate_highlight(self):

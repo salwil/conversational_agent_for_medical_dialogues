@@ -23,7 +23,7 @@ from rules.rules.interrogative_pronouns import InterrogativePronoun, Position
 
 
 class QuestionGenerationRules:
-    def __init__(self, answer: Answer, preprocessor: Preprocessor, nlp):
+    def __init__(self, preprocessor: Preprocessor, nlp, answer: Answer = None):
         self.interrogative_pronouns = InterrogativePronoun()
         self.found_named_entities = None
         # class variable only for test purposes

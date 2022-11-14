@@ -29,7 +29,7 @@ class QuestionGenerationTest(unittest.TestCase):
     def test_generate_why_question(self):
         answer = Answer("In the night I can't sleep ", 1)
         answer.content_in_2nd_pers = "In the night you can't sleep"
-        question_generator = QuestionGenerator(answer, self.preprocessor, nlp)
+        question_generator = QuestionGenerator(self.preprocessor, nlp, answer)
         hl = "[HL] because [HL]."
         with patch.object(QuestionGenerationRules,
                           '_QuestionGenerationRules__select_interrogative_pronoun_for_next_question',
@@ -44,7 +44,7 @@ class QuestionGenerationTest(unittest.TestCase):
     def test_generate_when_question(self):
         answer = Answer("I often have ear pain, ", 1)
         answer.content_in_2nd_pers = "You often have ear pain"
-        question_generator = QuestionGenerator(answer, self.preprocessor, nlp)
+        question_generator = QuestionGenerator(self.preprocessor, nlp, answer)
         hl = "[HL] during [HL]."
         with patch.object(QuestionGenerationRules,
                           '_QuestionGenerationRules__select_interrogative_pronoun_for_next_question',
@@ -59,7 +59,7 @@ class QuestionGenerationTest(unittest.TestCase):
     def test_generate_where_question(self):
         answer = Answer("I often have pain, ", 1)
         answer.content_in_2nd_pers = "You often have pain, "
-        question_generator = QuestionGenerator(answer, self.preprocessor, nlp)
+        question_generator = QuestionGenerator(self.preprocessor, nlp, answer)
         hl = "[HL] at the University Hospital [HL]."
         with patch.object(QuestionGenerationRules,
                           '_QuestionGenerationRules__select_interrogative_pronoun_for_next_question',
@@ -74,7 +74,7 @@ class QuestionGenerationTest(unittest.TestCase):
     def test_generate_how_question(self):
         answer = Answer("I often have pain, ", 1)
         answer.content_in_2nd_pers = "You often have pain"
-        question_generator = QuestionGenerator(answer, self.preprocessor, nlp)
+        question_generator = QuestionGenerator(self.preprocessor, nlp, answer)
         hl = "[HL] in form of [HL]."
         with patch.object(QuestionGenerationRules,
                           '_QuestionGenerationRules__select_interrogative_pronoun_for_next_question',
@@ -89,7 +89,7 @@ class QuestionGenerationTest(unittest.TestCase):
     def test_generate_who_question(self):
         answer = Answer(" says that I have to stay in bed.", 1)
         answer.content_in_2nd_pers = "says that you have to stay in bed."
-        question_generator = QuestionGenerator(answer, self.preprocessor, nlp)
+        question_generator = QuestionGenerator(self.preprocessor, nlp, answer)
         hl = "[HL] Your Doctor [HL]"
         with patch.object(QuestionGenerationRules,
                           '_QuestionGenerationRules__select_interrogative_pronoun_for_next_question',
@@ -104,7 +104,7 @@ class QuestionGenerationTest(unittest.TestCase):
     def test_generate_what_question(self):
         answer = Answer(" hurts when I eat food.", 1)
         answer.content_in_2nd_pers = " hurts when you eat food"
-        question_generator = QuestionGenerator(answer, self.preprocessor, nlp)
+        question_generator = QuestionGenerator(self.preprocessor, nlp, answer)
         hl = "[HL] Your jaw [HL]"
         with patch.object(QuestionGenerationRules,
                           '_QuestionGenerationRules__select_interrogative_pronoun_for_next_question',
@@ -119,7 +119,7 @@ class QuestionGenerationTest(unittest.TestCase):
     def test_generate_how_long_question(self):
         answer = Answer(" my jaw hurts when I eat food.", 1)
         answer.content_in_2nd_pers = " your jaw hurts when you eat food"
-        question_generator = QuestionGenerator(answer, self.preprocessor, nlp)
+        question_generator = QuestionGenerator(self.preprocessor, nlp, answer)
         hl = "[HL] since one year [HL]"
         with patch.object(QuestionGenerationRules,
                           '_QuestionGenerationRules__select_interrogative_pronoun_for_next_question',
@@ -134,7 +134,7 @@ class QuestionGenerationTest(unittest.TestCase):
     def test_generate_how_often_question(self):
         answer = Answer(" my jaw hurts.", 1)
         answer.content_in_2nd_pers = " your jaw hurts"
-        question_generator = QuestionGenerator(answer, self.preprocessor, nlp)
+        question_generator = QuestionGenerator(self.preprocessor, nlp, answer)
         hl = "[HL] once a day [HL]"
         with patch.object(QuestionGenerationRules,
                           '_QuestionGenerationRules__select_interrogative_pronoun_for_next_question',
@@ -149,7 +149,7 @@ class QuestionGenerationTest(unittest.TestCase):
     def test_generate_how_m_question(self):
         answer = Answer(" my teeth hurt.", 1)
         answer.content_in_2nd_pers = " your teeth hurt"
-        question_generator = QuestionGenerator(answer, self.preprocessor, nlp)
+        question_generator = QuestionGenerator(self.preprocessor, nlp, answer)
         hl = "[HL] 5 of [HL]"
         with patch.object(QuestionGenerationRules,
                           '_QuestionGenerationRules__select_interrogative_pronoun_for_next_question',
