@@ -31,9 +31,13 @@ class QuestionGenerator:
         self.rules = QuestionGenerationRules(nlp, preprocessor, answer)
 
     def generate(self):
-        #answer_with_replaced_pronouns = self.__replace_pronouns_first_person(answer)
-        #self.__replace_pronouns_first_person()
-        #self.__generate_highlight()
+        self.rules.create_2nd_person_sentence_from_1st_person()
+        input_ids = self.tokenizer.encode(self.answer.content_in_2nd_pers)
+        question_ids = self.model.generate(torch.tensor([input_ids]))
+        decode = self.tokenizer.decode(question_ids.squeeze().tolist(), skip_special_tokens=True)
+        return decode
+
+    def generate_with_highlight(self):
         self.rules.create_2nd_person_sentence_from_1st_person()
         self.rules.generate_highlight()
         input_ids = self.tokenizer.encode(self.answer.content_with_hl)

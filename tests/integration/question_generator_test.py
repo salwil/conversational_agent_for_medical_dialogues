@@ -38,7 +38,7 @@ class QuestionGenerationTest(unittest.TestCase):
             # we set the content in 2nd person manually (above) and patch the below method as we only have a mocked
             # preprocessor (the tokenization method call would not work)
             with patch.object(QuestionGenerationRules, 'create_2nd_person_sentence_from_1st_person'):
-                self.assertTrue(question_generator.generate().startswith("Why"))
+                self.assertTrue(question_generator.generate_with_highlight().startswith("Why"))
                 self.assertTrue(hl in answer.content_with_hl)
 
     def test_generate_when_question(self):
@@ -53,7 +53,7 @@ class QuestionGenerationTest(unittest.TestCase):
             # we set the content in 2nd person manually (above) and patch the below method as we only have a mocked
             # preprocessor (the tokenization method call would not work)
             with patch.object(QuestionGenerationRules, 'create_2nd_person_sentence_from_1st_person'):
-                self.assertTrue(question_generator.generate().startswith("When"))
+                self.assertTrue(question_generator.generate_with_highlight().startswith("When"))
                 self.assertTrue(hl in answer.content_with_hl)
 
     def test_generate_where_question(self):
@@ -68,7 +68,7 @@ class QuestionGenerationTest(unittest.TestCase):
             # we set the content in 2nd person manually (above) and patch the below method as we only have a mocked
             # preprocessor (the tokenization method call would not work)
             with patch.object(QuestionGenerationRules, 'create_2nd_person_sentence_from_1st_person'):
-                self.assertTrue(question_generator.generate().startswith("Where"))
+                self.assertTrue(question_generator.generate_with_highlight().startswith("Where"))
                 self.assertTrue(hl in answer.content_with_hl)
 
     def test_generate_how_question(self):
@@ -83,7 +83,7 @@ class QuestionGenerationTest(unittest.TestCase):
             # we set the content in 2nd person manually (above) and patch the below method as we only have a mocked
             # preprocessor (the tokenization method call would not work)
             with patch.object(QuestionGenerationRules, 'create_2nd_person_sentence_from_1st_person'):
-                self.assertTrue(question_generator.generate().startswith("How"))
+                self.assertTrue(question_generator.generate_with_highlight().startswith("How"))
                 self.assertTrue(hl in answer.content_with_hl)
 
     def test_generate_who_question(self):
@@ -98,7 +98,7 @@ class QuestionGenerationTest(unittest.TestCase):
             # we set the content in 2nd person manually (above) and patch the below method as we only have a mocked
             # preprocessor (the tokenization method call would not work)
             with patch.object(QuestionGenerationRules, 'create_2nd_person_sentence_from_1st_person'):
-                self.assertTrue(question_generator.generate().startswith("Who"))
+                self.assertTrue(question_generator.generate_with_highlight().startswith("Who"))
                 self.assertTrue(hl in answer.content_with_hl)
 
     def test_generate_what_question(self):
@@ -113,7 +113,7 @@ class QuestionGenerationTest(unittest.TestCase):
             # we set the content in 2nd person manually (above) and patch the below method as we only have a mocked
             # preprocessor (the tokenization method call would not work)
             with patch.object(QuestionGenerationRules, 'create_2nd_person_sentence_from_1st_person'):
-                self.assertTrue(question_generator.generate().startswith("What"))
+                self.assertTrue(question_generator.generate_with_highlight().startswith("What"))
                 self.assertTrue(hl in answer.content_with_hl)
 
     def test_generate_how_long_question(self):
@@ -128,7 +128,7 @@ class QuestionGenerationTest(unittest.TestCase):
             # we set the content in 2nd person manually (above) and patch the below method as we only have a mocked
             # preprocessor (the tokenization method call would not work)
             with patch.object(QuestionGenerationRules, 'create_2nd_person_sentence_from_1st_person'):
-                self.assertTrue(question_generator.generate().startswith('How long'))
+                self.assertTrue(question_generator.generate_with_highlight().startswith('How long'))
                 self.assertTrue(hl in answer.content_with_hl)
 
     def test_generate_how_often_question(self):
@@ -143,7 +143,7 @@ class QuestionGenerationTest(unittest.TestCase):
             # we set the content in 2nd person manually (above) and patch the below method as we only have a mocked
             # preprocessor (the tokenization method call would not work)
             with patch.object(QuestionGenerationRules, 'create_2nd_person_sentence_from_1st_person'):
-                self.assertTrue(question_generator.generate().startswith('How often'))
+                self.assertTrue(question_generator.generate_with_highlight().startswith('How often'))
                 self.assertTrue(hl in answer.content_with_hl)
 
     def test_generate_how_m_question(self):
@@ -158,7 +158,7 @@ class QuestionGenerationTest(unittest.TestCase):
             # we set the content in 2nd person manually (above) and patch the below method as we only have a mocked
             # preprocessor (the tokenization method call would not work)
             with patch.object(QuestionGenerationRules, 'create_2nd_person_sentence_from_1st_person'):
-                self.assertTrue(question_generator.generate().startswith('How m'))
+                self.assertTrue(question_generator.generate_with_highlight().startswith('How m'))
                 self.assertTrue(hl in answer.content_with_hl)
 
     # open: whom, whose, which

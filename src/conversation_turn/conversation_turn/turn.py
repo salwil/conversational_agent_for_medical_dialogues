@@ -78,7 +78,12 @@ class ConversationTurn:
         self.mental_state = self.conversation.sentiment_detector.predict_mental_state(self.patient_input)
 
     def __generate_question(self):
-        self.generated_question = self.conversation.question_generator.generate()
+        print(self.turn_number)
+        if self.turn_number % 3 == 0:
+            # for variety we enforce one of our preferred interrogative pronouns, every third turn.
+            self.generated_question = self.conversation.question_generator.generate_with_highlight()
+        else:
+            self.generated_question = self.conversation.question_generator.generate()
 
     def __german_to_english(self, text):
         self.conversation.translator_de_en.translate(text)
