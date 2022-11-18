@@ -14,13 +14,10 @@ Institute for Computational Linguistics
 
 """
 import random
-from pprint import pprint
-import en_core_web_sm
 
 from conversation_turn.conversation_turn.conversation_element import Answer
 from preprocess.preprocess.preprocess import Preprocessor
 from rules.rules.interrogative_pronouns import InterrogativePronoun, Position
-
 
 class QuestionGenerationRules:
     def __init__(self, preprocessor: Preprocessor, nlp, answer: Answer = None):
@@ -31,6 +28,8 @@ class QuestionGenerationRules:
         self.answer = answer
         self.preprocessor = preprocessor
         self.nlp = nlp
+        self.generated_questions_repository = None
+        self.question_intro_repository = None
 
     def generate_highlight(self) -> str:
         pronoun = self.__select_interrogative_pronoun_for_next_question()
@@ -39,7 +38,6 @@ class QuestionGenerationRules:
             self.answer.content_with_hl = '[HL] ' + trigger[0] + ' [HL] ' + self.answer.content_in_2nd_pers
         else:
             self.answer.content_with_hl = self.answer.content_in_2nd_pers + ' [HL] ' + trigger[0] + ' [HL].'
-
 
     def create_2nd_person_sentence_from_1st_person(self) -> None:
         doc = self.nlp(self.answer.content)
@@ -57,6 +55,17 @@ class QuestionGenerationRules:
                     pass
             index += 1
         self.answer.content_in_2nd_pers = " ".join(self.answer.content_tokenized)
+
+    def select_question_intro(self):
+        try:
+            matching_intros = self.question_intro_repository.mental_states[self.answer.mental_state]
+            self.question_intro = matching_intros[0]
+            matching_intros[0].number_of_usage += 1
+            # sort list of intros ascending by their usage --> we can just always pick the first one, which has been the
+            # one not used for the longest time.
+            matching_intros.sort(key=lambda x: x.number_of_usage, reverse=False)
+        except KeyError:
+            self.question_intro = None
 
     def __determine_sentence_ne(self, text: str) -> None:
         doc = self.nlp(text)

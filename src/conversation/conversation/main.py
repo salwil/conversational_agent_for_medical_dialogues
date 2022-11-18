@@ -18,7 +18,6 @@ from src.conversation.conversation.conversation import Conversation
 from src.conversation.conversation.termination_criterion import TerminationCriterionForConversation
 from src.conversation_turn.conversation_turn.turn import ConversationTurn
 
-
 def main():
     conversation = Conversation()
     conversation.load_repositories()

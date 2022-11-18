@@ -13,6 +13,8 @@ Institute for Computational Linguistics
 - Data class for conversation turn
 
 """
+from operator import itemgetter
+
 from src.conversation.conversation.conversation import Conversation
 from src.conversation_turn.conversation_turn.conversation_element import Answer, Question, QuestionType
 
@@ -23,6 +25,7 @@ class ConversationTurn:
 
         # References to other objects
         self.mental_state = None
+        self.mental_state = None
         self.patient_input = patient_input
         self.generated_question: str = None
         self.answer: Answer = None
@@ -30,6 +33,9 @@ class ConversationTurn:
         self.conversation = conversation
         self.preprocessor = conversation.preprocessor
         self.nlp = conversation.nlp
+        # the question generation object requires access to the question intro repository
+        self.conversation.question_generator.update_question_intro_repository(
+            self.conversation.data_loader.question_intro_repo)
 
     def process_question_and_answer_for_patient_profile(self, question: str):
         """
@@ -43,10 +49,11 @@ class ConversationTurn:
         self.__write_turn_to_archive()
 
     def process_answer_and_create_follow_up_question(self):
-        self.__predict_mental_state()
         self.__create_answer_object_and_store()
+        self.__predict_mental_state()
         self.__generate_question()
         self.__create_question_object_and_store()
+        self.__update_question_generation_object_with_newest_data()
         self.__write_turn_to_archive()
 
     def __create_answer_object_and_store(self):
@@ -75,10 +82,11 @@ class ConversationTurn:
             .store_conversation_element('question_repo', self.question)
 
     def __predict_mental_state(self):
-        self.mental_state = self.conversation.sentiment_detector.predict_mental_state(self.patient_input)
+        mental_state = self.conversation.sentiment_detector.predict_mental_state(self.patient_input)
+        self.mental_state = mental_state
+        self.answer.mental_state = mental_state
 
     def __generate_question(self):
-        print(self.turn_number)
         if self.turn_number % 3 == 0:
             # for variety we enforce one of our preferred interrogative pronouns, every third turn.
             self.generated_question = self.conversation.question_generator.generate_with_highlight()
@@ -94,3 +102,9 @@ class ConversationTurn:
     def __write_turn_to_archive(self):
         archive_record = {'answer': self.patient_input, 'question': self.generated_question}
         self.conversation.conversation_archive.write(archive_record)
+
+    def __update_question_generation_object_with_newest_data(self):
+        self.conversation.question_generator.update_generated_questions_repository(
+            self.conversation.data_loader.generated_question_repo)
+        self.conversation.question_generator.update_question_intro_repository(
+            self.conversation.data_loader.question_intro_repo)

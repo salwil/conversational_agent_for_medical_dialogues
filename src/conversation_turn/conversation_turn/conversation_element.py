@@ -16,7 +16,6 @@ Institute for Computational Linguistics
 from dataclasses import dataclass, field
 from enum import Enum
 
-from conversation_turn.conversation_turn.mental_state import MentalState
 from conversation_turn.conversation_turn.topic import Topic
 
 @dataclass
@@ -34,6 +33,7 @@ class Answer(ConversationElement):
     content_with_hl: str = field(init=False, repr=False)
     relevance: float = field(init=False, repr=False)
     topic: Topic = field(init=False, repr=False)
+    mental_state: str = field(init=False, repr=False)
 
 @dataclass
 class QuestionIntro(ConversationElement):
