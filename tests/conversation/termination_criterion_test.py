@@ -1,15 +1,19 @@
 import unittest
-import datetime
 
-from conversation.conversation.conversation import Conversation
 from conversation.conversation.termination_criterion import TerminationCriterionForConversation
 from conversation_turn.conversation_turn.turn import ConversationTurn
+from util.conversation_builder import ConversationBuilder
+
 
 class TerminationCriterionTest(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.termination_criterion =TerminationCriterionForConversation()
-        self.conversation = Conversation()
+        self.termination_criterion = TerminationCriterionForConversation()
+        self.conversation = ConversationBuilder()\
+            .with_question_intro_repository()\
+            .with_question_intro('sad', 'Es tut mir leid, das zu hören', 'I am sorry to hear that.')\
+            .with_question_generator()\
+            .conversation()
         self.current_turn_last = ConversationTurn(21, self.conversation, 'When have you been to the doctor?')
         self.current_turn_not_last = ConversationTurn(15, self.conversation, 'When have you been to the doctor?')
 

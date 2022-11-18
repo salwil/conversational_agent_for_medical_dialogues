@@ -3,12 +3,14 @@ from unittest.mock import MagicMock
 
 import en_core_web_sm
 
-from conversation_turn.conversation_turn.conversation_element import Answer
+from conversation_turn.conversation_turn.conversation_element import QuestionIntro
 from preprocess.preprocess.lemmatize import EnglishLemmatizer
 from preprocess.preprocess.preprocess import Preprocessor
-from rules.rules.question_generation_rules import QuestionGenerationRules
+from repository.repository.repositories import QuestionIntroRepository
 
 # load computation-intensive classes only once
+from util.conversation_builder import ConversationBuilder
+
 nlp = en_core_web_sm.load()
 preprocessor = Preprocessor(EnglishLemmatizer(nlp), nlp)
 
@@ -17,63 +19,114 @@ class QuestionGenerationRulesTest(unittest.TestCase):
     def setUp(self) -> None:
         # the preprocessor is needed for pronoun replacement only, but this is tested in question_generation_rules and
         # therefore we mock the preprocessor (and also the pronoun replacement method in the below tests)
-        self.preprocessor = MagicMock()
+        self.conversation_builder = ConversationBuilder()\
+            .with_question_intro_repository()\
+            .with_question_intro('sad', "I'm sorry.", "Das tut mir leid.")\
+            .with_question_generator(preprocessor, nlp)
+        #self.current_turn_last = ConversationTurn(21, self.conversation, 'When have you been to the doctor?')
 
     def test_generate_highlight_not_who_not_what(self):
-        answer = Answer("Dr. Mayer told me to take Aspirin", 1)
-        answer.content_in_2nd_pers = "Dr. Mayer told you to take Aspirin"
-        self.question_generation_rules = QuestionGenerationRules(self.preprocessor, nlp, answer)
-        self.question_generation_rules.generate_highlight()
-        self.assertFalse('who' in self.question_generation_rules.allowed_pronouns)
-        self.assertFalse('what' in self.question_generation_rules.allowed_pronouns)
-        self.assertNotEqual(answer.content_with_hl, 'My doctor')
-        self.assertNotEqual(answer.content_with_hl, 'My jaw')
+        conversation = self.conversation_builder.with_answer("Dr. Mayer told me to take Aspirin",
+                                                             1,
+                                                             content_in_2nd_pers="Dr. Mayer told you to take Aspirin")\
+            .conversation()
+        conversation.question_generator.rules.generate_highlight()
+        self.assertGreater(len(conversation.question_generator.rules.allowed_pronouns),0)
+        self.assertFalse('who' in conversation.question_generator.rules.allowed_pronouns)
+        self.assertFalse('what' in conversation.question_generator.rules.allowed_pronouns)
+        self.assertTrue("[HL]" in conversation.question_generator.answer.content_with_hl)
+        self.assertNotEqual(conversation.question_generator.answer.content_with_hl, 'My doctor')
+        self.assertNotEqual(conversation.question_generator.answer.content_with_hl, 'My jaw')
 
     def test_generate_highlight_not_when(self):
-        answer = Answer("It often hurts in the morning", 1)
-        answer.content_in_2nd_pers = "It often hurts in the morning"
-        self.question_generation_rules = QuestionGenerationRules(self.preprocessor, nlp, answer)
-        highlight = self.question_generation_rules.generate_highlight()
-        self.assertFalse('when' in self.question_generation_rules.allowed_pronouns)
-        self.assertNotEqual(answer.content_with_hl, 'during')
+        conversation = self.conversation_builder.with_answer("It often hurts in the morning",
+                                                             1,
+                                                             content_in_2nd_pers="It often hurts in the morning")\
+            .conversation()
+        conversation.question_generator.rules.generate_highlight()
+        self.assertGreater(len(conversation.question_generator.rules.allowed_pronouns),0)
+        self.assertFalse('when' in conversation.question_generator.rules.allowed_pronouns)
+        self.assertTrue("[HL]" in conversation.question_generator.answer.content_with_hl)
+
+        self.assertNotEqual(conversation.question_generator.answer.content_with_hl, 'during')
 
     def test_generate_highlight_all_pronouns_allowed(self):
-        answer = Answer("When I am at home I feel better.", 1)
-        answer.content_in_2nd_pers = "When I am at home I feel better."
-        self.question_generation_rules = QuestionGenerationRules(self.preprocessor, nlp, answer)
-        self.question_generation_rules.generate_highlight()
+        conversation = self.conversation_builder.with_answer("When I am at home I feel better.",
+                                                             1,
+                                                             content_in_2nd_pers="When you are at home you feel better")\
+            .conversation()
+        conversation.question_generator.rules.generate_highlight()
         self.assertEqual(['why', 'when', 'where', 'what', 'who', 'how', 'how often', 'how many', 'since'],
-                         self.question_generation_rules.allowed_pronouns)
+                         conversation.question_generator.rules.allowed_pronouns)
 
     def test_create_2nd_person_sentence_pers_pronoun_and_verb_b(self):
-        answer = Answer("When I am at home I feel better.", 1)
-        question_generation_rules = QuestionGenerationRules(preprocessor, nlp, answer)
-        question_generation_rules.create_2nd_person_sentence_from_1st_person()
-        self.assertEqual('When you are at home you feel better .', answer.content_in_2nd_pers)
+        conversation = self.conversation_builder.with_answer("When I am at home I feel better.",
+                                                             1).conversation()
+        conversation.question_generator.rules.create_2nd_person_sentence_from_1st_person()
+        self.assertEqual('When you are at home you feel better .',
+                         conversation.question_generator.rules.answer.content_in_2nd_pers)
         # assert that original content is still there
-        self.assertEqual("When I am at home I feel better.", answer.content)
+        self.assertEqual("When I am at home I feel better.", conversation.question_generator.rules.answer.content)
 
     def test_create_2nd_person_sentence_short_forms(self):
-        answer = Answer("When I'm at home, my health gets better.", 1)
-        question_generation_rules = QuestionGenerationRules(preprocessor, nlp, answer)
-        question_generation_rules.create_2nd_person_sentence_from_1st_person()
-        self.assertEqual("When you 're at home , your health gets better .", answer.content_in_2nd_pers)
-        self.assertEqual("When I'm at home, my health gets better.", answer.content)
+        conversation = self.conversation_builder.with_answer("When I'm at home, my health gets better.",
+                                                             1).conversation()
+        conversation.question_generator.rules.create_2nd_person_sentence_from_1st_person()
+        self.assertEqual("When you 're at home , your health gets better .",
+                         conversation.question_generator.rules.answer.content_in_2nd_pers)
+        self.assertEqual("When I'm at home, my health gets better.",
+                         conversation.question_generator.rules.answer.content)
 
     def test_create_2nd_person_sentence_false_friend_have(self):
-        answer = Answer("I often have headache.", 1)
-        question_generation_rules = QuestionGenerationRules(preprocessor, nlp, answer)
-        question_generation_rules.create_2nd_person_sentence_from_1st_person()
-        self.assertEqual("you often have headache .", answer.content_in_2nd_pers)
-        self.assertEqual("I often have headache.", answer.content)
+        conversation = self.conversation_builder.with_answer("I often have headache.",
+                                                             1).conversation()
+        conversation.question_generator.rules.create_2nd_person_sentence_from_1st_person()
+        self.assertEqual("you often have headache .", conversation.question_generator.rules.answer.content_in_2nd_pers)
+        self.assertEqual("I often have headache.", conversation.question_generator.rules.answer.content)
 
     def test_create_2nd_person_sentence_multiple_sentences(self):
-        answer = Answer("I often have headache. Sometimes I also have jaw tension. Especially during the night.", 1)
-        question_generation_rules = QuestionGenerationRules(preprocessor, nlp, answer)
-        question_generation_rules.create_2nd_person_sentence_from_1st_person()
+        conversation = self.conversation_builder.with_answer("I often have headache. Sometimes I also have jaw tension."
+                                                             " Especially during the night.",
+                                                             1).conversation()
+        conversation.question_generator.rules.create_2nd_person_sentence_from_1st_person()
         self.assertEqual("you often have headache . Sometimes you also have jaw tension . Especially during the night ."
-                         , answer.content_in_2nd_pers)
+                         , conversation.question_generator.rules.answer.content_in_2nd_pers)
         self.assertEqual("I often have headache. Sometimes I also have jaw tension. Especially during the night."
-                         , answer.content)
+                         , conversation.question_generator.rules.answer.content)
 
+    def test_select_question_intro(self):
+        conversation = self.conversation_builder.with_answer("I often have headache. Sometimes I also have jaw tension."
+                                                             " Especially during the night.",
+                                                             1).conversation()
+        self.create_question_intro_repository(conversation.question_generator.rules)
+        self.assertEqual("I am sorry about how you feel", conversation.question_generator
+                                                         .rules
+                                                         .question_intro_repository
+                                                         .mental_states['sad'][0]
+                                                         .content)
+        conversation.question_generator.rules.answer.mental_state = 'sad'
+        conversation.question_generator.rules.select_question_intro()
+        self.assertEqual("Don't worry.", conversation.question_generator
+                                         .rules.question_intro_repository
+                                         .mental_states['sad'][0]
+                                         .content)
+        self.assertEqual("I am sorry about how you feel", conversation.question_generator.rules.question_intro.content)
 
+    def test_select_question_intro_mental_state_not_found(self):
+        conversation = self.conversation_builder.with_answer("I often have headache. Sometimes I also have jaw tension."
+                                                             " Especially during the night.",
+                                                             1).conversation()
+        self.create_question_intro_repository(conversation.question_generator.rules)
+        conversation.question_generator.rules.answer.mental_state = 'confused'
+        conversation.question_generator.rules.select_question_intro()
+        self.assertIsNone(conversation.question_generator.rules.question_intro)
+
+    # Helper
+    def create_question_intro_repository(self, question_generation_rules):
+        intro_sad_1 = QuestionIntro("I am sorry about how you feel", 0, "Es tut mir leid, wie Sie sich fühlen.", 'sad')
+        intro_sad_2 = QuestionIntro("Don't worry.", 0, "Machen Sie sich keine Sorgen.", 'sad')
+        intro_happy = QuestionIntro("I'm happy that you feel better.", 0, "Es freut mich, dass es Ihnen besser geht.", 'happy')
+        question_generation_rules.question_intro_repository = QuestionIntroRepository({})
+        question_generation_rules.question_intro_repository.mental_states['sad'] = [intro_sad_1]
+        question_generation_rules.question_intro_repository.mental_states['sad'].append(intro_sad_2)
+        question_generation_rules.question_intro_repository.mental_states['happy'] = [intro_happy]
