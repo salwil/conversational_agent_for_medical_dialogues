@@ -58,7 +58,7 @@ class Conversation:
         self.sentiment_detector = SentimentDetector([mental_state
                                                      for mental_state
                                                      in self.data_loader.question_intro_repo.mental_states])
-        self.question_generator = QuestionGenerator(self.nlp, self.preprocessor, None)
+        self.question_generator = QuestionGenerator(self.preprocessor, self.nlp, None)
 
     def ask_questions_for_patient_instantiation(self):
         for question in self.data_loader.profile_question_repo.questions:
