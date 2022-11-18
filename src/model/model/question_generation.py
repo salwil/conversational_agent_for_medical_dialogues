@@ -31,7 +31,6 @@ class QuestionGenerator:
         self.question_intro_repository = None
 
     def generate(self):
-        self.rules.select_question_intro()
         self.rules.create_2nd_person_sentence_from_1st_person()
         self.rules.select_question_intro()
         input_ids = self.tokenizer.encode(self.answer.content_in_2nd_pers)
