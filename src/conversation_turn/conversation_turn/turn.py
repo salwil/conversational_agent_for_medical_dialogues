@@ -24,8 +24,7 @@ class ConversationTurn:
         self.turn_number = turn_number
 
         # References to other objects
-        self.mental_state = None
-        self.mental_state = None
+        #self.mental_state = None
         self.patient_input = patient_input
         self.generated_question: str = None
         self.answer: Answer = None
