@@ -15,17 +15,21 @@ Institute for Computational Linguistics
 """
 from enum import Enum
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, AutoModelForSequenceClassification
+import src.helpers.helpers.helpers as helpers
+from model.model.topic import TopicInferencer
+
 
 class Model(Enum):
     TRANSLATION_DE_EN = 'translation-de-en' #replace with real model name / path to model?
     TRANSLATION_EN_DE = 'translation-en-de' # replace with real model name / path to model?
     QUESTION_GENERATION = 'p208p2002/bart-squad-qg-hl' # https://huggingface.co/p208p2002/bart-squad-qg-hl
     SENTIMENT_DETECTION = 'facebook/bart-large-mnli' # https://huggingface.co/facebook/bart-large-mnli
+    TOPIC = 'mallet.model.10'
 
 
 class ModelLoader:
     def __init__(self):
-        pass
+        self.path = helpers.get_project_path() + '/src/repository/data/'
 
     def load_tokenizer(self, model_checkpoint: Model):
         return AutoTokenizer.from_pretrained(model_checkpoint.value)
@@ -35,11 +39,17 @@ class Seq2SeqModelLoader(ModelLoader):
         print("Loading " + model_checkpoint.value + "...")
         return AutoModelForSeq2SeqLM.from_pretrained(model_checkpoint.value)
 
-
 class SequenceClassificationModelLoader(ModelLoader):
     def load_model(self, model_checkpoint: Model):
         print("Loading " + model_checkpoint.value + "...")
         return AutoModelForSequenceClassification.from_pretrained(model_checkpoint.value)
+
+class TopicModelLoader(ModelLoader):
+    def load_model(self, model_checkpoint: Model):
+        path_to_mallet = self.path + 'topic/'
+        print("Loading " + model_checkpoint.value + "...")
+        return TopicInferencer(path_to_mallet, model_checkpoint.value)
+
 
 
 
