@@ -1,0 +1,10 @@
+0 no_label I have toothache every day and I feel bad
+1 no_label  Sometimes my jaw hurts and sometimes I have jaw tension
+2 no_label 
+        Often I ask myself if that will ever will go away again
+3 no_label  In the night I have problems falling asleep
+4 no_label  In the
+        evening the pain is worse than in the morning
+5 no_label  They get worse during the day
+6 no_label  Sometimes my entire head hurts
+7 no_label 

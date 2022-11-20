@@ -50,7 +50,7 @@ class ConversationElementTest(unittest.TestCase):
         # Note: this test only works as long as the Question topic 1 is available in this form
         # inside the topics.txt file!
         tr = self.data_loader.topic_repo
-        t_exp = Topic(1, ['jaw', 'mouth', 'open', 'eat', 'chew', 'food'], 0.0)
+        t_exp = Topic(['jaw', 'mouth', 'open', 'eat', 'chew', 'food'], 0.0)
         self.data_loader.load_data_into_repository(Repository.TOPICS)
         self.assertEqual(2, len(tr))
         self.assertEqual(repr(t_exp), repr(tr[1]))

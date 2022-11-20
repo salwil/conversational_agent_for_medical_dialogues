@@ -73,7 +73,7 @@ class DataLoader:
                 for keywords in topics:
                     keyword_list = keywords.split(', ')
                     keyword_list_clean = [k.rstrip("\n") for k in keyword_list]
-                    t = Topic(topic_number, keyword_list_clean, 0.0)
+                    t = Topic(keyword_list_clean, 0.0)
                     self.topic_repo[topic_number] = t
                     topic_number += 1
         elif repository is Repository.INTRO:

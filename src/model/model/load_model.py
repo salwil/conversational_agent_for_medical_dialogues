@@ -20,11 +20,11 @@ from model.model.topic import TopicInferencer
 
 
 class Model(Enum):
-    TRANSLATION_DE_EN = 'translation-de-en' #replace with real model name / path to model?
-    TRANSLATION_EN_DE = 'translation-en-de' # replace with real model name / path to model?
+    TRANSLATION_DE_EN = 'translation-de-en' #replace with real mallet_topics name / path to mallet_topics?
+    TRANSLATION_EN_DE = 'translation-en-de' # replace with real mallet_topics name / path to mallet_topics?
     QUESTION_GENERATION = 'p208p2002/bart-squad-qg-hl' # https://huggingface.co/p208p2002/bart-squad-qg-hl
     SENTIMENT_DETECTION = 'facebook/bart-large-mnli' # https://huggingface.co/facebook/bart-large-mnli
-    TOPIC = 'mallet.model.10'
+    TOPIC = 'mallet.mallet_topics.10'
 
 
 class ModelLoader:
