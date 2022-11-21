@@ -105,7 +105,7 @@ class QuestionGenerationTest(unittest.TestCase):
                                                              content_in_2nd_pers="says that you have to stay in bed",
                                                              mental_state='afraid')\
             .conversation()
-        hl = "[HL] Your Doctor [HL]"
+        hl = "[HL] Somebody [HL]"
         with patch.object(QuestionGenerationRules,
                           '_QuestionGenerationRules__select_interrogative_pronoun_for_next_question',
                           return_value="who")\

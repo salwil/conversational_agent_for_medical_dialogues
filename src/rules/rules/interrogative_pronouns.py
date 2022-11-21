@@ -47,7 +47,7 @@ class InterrogativePronoun():
         'when': ('during', Position.EOS),
         'where': ('at the University Hospital', Position.EOS),
         'what': ('Your jaw', Position.BOS),
-        'who': ('Your Doctor', Position.BOS),
+        'who': ('Somebody', Position.BOS),
         'how': ('in form of', Position.EOS),
         'how often': ('once a day', Position.BOS),
         'how many': ('5 of', Position.BOS),
