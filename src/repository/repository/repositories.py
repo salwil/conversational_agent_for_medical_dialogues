@@ -24,7 +24,7 @@ class QuestionRepository:
 
 @dataclass
 class AnswerRepository:
-    answers: {} # key: preprocessed answer, value: Answer
+    answers: {} # key: conversation turn, value: Answer
 
 @dataclass
 class TopicRepository:
