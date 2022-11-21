@@ -56,7 +56,7 @@ class QuestionGenerationRulesTest(unittest.TestCase):
                                                              content_in_2nd_pers="When you are at home you feel better")\
             .conversation()
         conversation.question_generator.rules.generate_highlight()
-        self.assertEqual(['why', 'when', 'where', 'what', 'who', 'how', 'how often', 'how many', 'since'],
+        self.assertEqual(['when', 'where', 'what', 'who', 'how', 'how often', 'how many', 'since'],
                          conversation.question_generator.rules.allowed_pronouns)
 
     def test_create_2nd_person_sentence_pers_pronoun_and_verb_b(self):

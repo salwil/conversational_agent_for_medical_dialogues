@@ -118,12 +118,14 @@ class ConversationBuilder(Builder):
         return self
         """
 
-
-    def with_answer(self, content_en: str, number_of_usage = None, content_in_2nd_pers = None, content_with_hl = None, mental_state = None):
+    def with_answer(self, content_en: str, number_of_usage = None, content_in_2nd_pers = None, content_with_hl = None, mental_state = None, turn_number = None):
         if number_of_usage:
-            answer = Answer(content_en, number_of_usage)
+            if turn_number:
+                answer = Answer(content_en, number_of_usage, turn_number)
+            else:
+                answer = Answer(content_en, number_of_usage, 1)
         else:
-            answer = Answer(content_en, 1)
+            answer = Answer(content_en, 1, 1)
         if content_in_2nd_pers:
             answer.content_in_2nd_pers = content_in_2nd_pers
         if content_with_hl:

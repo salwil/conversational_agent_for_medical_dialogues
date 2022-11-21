@@ -67,15 +67,16 @@ class ConversationElementTest(unittest.TestCase):
             self.data_loader.load_data_into_repository(Repository.ANSWERS)
 
     def test_data_loader_store_answers(self):
-        answer = Answer("I have jaw pain.", 1)
+        answer = Answer("I have jaw pain.", 1, 1)
         answer.content_preprocessed = "jaw pain"
         ar = self.data_loader.answer_repo
         self.data_loader.store_conversation_element('answer_repo', answer)
         stored_answers = ar.answers
         self.assertEqual(1, len(stored_answers))
-        self.assertTrue('jaw pain' in stored_answers)
-        self.assertEqual(stored_answers['jaw pain'].content, "I have jaw pain.")
-        self.assertEqual(stored_answers['jaw pain'].number_of_usage, 1)
+        self.assertTrue(1 in stored_answers)
+        self.assertEqual(stored_answers[1].content, "I have jaw pain.")
+        self.assertEqual(stored_answers[1].content_preprocessed, "jaw pain")
+        self.assertEqual(stored_answers[1].number_of_usage, 1)
 
     def test_data_loader_store_generated_question(self):
         question = Question("When do you have headache?", 1, QuestionType.GENERATED)

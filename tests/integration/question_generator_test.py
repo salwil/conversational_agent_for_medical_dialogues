@@ -29,6 +29,7 @@ class QuestionGenerationTest(unittest.TestCase):
             .with_question_intro('sad', "I'm sorry.", "Das tut mir leid.")\
             .with_question_generator()
 
+    """Why is temporarily removed from interrogative pronouns, as it is already generated quite often by the QG
     def test_generate_why_question(self):
         conversation = self.conversation_builder.with_answer("In the night I can't sleep ",
                                                              1,
@@ -45,6 +46,7 @@ class QuestionGenerationTest(unittest.TestCase):
             with patch.object(QuestionGenerationRules, 'create_2nd_person_sentence_from_1st_person'):
                 self.assertTrue(conversation.question_generator.generate_with_highlight().startswith("Why"))
                 self.assertTrue(hl in conversation.question_generator.answer.content_with_hl)
+    """
 
     def test_generate_when_question(self):
         conversation = self.conversation_builder.with_answer("I often have ear pain",
