@@ -21,6 +21,8 @@ Institute for Computational Linguistics
 """
 import os
 
+from typing import List
+
 from conversation_turn.conversation_turn.conversation_element import Answer
 from conversation_turn.conversation_turn.topic import Topic
 
@@ -31,23 +33,22 @@ class TopicInferencer:
         self.path_to_original_model = path_to_pretrained_mallet_model
         self.path_to_new_model = path_to_new_model
         self.number_of_topics = 1
-        self.answer: Answer = None
-        self.topic_keys = self.__load_topic_keys(self.path_to_original_model + 'mallet.topic_keys.10')
+        self.number_of_topics_pretrained = 10
+        self.topic_keys = self.__load_topic_keys(self.path_to_original_model +
+                                                 'mallet.topic_keys.' +
+                                                 str(self.number_of_topics_pretrained))
         self.topic_distributions = None
 
-    def infer_topic(self, answer: Answer):
-        self.answer = answer
-        text = [self.answer.content_preprocessed]
+    def infer_topic(self, text_preprocessed):
+        text = [text_preprocessed]
         self.__prepare_input_data(text)
         self.__infer_topics(self.path_to_mallet,
-                            self.path_to_original_model + 'mallet.model.10',
+                            self.path_to_original_model + 'mallet.model.' + str(self.number_of_topics_pretrained),
                             self.path_to_new_model + 'training',
                             self.path_to_new_model + 'mallet.topic_distributions.' + str(self.number_of_topics))
         self.topic_distributions = self.__load_topic_distributions(self.path_to_new_model +
                                                                    'mallet.topic_distributions.' +
                                                                    str(self.number_of_topics))
-        best_topic, probability = self.get_best_topic()
-        self.answer.topic = Topic(best_topic, probability)
 
     def __load_topic_keys(self, topic_keys_path):
         return [line.split('\t')[2].split() for line in open(topic_keys_path, 'r')]
@@ -78,7 +79,7 @@ class TopicInferencer:
                        path_to_new_topic_distributions):
         # num-iterations tbd
         os.system(path_to_mallet + ' infer-topics --input "' + path_to_new_formatted_training_data + '"' \
-                  + ' --num-iterations 10' \
+                  + ' --num-iterations 100' \
                   + ' --inferencer "' + path_to_original_model + '"' \
                   + ' --output-doc-topics "' + path_to_new_topic_distributions + '"')
 
@@ -86,8 +87,15 @@ class TopicInferencer:
         for i, t in enumerate(self.topic_keys):
             print(i, '\t', ' '.join(t[:number]))
 
-    def get_best_topic(self):
+    def get_best_topics(self, number) -> List[Topic]:
+        # Only for test: self.topic_distributions in None then.
         if not self.topic_distributions:
             self.topic_distributions = self.__load_topic_distributions(self.path_to_new_model + 'mallet.topic_distributions.1')
-        max_index = self.topic_distributions[0].index(max(self.topic_distributions[0]))
-        return self.topic_keys[max_index], max(self.topic_distributions[0])
+        # The preprocessed input is treated as one single document, therefore we always expect only one line of topic
+        # distributions --> one list element in list at index 0.
+        sorted_data = sorted([(_distribution, _topic)
+                              for _distribution, _topic
+                              in zip(self.topic_distributions[0], self.topic_keys)],
+                             reverse=True)
+        return [Topic(prob_topic[1], prob_topic[0]) for prob_topic in sorted_data[:number]]
+

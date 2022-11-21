@@ -1,34 +1,56 @@
+import pathlib
 import unittest
+from unittest.mock import patch
 
 import src.helpers.helpers.helpers as helpers
-from conversation_turn.conversation_turn.conversation_element import Answer
 from model.model.topic import TopicInferencer
 
 
 class TopicInferencerTest(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.path = helpers.get_project_path() +  '/src/model/language_models/'
+        self.path = helpers.get_project_path() + '/src/model/language_models/'
         self.path_to_mallet = self.path + 'mallet-2.0.8/bin/mallet'
         self.path_to_pretrained_mallet_model = self.path + 'mallet_topics/'
         self.path_to_new_mallet_model = self.path + 'mallet_inferred_topics/'
-        self.topic_inferencer = TopicInferencer(self.path_to_mallet, self.path_to_pretrained_mallet_model, self.path_to_new_mallet_model)
+        self.topic_inferencer = TopicInferencer(self.path_to_mallet, self.path_to_pretrained_mallet_model,
+                                                self.path_to_new_mallet_model)
 
     def test_infer_topic_for_sentence(self):
-        text = "I have toothache every day and I feel bad. Sometimes my jaw hurts and sometimes I have jaw tension." \
-               "Often I ask myself if that will ever go away again. In the night I have problems falling asleep" \
-               ". In the evening the pain is worse than in the morning. They get worse during the day. Sometimes " \
-               "my entire head hurts."
-        answer = Answer(text, 0)
-        answer.content_preprocessed = "I have toothache every day and I feel bad. Sometimes my jaw hurts and sometimes I have jaw tension." \
-               "Often I ask myself if that will ever go away again. In the night I have problems falling asleep" \
-               ". In the evening the pain is worse than in the morning. They get worse during the day. Sometimes " \
-               "my entire head hurts."
-        answer.content_preprocessed = "Stress, either physiological, biological or psychological, is an organism's response to a stressor such as an environmental condition.[1] Stress is the body's method of reacting to a condition such as a threat, challenge or physical and psychological barrier. There are two hormones that an individual produces during a stressful situation, these are well known as adrenaline and cortisol.[2] Stimuli that alter an organism's environment are responded to by multiple systems in the body.[3] In humans and most mammals, the autonomic nervous system and hypothalamic-pituitary-adrenal (HPA) axis are the two major systems that respond to stress.[4] "
-        self.topic_inferencer.infer_topic(answer)
-        self.assertTrue('jaw' in answer.topic.topic_keys)
-        self.assertTrue('food' in answer.topic.topic_keys)
-        self.assertTrue('pain' in answer.topic.topic_keys)
+        paths = [pathlib.Path(self.path_to_new_mallet_model + 'training.txt'),
+                 pathlib.Path(self.path_to_new_mallet_model + 'training'),
+                 pathlib.Path(self.path_to_new_mallet_model + 'mallet.topic_distributions.1')]
+        for path in paths:
+            pathlib.Path.unlink(path, missing_ok=True)
+            # make sure, file is really deleted
+            self.assertFalse(path.exists())
+        text_preprocessed = "toothache every day feel bad sometimes jaw hurts sometimes jaw tension often ask myself " \
+                            "if will ever go away again night problems falling asleep evening the pain worse morning " \
+                            "they get worse during day head hurts."
+        text_preprocessed = "job very stressful need urgently relax"
+        text_preprocessed = "work 10 hour day since 2 year job annoying "
+        text_preprocessed = "doctor treatment tooth since dentist year dental implant see take clarification remove xxx problem still inflammation result crown nerve"
+        self.topic_inferencer.infer_topic(text_preprocessed)
+        for path in paths:
+            self.assertTrue(path.exists())
 
-    def test_get_best_topic(self):
-        self.topic_inferencer.get_best_topic()
+    def test_get_3_best_topics(self):
+        """
+        The preprocessed input is treated as one single document, therefore we always expect only one line of topic
+        distributions --> one list element in list.
+        """
+        topic_distributions = [[0.01, 0.1, 0.02, 0.3, 0.05, 0.45, 0.035, 0.01, 0.016, 0.009]]
+        # check preconditions
+        self.assertEqual(1, sum(topic_distributions[0]))
+        self.assertEqual(10, len(topic_distributions[0]))
+        with patch.object(TopicInferencer, '_TopicInferencer__load_topic_distributions',
+                          return_value=topic_distributions) \
+                as __load_topic_distributions:
+            topic_list = topic = self.topic_inferencer.get_best_topics(3)
+            self.assertTrue(3, len(topic_list))
+            self.assertTrue('tongue' in topic_list[0].topic_keys)
+            self.assertTrue('throat' in topic_list[0].topic_keys)
+            self.assertTrue('dry' in topic_list[0].topic_keys)
+            self.assertEqual(0.45, topic_list[0].probability)
+            self.assertEqual(0.3, topic_list[1].probability)
+            self.assertEqual(0.1, topic_list[2].probability)

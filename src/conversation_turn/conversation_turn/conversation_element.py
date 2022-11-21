@@ -15,6 +15,7 @@ Institute for Computational Linguistics
 """
 from dataclasses import dataclass, field
 from enum import Enum
+from typing import List
 
 from conversation_turn.conversation_turn.topic import Topic
 
@@ -29,10 +30,11 @@ class ConversationElement:
 class Answer(ConversationElement):
     # when instantiating an oject of answers, the preprocessed content has to be provided already:
     # content_preprocessed: list
+    turn_number: int
     content_in_2nd_pers: str = field(init=False, repr=False)
     content_with_hl: str = field(init=False, repr=False)
     relevance: float = field(init=False, repr=False)
-    topic: Topic = field(init=False, repr=False)
+    topic_list: List[Topic] = field(init=False, repr=False)
     mental_state: str = field(init=False, repr=False)
 
 @dataclass

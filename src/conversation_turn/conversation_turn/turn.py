@@ -50,6 +50,7 @@ class ConversationTurn:
     def process_answer_and_create_follow_up_question(self):
         self.__create_answer_object_and_store()
         self.__predict_mental_state()
+        self.__infer_topic()
         self.__generate_question()
         self.__create_question_object_and_store()
         self.__update_question_generation_object_with_newest_data()
@@ -60,7 +61,7 @@ class ConversationTurn:
         Creates an answer object and stores it in the corresponding repository
         :return:
         """
-        self.answer = Answer(self.patient_input, 1)
+        self.answer = Answer(self.patient_input, 1, self.turn_number)
         # as soon as we have created the answer object, we have to update the QuestionGenerator object with it
         self.conversation.question_generator.set_answer(self.answer)
         self.conversation.preprocessor.preprocess(self.answer, self.conversation.preprocessing_parameters)
@@ -85,12 +86,17 @@ class ConversationTurn:
         self.mental_state = mental_state
         self.answer.mental_state = mental_state
 
+    def __infer_topic(self):
+        self.conversation.topic_inferencer.infer_topic(self.answer.content_preprocessed)
+        self.answer.topic_list = self.conversation.topic_inferencer.get_best_topics(3)
+        print(self.answer.topic_list)
+
     def __generate_question(self):
         if self.turn_number % 3 == 0:
-            # for variety we enforce one of our preferred interrogative pronouns, every third turn.
-            self.generated_question = self.conversation.question_generator.generate_with_highlight()
-        else:
             self.generated_question = self.conversation.question_generator.generate()
+        else:
+            # for variety we enforce one of our preferred interrogative pronouns, in some turns
+            self.generated_question = self.conversation.question_generator.generate_with_highlight()
 
     def __german_to_english(self, text):
         self.conversation.translator_de_en.translate(text)
