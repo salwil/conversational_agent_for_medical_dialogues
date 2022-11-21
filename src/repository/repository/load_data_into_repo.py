@@ -95,7 +95,7 @@ class DataLoader:
         if repository == Repository.ANSWERS.value:
             #a = Answer(data, 1)
             #self.preprocessor.preprocess(a, self.preprocessing_parameters)
-            self.answer_repo.answers[conversation_element.content_preprocessed] = conversation_element
+            self.answer_repo.answers[conversation_element.turn_number] = conversation_element
         elif repository == Repository.QUESTIONS.value:
             self.generated_question_repo.questions[conversation_element.content_preprocessed] = conversation_element
         else:
