@@ -43,7 +43,7 @@ class Position(Enum):
 @dataclass
 class InterrogativePronoun():
     interrogative_pronouns_with_trigger = {
-        'why': ('because', Position.EOS),
+        #'why': ('because', Position.EOS),
         'when': ('during', Position.EOS),
         'where': ('at the University Hospital', Position.EOS),
         'what': ('Your jaw', Position.BOS),
