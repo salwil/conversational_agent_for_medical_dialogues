@@ -15,6 +15,8 @@ Institute for Computational Linguistics
 """
 import sys
 import traceback
+import datetime
+from enum import Enum
 
 import en_core_web_sm
 
@@ -24,14 +26,17 @@ from src.model.model.sentiment_detection import SentimentDetector
 from src.model.model.question_generation import QuestionGenerator
 from src.repository.repository.load_data_into_repo import DataLoader, Repository
 from src.repository.repository.conversation_archive import ConversationArchival
-from .patient import Patient
 from src.preprocess.preprocess.lemmatize import EnglishLemmatizer
 from src.preprocess.preprocess.preprocess import Preprocessor
 import src.helpers.helpers.helpers as helpers
 
+class Language(Enum):
+    ENGLISH = 'E',
+    GERMAN = 'D'
 
 class Conversation:
     def __init__(self):
+        self.language = Language.ENGLISH
         self.preprocessing_parameters = ['lemmatize', 'tokenize', 'remove_punctuation', 'remove_stopwords']
         try:
             self.nlp = en_core_web_sm.load()
@@ -47,8 +52,9 @@ class Conversation:
         self.sentiment_detector: SentimentDetector = None
         self.question_generator: QuestionGenerator = None
         self.topic_inferencer: TopicInferencer = None
-        self.patient = Patient()
-        self.conversation_archive = ConversationArchival(self.patient.creation_timestamp_formatted)
+        self.creation_timestamp: datetime = datetime.datetime.now()
+        self.creation_timestamp_formatted: str = self.creation_timestamp.strftime("%m-%d-%Y-%H-%M-%S")
+        self.conversation_archive = ConversationArchival(self.creation_timestamp_formatted)
 
     def load_repositories(self):
         self.data_loader.load_data_into_repository(Repository.QUESTIONS)
