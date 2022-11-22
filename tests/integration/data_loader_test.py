@@ -19,6 +19,7 @@ lemmatizer = EnglishLemmatizer(nlp)
 preprocessor = Preprocessor(lemmatizer, nlp)
 
 path_to_files = helpers.get_project_path() + '/src/repository/data/'
+path_to_topic_model = helpers.get_project_path() + '/src/model/language_model/mallet_topics/'
 
 class ConversationElementTest(unittest.TestCase):
 
@@ -28,7 +29,7 @@ class ConversationElementTest(unittest.TestCase):
                                  preprocessor=preprocessor)
 
     @unittest.skipIf(not pathlib.Path(path_to_files + 'questions.csv').exists(),
-                     "Please add the file questions.csv to the repository/data folder.")
+                     "Please add the file questions.csv to the repository/data/ folder.")
     def test_data_loader_profile_question(self):
         # Note: this test only works as long as the Question 'How do you feel today?' is available
         # inside the questions.csv file!
@@ -43,7 +44,7 @@ class ConversationElementTest(unittest.TestCase):
         self.assertEqual(repr(q_exp), repr(qr.questions['first name']))
 
     @unittest.skipIf(not pathlib.Path(path_to_files + 'questions.csv').exists(),
-                     "Please add the file questions.csv to the repository/data folder.")
+                     "Please add the file questions.csv to the repository/data/ folder.")
     def test_data_loader_mandatory_question(self):
         # Note: this test only works as long as the Question 'How do you feel today?' is available
         # inside the questions.csv file!
@@ -55,6 +56,8 @@ class ConversationElementTest(unittest.TestCase):
         self.assertEqual(5, len(qr.questions))
         self.assertEqual(repr(q_exp), repr(qr.questions['please describe chief complaint seek consultation']))
 
+    @unittest.skipIf(not pathlib.Path(path_to_topic_model + 'mallet.topic_keys.10').exists(),
+                     "Please add the file mallet.topic_keys.10 to the model/language_models/mallet_topics/ folder.")
     def test_data_loader_topic(self):
         tr = self.data_loader.topic_repo
         self.data_loader.load_data_into_repository(Repository.TOPICS)
@@ -63,7 +66,7 @@ class ConversationElementTest(unittest.TestCase):
         self.assertIsInstance(tr['4'], Topic)
 
     @unittest.skipIf(not pathlib.Path(path_to_files + 'mental_states_with_intros.csv').exists(),
-                     "Please add the file mental_states_with_intros.csv to the repository/data folder.")
+                     "Please add the file mental_states_with_intros.csv to the repository/data/ folder.")
     def test_data_loader_mental_states(self):
         self.data_loader.load_data_into_repository(Repository.INTRO)
         ci = self.data_loader.question_intro_repo
