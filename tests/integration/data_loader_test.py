@@ -43,19 +43,6 @@ class ConversationElementTest(unittest.TestCase):
         self.assertEqual(q_exp.content_in_german, qr.questions['first name'].content_in_german)
         self.assertEqual(repr(q_exp), repr(qr.questions['first name']))
 
-    @unittest.skipIf(not pathlib.Path(path_to_files + 'questions.csv').exists(),
-                     "Please add the file questions.csv to the repository/data/ folder.")
-    def test_data_loader_mandatory_question(self):
-        # Note: this test only works as long as the Question 'How do you feel today?' is available
-        # inside the questions.csv file!
-        qr = self.data_loader.mandatory_question_repo
-        q_exp = Question(content='Please describe your chief complaint for which you seek consultation.',
-                         number_of_usage=0,
-                         question_type=QuestionType.MANDATORY)
-        self.data_loader.load_data_into_repository(Repository.QUESTIONS)
-        self.assertEqual(5, len(qr.questions))
-        self.assertEqual(repr(q_exp), repr(qr.questions['please describe chief complaint seek consultation']))
-
     @unittest.skipIf(not pathlib.Path(path_to_files + 'questions_for_topics_10.csv').exists(),
                      "Please add the file questions_for_topics_10.csv to the repository/data/ folder.")
     def test_data_loader_topic(self):

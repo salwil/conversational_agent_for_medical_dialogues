@@ -91,9 +91,9 @@ class TopicInferencer:
             self.topic_distributions = self.__load_topic_distributions(self.path_to_new_model + 'mallet.topic_distributions.1')
         # The preprocessed input is treated as one single document, therefore we always expect only one line of topic
         # distributions --> one list element in list at index 0.
-        sorted_data = sorted([(_distribution, _topic)
-                              for _distribution, _topic
-                              in zip(self.topic_distributions[0], self.topic_keys)],
+        indices = range(0,10)
+        sorted_data = sorted([(_distribution, _topic, _index)
+                              for _distribution, _topic, _index
+                              in zip(self.topic_distributions[0], self.topic_keys,indices)],
                              reverse=True)
-        return [Topic(prob_topic[1], prob_topic[0]) for prob_topic in sorted_data[:number]]
-
+        return [Topic(prob_topic[2], prob_topic[1], prob_topic[0]) for prob_topic in sorted_data[:number]]

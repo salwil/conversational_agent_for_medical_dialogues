@@ -5,21 +5,29 @@ from unittest.mock import patch
 import src.helpers.helpers.helpers as helpers
 from model.model.topic import TopicInferencer
 
+path = helpers.get_project_path() + '/src/model/language_models/'
+path_to_pretrained_mallet_model = path + 'mallet_topics/'
+path_to_mallet = path + 'mallet-2.0.8/bin/mallet'
+path_to_new_mallet_model = path + 'mallet_inferred_topics/'
 
 class TopicInferencerTest(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.path = helpers.get_project_path() + '/src/model/language_models/'
-        self.path_to_mallet = self.path + 'mallet-2.0.8/bin/mallet'
-        self.path_to_pretrained_mallet_model = self.path + 'mallet_topics/'
-        self.path_to_new_mallet_model = self.path + 'mallet_inferred_topics/'
-        self.topic_inferencer = TopicInferencer(self.path_to_mallet, self.path_to_pretrained_mallet_model,
-                                                self.path_to_new_mallet_model)
 
+        self.topic_inferencer = TopicInferencer(path_to_mallet, path_to_pretrained_mallet_model,
+                                                path_to_new_mallet_model)
+
+    @unittest.skipIf(not pathlib.Path(path_to_pretrained_mallet_model + 'mallet.training').exists(),
+                     "Please add the training file to the model/language_models/mallet_topics folder.")
+    @unittest.skipIf(not pathlib.Path(path_to_pretrained_mallet_model + 'mallet.topic_distributions.10').exists(),
+                     "Please add the mallet.topic_distributions.10 file to the model/language_models/mallet_topics "
+                     "folder.")
+    @unittest.skipIf(not pathlib.Path(path_to_pretrained_mallet_model + 'mallet.topic_keys.10').exists(),
+                     "Please add the mallet.topic_keys.10 file to the model/language_models/mallet_topics folder.")
     def test_infer_topic_for_sentence(self):
-        paths = [pathlib.Path(self.path_to_new_mallet_model + 'training.txt'),
-                 pathlib.Path(self.path_to_new_mallet_model + 'training'),
-                 pathlib.Path(self.path_to_new_mallet_model + 'mallet.topic_distributions.1')]
+        paths = [pathlib.Path(path_to_new_mallet_model + 'training.txt'),
+                 pathlib.Path(path_to_new_mallet_model + 'training'),
+                 pathlib.Path(path_to_new_mallet_model + 'mallet.topic_distributions.1')]
         for path in paths:
             pathlib.Path.unlink(path, missing_ok=True)
             # make sure, file is really deleted
@@ -48,9 +56,10 @@ class TopicInferencerTest(unittest.TestCase):
                 as __load_topic_distributions:
             topic_list = topic = self.topic_inferencer.get_best_topics(3)
             self.assertTrue(3, len(topic_list))
-            self.assertTrue('tongue' in topic_list[0].topic_keys)
-            self.assertTrue('throat' in topic_list[0].topic_keys)
-            self.assertTrue('dry' in topic_list[0].topic_keys)
+            self.assertTrue('mouth' in topic_list[0].topic_keys)
+            self.assertTrue('chew' in topic_list[0].topic_keys)
+            self.assertTrue('crack' in topic_list[0].topic_keys)
             self.assertEqual(0.45, topic_list[0].probability)
             self.assertEqual(0.3, topic_list[1].probability)
             self.assertEqual(0.1, topic_list[2].probability)
+            self.assertEqual(5, topic_list[0].topic_number)
