@@ -45,7 +45,8 @@ class DataLoader:
         self.topic_repo = {}  # fuer spaeter ev: = TopicRepository({}), aber ev. overengineered
         self.question_intro_repo = QuestionIntroRepository({})
         self.answer_repo = AnswerRepository({})
-        self.path = helpers.get_project_path() + '/src/repository/data/'
+        self.path_to_data = helpers.get_project_path() + '/src/repository/data/'
+        self.path_to_topic_model = helpers.get_project_path() + '/src/model/language_models/mallet_topics/'
         self.preprocessing_parameters = preprocessing_parameters
         self.preprocessor = preprocessor
 
@@ -53,7 +54,7 @@ class DataLoader:
     def load_data_into_repository(self, repository: Repository):
         if repository is Repository.QUESTIONS:
             if self.preprocessor:
-                with open(self.path + 'questions.csv') as questions_file:
+                with open(self.path_to_data + 'questions.csv') as questions_file:
                     question_reader = csv.reader(questions_file, delimiter='\t', quotechar='"')
                     for question in question_reader:
                         question_type = self.determine_question_type(question[1])
@@ -67,17 +68,14 @@ class DataLoader:
                 raise Exception("Please provide a valid preprocessor instance for loading questions into repository.")
 
         elif repository is Repository.TOPICS:
-            with open(self.path + 'topics.txt') as questions_file:
-                topics = questions_file.readlines()
-                topic_number = 1
-                for keywords in topics:
-                    keyword_list = keywords.split(', ')
-                    keyword_list_clean = [k.rstrip("\n") for k in keyword_list]
-                    t = Topic(keyword_list_clean, 0.0)
-                    self.topic_repo[topic_number] = t
-                    topic_number += 1
+            with open(self.path_to_topic_model + 'mallet.topic_keys.10') as topic_keys_file:
+                topics = topic_keys_file.readlines()
+                for t in topics:
+                    t = t.split('\t')
+                    topic = Topic(t[2].split(), t[1])
+                    self.topic_repo[t[0]] = topic
         elif repository is Repository.INTRO:
-            with open(self.path + 'mental_states_with_intros.csv') as mental_states_file:
+            with open(self.path_to_data + 'mental_states_with_intros.csv') as mental_states_file:
                 mental_states_reader = csv.reader(mental_states_file, delimiter='\t', quotechar='"')
                 for mental_state in mental_states_reader:
                     i = QuestionIntro(mental_state[1], 0, mental_state[2], mental_state[0])
@@ -85,8 +83,6 @@ class DataLoader:
                         self.question_intro_repo.mental_states[mental_state[0]].append(i)
                     else:
                         self.question_intro_repo.mental_states[mental_state[0]] = [i]
-            #self.mental_state_repo = MentalStates
-            #print(self.mental_state_repo)
         else:
             warnings.warn('There is no data to load for this repository: ' + repository.value, ResourceWarning)
 

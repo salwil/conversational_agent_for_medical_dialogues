@@ -1,3 +1,4 @@
+import pathlib
 import unittest
 
 import en_core_web_sm
@@ -8,6 +9,8 @@ from src.repository.repository.load_data_into_repo import DataLoader, Repository
 from src.conversation_turn.conversation_turn.conversation_element import Question, PredefinedQuestion, QuestionType, \
     Answer
 from src.conversation_turn.conversation_turn.topic import Topic
+import src.helpers.helpers.helpers as helpers
+
 
 # load computation-intensive classes only once
 preprocessing_parameters = ['lemmatize', 'tokenize', 'remove_punctuation', 'remove_stopwords']
@@ -15,13 +18,17 @@ nlp = en_core_web_sm.load()
 lemmatizer = EnglishLemmatizer(nlp)
 preprocessor = Preprocessor(lemmatizer, nlp)
 
+path_to_files = helpers.get_project_path() + '/src/repository/data/'
 
 class ConversationElementTest(unittest.TestCase):
 
     def setUp(self) -> None:
+
         self.data_loader = DataLoader(preprocessing_parameters=preprocessing_parameters,
                                  preprocessor=preprocessor)
 
+    @unittest.skipIf(not pathlib.Path(path_to_files + 'questions.csv').exists(),
+                     "Please add the file questions.csv to the repository/data folder.")
     def test_data_loader_profile_question(self):
         # Note: this test only works as long as the Question 'How do you feel today?' is available
         # inside the questions.csv file!
@@ -35,6 +42,8 @@ class ConversationElementTest(unittest.TestCase):
         self.assertEqual(q_exp.content_in_german, qr.questions['first name'].content_in_german)
         self.assertEqual(repr(q_exp), repr(qr.questions['first name']))
 
+    @unittest.skipIf(not pathlib.Path(path_to_files + 'questions.csv').exists(),
+                     "Please add the file questions.csv to the repository/data folder.")
     def test_data_loader_mandatory_question(self):
         # Note: this test only works as long as the Question 'How do you feel today?' is available
         # inside the questions.csv file!
@@ -47,19 +56,19 @@ class ConversationElementTest(unittest.TestCase):
         self.assertEqual(repr(q_exp), repr(qr.questions['please describe chief complaint seek consultation']))
 
     def test_data_loader_topic(self):
-        # Note: this test only works as long as the Question topic 1 is available in this form
-        # inside the topics.txt file!
         tr = self.data_loader.topic_repo
-        t_exp = Topic(['jaw', 'mouth', 'open', 'eat', 'chew', 'food'], 0.0)
         self.data_loader.load_data_into_repository(Repository.TOPICS)
-        self.assertEqual(2, len(tr))
-        self.assertEqual(repr(t_exp), repr(tr[1]))
+        self.assertEqual(10, len(tr))
+        self.assertTrue('4' in tr)
+        self.assertIsInstance(tr['4'], Topic)
 
+    @unittest.skipIf(not pathlib.Path(path_to_files + 'mental_states_with_intros.csv').exists(),
+                     "Please add the file mental_states_with_intros.csv to the repository/data folder.")
     def test_data_loader_mental_states(self):
         self.data_loader.load_data_into_repository(Repository.INTRO)
         ci = self.data_loader.question_intro_repo
         stored_intros = ci.mental_states
-        self.assertEqual(8, len(ci.mental_states))
+        self.assertGreater(len(ci.mental_states), 0)
         self.assertTrue('happy' in stored_intros)
 
     def test_data_loader_nothing_to_load(self):
