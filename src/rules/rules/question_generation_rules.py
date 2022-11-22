@@ -76,7 +76,6 @@ class QuestionGenerationRules:
                 found_entities.append(label.label_)
         if len(found_entities) > 0:
             self.found_named_entities = found_entities
-        print(self.found_named_entities)
 
     def __select_interrogative_pronoun_for_next_question(self) -> str:
         self.__determine_sentence_ne(self.answer.content)
@@ -88,10 +87,7 @@ class QuestionGenerationRules:
                                     for ne in self.interrogative_pronouns.ne_type_for_interrogative_pronouns
                                     if ne in self.found_named_entities]
             not_allowed_pronouns_flat = [item for sublist in not_allowed_pronouns for item in sublist]
-            print(not_allowed_pronouns_flat)
             self.allowed_pronouns = [p for p in self.interrogative_pronouns.interrogative_pronouns_with_trigger.keys()
                                      if p not in not_allowed_pronouns_flat]
-        print("Allowed pronouns: ")
-        print(self.allowed_pronouns)
         return random.choice(self.allowed_pronouns)
 

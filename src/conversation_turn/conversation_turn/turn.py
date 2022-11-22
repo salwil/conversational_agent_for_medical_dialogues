@@ -22,9 +22,6 @@ from src.conversation_turn.conversation_turn.conversation_element import Answer,
 class ConversationTurn:
     def __init__(self, turn_number:int, conversation: Conversation, patient_input: str):
         self.turn_number = turn_number
-
-        # References to other objects
-        #self.mental_state = None
         self.patient_input = patient_input
         self.generated_question: str = None
         self.answer: Answer = None
@@ -48,6 +45,8 @@ class ConversationTurn:
         self.__write_turn_to_archive()
 
     def process_answer_and_create_follow_up_question(self):
+        if self.conversation.language.GERMAN:
+            self.__translate_patient_input_from_german_to_english()
         self.__create_answer_object_and_store()
         self.__predict_mental_state()
         self.__infer_topic()
@@ -55,6 +54,8 @@ class ConversationTurn:
         self.__create_question_object_and_store()
         self.__update_question_generation_object_with_newest_data()
         self.__write_turn_to_archive()
+        if self.conversation.language.GERMAN:
+            self.__translate_question_from_english_to_german()
 
     def __create_answer_object_and_store(self):
         """
@@ -80,6 +81,12 @@ class ConversationTurn:
         self.conversation\
             .data_loader\
             .store_conversation_element('question_repo', self.question)
+
+    def __translate_patient_input_from_german_to_english(self):
+        self.patient_input = self.conversation.translator_de_en.translate(self.patient_input)
+
+    def __translate_question_from_english_to_german(self):
+        self.generated_question = self.conversation.translator_en_de.translate(self.generated_question)
 
     def __predict_mental_state(self):
         mental_state = self.conversation.sentiment_detector.predict_mental_state(self.patient_input)
