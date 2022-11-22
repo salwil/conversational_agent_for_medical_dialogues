@@ -42,7 +42,6 @@ class DataLoader:
         self.fallback_question_repo = QuestionRepository(QuestionType.FALLBACK, {})
         self.modedetail_question_repo = QuestionRepository(QuestionType.MOREDETAIL, {})
         self.generated_question_repo = QuestionRepository(QuestionType.GENERATED, {})
-        self.topic_repo = {}  # fuer spaeter ev: = TopicRepository({}), aber ev. overengineered
         self.question_intro_repo = QuestionIntroRepository({})
         self.answer_repo = AnswerRepository({})
         self.path_to_data = helpers.get_project_path() + '/src/repository/data/'
@@ -68,12 +67,16 @@ class DataLoader:
                 raise Exception("Please provide a valid preprocessor instance for loading questions into repository.")
 
         elif repository is Repository.TOPICS:
-            with open(self.path_to_topic_model + 'mallet.topic_keys.10') as topic_keys_file:
-                topics = topic_keys_file.readlines()
-                for t in topics:
-                    t = t.split('\t')
-                    topic = Topic(t[2].split(), t[1])
-                    self.topic_repo[t[0]] = topic
+            with open(self.path_to_data + 'questions_for_topics_10.csv') as topic_keys_file:
+                question_reader = csv.reader(topic_keys_file, delimiter='\t', quotechar='"')
+                for question in question_reader:
+                    p = PredefinedQuestion(question[1], 0, QuestionType.MANDATORY, question[2])
+                    self.preprocessor.preprocess(p, self.preprocessing_parameters)
+                    if question[0] in self.mandatory_question_repo.questions:
+                        self.mandatory_question_repo.questions[question[0]].append(p)
+                    else:
+                        self.mandatory_question_repo.questions[question[0]] = [p]
+
         elif repository is Repository.INTRO:
             with open(self.path_to_data + 'mental_states_with_intros.csv') as mental_states_file:
                 mental_states_reader = csv.reader(mental_states_file, delimiter='\t', quotechar='"')
@@ -83,6 +86,7 @@ class DataLoader:
                         self.question_intro_repo.mental_states[mental_state[0]].append(i)
                     else:
                         self.question_intro_repo.mental_states[mental_state[0]] = [i]
+
         else:
             warnings.warn('There is no data to load for this repository: ' + repository.value, ResourceWarning)
 

@@ -1,5 +1,6 @@
 import pathlib
 import unittest
+from typing import List
 
 import en_core_web_sm
 
@@ -19,7 +20,6 @@ lemmatizer = EnglishLemmatizer(nlp)
 preprocessor = Preprocessor(lemmatizer, nlp)
 
 path_to_files = helpers.get_project_path() + '/src/repository/data/'
-path_to_topic_model = helpers.get_project_path() + '/src/model/language_model/mallet_topics/'
 
 class ConversationElementTest(unittest.TestCase):
 
@@ -56,14 +56,15 @@ class ConversationElementTest(unittest.TestCase):
         self.assertEqual(5, len(qr.questions))
         self.assertEqual(repr(q_exp), repr(qr.questions['please describe chief complaint seek consultation']))
 
-    @unittest.skipIf(not pathlib.Path(path_to_topic_model + 'mallet.topic_keys.10').exists(),
-                     "Please add the file mallet.topic_keys.10 to the model/language_models/mallet_topics/ folder.")
+    @unittest.skipIf(not pathlib.Path(path_to_files + 'questions_for_topics_10.csv').exists(),
+                     "Please add the file questions_for_topics_10.csv to the repository/data/ folder.")
     def test_data_loader_topic(self):
-        tr = self.data_loader.topic_repo
+        mqr = self.data_loader.mandatory_question_repo
         self.data_loader.load_data_into_repository(Repository.TOPICS)
-        self.assertEqual(10, len(tr))
-        self.assertTrue('4' in tr)
-        self.assertIsInstance(tr['4'], Topic)
+        self.assertEqual(10, len(mqr.questions))
+        self.assertTrue('4' in mqr.questions)
+        self.assertIsInstance(mqr.questions['4'], list)
+        self.assertIsInstance(mqr.questions['4'][0], PredefinedQuestion)
 
     @unittest.skipIf(not pathlib.Path(path_to_files + 'mental_states_with_intros.csv').exists(),
                      "Please add the file mental_states_with_intros.csv to the repository/data/ folder.")

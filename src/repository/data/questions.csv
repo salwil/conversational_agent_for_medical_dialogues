@@ -5,8 +5,3 @@ What is your birthday?	profile	Was ist Ihr Geburtsdatum?
 What is your height in cm?	profile	Was ist Ihre Grösse in cm?
 What is your weight in kg?	profile	Was ist Ihr Gewicht in kg?
 What is your medical care provider?	profile	Wer ist Ihr medizinischer Leistungserbringer?
-Please describe your chief complaint for which you seek consultation.	mandatory	Bitte beschreiben Sie Ihre Hauptbeschwerde, wegen der Sie Beratung suchen.
-What does your chief complaint stop you from doing?	mandatory	Was können Sie aufgrund Ihrer Hauptbeschwerde nicht tun?
-What do you expect as the result of the examinations and treatments in our clinic?	mandatory	Was erwarten Sie als Ergebnis der Untersuchungen und Behandlungen in unserer Klinik?
-Which factors aggravate your complaints? (e.g. chewing hard / soft food, biting, drinking, mouth opening (e.g. yawning), talking, physical / emotional stress, playing a musicial instrument, ... ),mandatory	mandatory	Welche Faktoren verschlimmern Ihre Beschwerden?  (z.B. Kauen von harter/weicher Nahrung, Beißen, Trinken, Mundöffnung (z.B. Gähnen), Sprechen, körperlicher/emotionaler Stress, Spielen eines Musikinstruments, ... )
-Which factors alleviate your complaints? (e.g. distraction, rest, relaxation, keeping jaw in fixed position, ... ),mandatory	mandatory	Welche Faktoren lindern Ihre Beschwerden?  (z.B. Ablenkung, Ruhe, Entspannung, Kieferfixierung, ... ) 

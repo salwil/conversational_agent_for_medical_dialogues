@@ -28,7 +28,7 @@ class AnswerRepository:
 
 @dataclass
 class TopicRepository:
-    topics: dict # key: topic number, value: Topic
+    topics: {} # key: topic number, value: Topic
 
 @dataclass
 class QuestionIntroRepository:

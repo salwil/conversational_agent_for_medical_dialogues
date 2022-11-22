@@ -23,9 +23,7 @@ import os
 
 from typing import List
 
-from conversation_turn.conversation_turn.conversation_element import Answer
 from conversation_turn.conversation_turn.topic import Topic
-
 
 class TopicInferencer:
     def __init__(self, path_to_mallet, path_to_pretrained_mallet_model, path_to_new_model):
