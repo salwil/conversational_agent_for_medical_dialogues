@@ -15,8 +15,8 @@ Institute for Computational Linguistics
 """
 import time
 
-from conversation.conversation.termination_criterion import TerminationCriterionForConversation
-from conversation_turn.conversation_turn.turn import ConversationTurn
+from src.conversation.conversation.termination_criterion import TerminationCriterionForConversation
+from src.conversation_turn.conversation_turn.turn import ConversationTurn
 from src.conversation.conversation.conversation import Conversation, Language
 
 def main():

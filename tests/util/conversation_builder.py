@@ -13,54 +13,27 @@ Institute for Computational Linguistics
 - Class for building conversations
 
 """
-from abc import abstractmethod, ABC
+from abc import ABC
 from unittest.mock import MagicMock
 
 from model.model.question_generation import QuestionGenerator
 from model.model.sentiment_detection import SentimentDetector
-from model.model.topic import TopicInferencer
+from model.model.topic_inference import TopicInferencer
 from model.model.translation import TranslatorDeEn, TranslatorEnDe
 from src.conversation.conversation.conversation import Conversation, Language
-from src.conversation_turn.conversation_turn.conversation_element import Question, PredefinedQuestion, QuestionType, \
+from src.conversation_turn.conversation_turn.conversation_element import PredefinedQuestion, QuestionType, \
     Answer, QuestionIntro
 
 
-class Builder(ABC):
-    """
-    The Builder interface specifies methods for creating the different parts of
-    the Product objects.
-    """
-
-    @property
-    @abstractmethod
-    def conversation(self) -> None:
-        pass
-
-    @abstractmethod
-    def with_profile_question(self) -> None:
-        pass
-
-    @abstractmethod
-    def with_mandatory_question(self) -> None:
-        pass
-
-    """
-    @abstractmethod
-    def with_generated_question(self) -> None:
-        pass
-    """
-
-
-class ConversationBuilder(Builder):
+class ConversationBuilder(ABC):
     def __init__(self):
         self.reset()
 
     def reset(self):
         self._conversation = Conversation(test_mode=True)
 
-    def conversation(self, language = Language.ENGLISH) -> Conversation:
+    def conversation(self) -> Conversation:
         conversation = self._conversation
-        conversation.language = language
         self.reset()
         return conversation
 

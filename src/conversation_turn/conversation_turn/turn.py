@@ -78,13 +78,18 @@ class ConversationTurn:
 
     def __create_question_object_and_store(self):
         """
-        Creates an question object and stores it in the corresponding repository
+        Create a question object and if it's not a predefined question, store it in the corresponding repository
         """
-        self.question = Question(self.generated_question, 1, QuestionType.GENERATED)
-        self.conversation.preprocessor.preprocess(self.question, self.conversation.preprocessing_parameters)
-        self.conversation\
-            .data_loader\
-            .store_conversation_element('question_repo', self.question)
+        if self.topic_number:
+            self.question = self.conversation.data_loader.mandatory_question_repo.questions[self.topic_number][0]
+            self.generated_question = self.question.content
+            #self.question = PredefinedQuestion(self.generated_question, 1, QuestionType.MANDATORY)
+        else:
+            self.question = Question(self.generated_question, 1, QuestionType.GENERATED)
+            self.conversation.preprocessor.preprocess(self.question, self.conversation.preprocessing_parameters)
+            self.conversation\
+                .data_loader\
+                .store_conversation_element('question_repo', self.question)
 
     def __translate_patient_input_from_german_to_english(self):
         self.patient_input = self.conversation.translator_de_en.translate(self.patient_input)
@@ -115,8 +120,7 @@ class ConversationTurn:
 
     def __generate_question(self):
         if self.topic_number:
-            self.question = self.conversation.data_loader.mandatory_question_repo.questions[self.topic_number][0]
-            self.generated_question = self.question.content
+            pass
         elif self.turn_number % 3 == 0:
             self.generated_question = self.conversation.question_generator.generate()
         else:
@@ -134,7 +138,10 @@ class ConversationTurn:
         self.conversation.conversation_archive.write(archive_record)
 
     def __update_question_generation_object_with_newest_data(self):
-        self.conversation.question_generator.update_generated_questions_repository(
-            self.conversation.data_loader.generated_question_repo)
-        self.conversation.question_generator.update_question_intro_repository(
-            self.conversation.data_loader.question_intro_repo)
+        # only generated questions are stored in this repository, the mandatory questions that derive from a topic are
+        # maintained in the mandatory_question_repository
+        if not self.topic_number:
+            self.conversation.question_generator.update_generated_questions_repository(
+                self.conversation.data_loader.generated_question_repo)
+            self.conversation.question_generator.update_question_intro_repository(
+                self.conversation.data_loader.question_intro_repo)

@@ -101,6 +101,8 @@ class TopicInferencer:
     def get_best_topics(self, number) -> List[Topic]:
         indices = range(0,self.number_of_pretrained_topics)
         relative_weights = self.__compute_relative_topic_weights()
+        print(relative_weights)
+        print(self.inferred_topic_distributions)
         sorted_data = sorted([(_distribution, _topic, _index)
                               for _distribution, _topic, _index
                               in zip(relative_weights, self.topic_keys, indices)],
@@ -110,5 +112,5 @@ class TopicInferencer:
     def __compute_relative_topic_weights(self) -> List[float]:
         # The preprocessed input is treated as one single document, therefore we always expect only one line of topic
         # distributions --> one list element in list at index 0.
-        return [float(_distribution) / float(_weight.replace(',', '.'))
+        return [float(_weight.replace(',', '.')) / float(_distribution)
                 for _distribution, _weight in zip(self.inferred_topic_distributions[0] , self.topic_weights)]

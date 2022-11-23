@@ -20,7 +20,7 @@ from enum import Enum
 
 import en_core_web_sm
 
-from model.model.topic import TopicInferencer
+from model.model.topic_inference import TopicInferencer
 from src.model.model.translation import TranslatorDeEn, TranslatorEnDe
 from src.model.model.sentiment_detection import SentimentDetector
 from src.model.model.question_generation import QuestionGenerator
@@ -36,7 +36,7 @@ class Language(Enum):
 
 class Conversation:
     def __init__(self, test_mode = False):
-        self.language = Language.ENGLISH
+        self.language: Language = Language.ENGLISH
         self.preprocessing_parameters = ['lemmatize', 'tokenize', 'remove_punctuation', 'remove_stopwords']
         try:
             self.nlp = en_core_web_sm.load()
@@ -68,13 +68,7 @@ class Conversation:
                                                      for mental_state
                                                      in self.data_loader.question_intro_repo.mental_states])
         self.question_generator = QuestionGenerator(self.preprocessor, self.nlp, None)
-        path = helpers.get_project_path() + '/src/model/language_models/'
-        path_to_mallet = path + 'mallet-2.0.8/bin/mallet'
-        path_to_pretrained_mallet_model = path + 'mallet_topics/'
-        path_to_new_mallet_model = path + 'mallet_inferred_topics/'
-        self.topic_inferencer = TopicInferencer(path_to_mallet,
-                                                path_to_pretrained_mallet_model,
-                                                path_to_new_mallet_model)
+        self.topic_inferencer = TopicInferencer(10)
 
     def ask_questions_for_patient_instantiation(self):
         for question in self.data_loader.profile_question_repo.questions:
