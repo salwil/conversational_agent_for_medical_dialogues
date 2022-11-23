@@ -6,7 +6,7 @@ from src.repository.repository.conversation_archive import ConversationArchival,
 class ConversationArchiveTest(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.archive = ConversationArchival('tests_creation_date')
+        self.archive = ConversationArchival('tests_creation_date', test_mode=True)
 
     def test_archive_is_ready_after_instantiation(self):
         self.assertTrue(self.archive.is_ready)
