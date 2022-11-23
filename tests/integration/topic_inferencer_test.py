@@ -14,8 +14,7 @@ class TopicInferencerTest(unittest.TestCase):
 
     def setUp(self) -> None:
 
-        self.topic_inferencer = TopicInferencer(path_to_mallet, path_to_pretrained_mallet_model,
-                                                path_to_new_mallet_model)
+        self.topic_inferencer = TopicInferencer(10)
 
     @unittest.skipIf(not pathlib.Path(path_to_pretrained_mallet_model + 'mallet.training').exists(),
                      "Please add the training file to the model/language_models/mallet_topics folder.")

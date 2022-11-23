@@ -53,7 +53,7 @@ class CLI ():
                     print(profile_question.content_in_german)
                 else:
                     print(profile_question.content)
-                self.current_conversation_turn.process_question_and_answer_for_patient_profile(profile_question.content)
+                self.current_conversation_turn.process_answer_and_profile_question(profile_question.content)
                 answer = input()
                 answer = self.__validate(answer)
                 turn_number += 1

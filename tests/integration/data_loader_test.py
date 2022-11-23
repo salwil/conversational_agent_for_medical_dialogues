@@ -49,9 +49,9 @@ class ConversationElementTest(unittest.TestCase):
         mqr = self.data_loader.mandatory_question_repo
         self.data_loader.load_data_into_repository(Repository.TOPICS)
         self.assertEqual(10, len(mqr.questions))
-        self.assertTrue('4' in mqr.questions)
-        self.assertIsInstance(mqr.questions['4'], list)
-        self.assertIsInstance(mqr.questions['4'][0], PredefinedQuestion)
+        self.assertTrue(4 in mqr.questions)
+        self.assertIsInstance(mqr.questions[4], list)
+        self.assertIsInstance(mqr.questions[4][0], PredefinedQuestion)
 
     @unittest.skipIf(not pathlib.Path(path_to_files + 'mental_states_with_intros.csv').exists(),
                      "Please add the file mental_states_with_intros.csv to the repository/data/ folder.")
