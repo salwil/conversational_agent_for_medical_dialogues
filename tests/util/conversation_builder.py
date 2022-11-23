@@ -53,7 +53,7 @@ class ConversationBuilder(Builder):
         self.reset()
 
     def reset(self):
-        self._conversation = Conversation()
+        self._conversation = Conversation(test_mode=True)
 
     def conversation(self) -> Conversation:
         conversation = self._conversation

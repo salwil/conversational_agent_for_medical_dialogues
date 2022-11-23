@@ -35,7 +35,7 @@ class Language(Enum):
     GERMAN = 'D'
 
 class Conversation:
-    def __init__(self):
+    def __init__(self, test_mode = False):
         self.language = Language.ENGLISH
         self.preprocessing_parameters = ['lemmatize', 'tokenize', 'remove_punctuation', 'remove_stopwords']
         try:
@@ -54,7 +54,7 @@ class Conversation:
         self.topic_inferencer: TopicInferencer = None
         self.creation_timestamp: datetime = datetime.datetime.now()
         self.creation_timestamp_formatted: str = self.creation_timestamp.strftime("%m-%d-%Y-%H-%M-%S")
-        self.conversation_archive = ConversationArchival(self.creation_timestamp_formatted)
+        self.conversation_archive = ConversationArchival(self.creation_timestamp_formatted, test_mode)
 
     def load_repositories(self):
         self.data_loader.load_data_into_repository(Repository.QUESTIONS)

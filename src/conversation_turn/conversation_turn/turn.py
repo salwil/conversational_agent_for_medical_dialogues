@@ -53,7 +53,7 @@ class ConversationTurn:
         self.__generate_question()
         self.__create_question_object_and_store()
         self.__update_question_generation_object_with_newest_data()
-        self.__write_turn_to_archive()
+        self.__write_turn_to_archive(test_mode)
         if self.conversation.language.GERMAN:
             self.__translate_question_from_english_to_german()
 

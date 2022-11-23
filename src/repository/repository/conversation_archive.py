@@ -28,8 +28,11 @@ class ArchiveOperation(Enum):
     WRITE = 'w'
 
 class ConversationArchival:
-    def __init__(self, creation_date):
-        self.archive_dir = helpers.get_project_path() + '/src/repository/data/conversation_archive/'
+    def __init__(self, creation_date, test_mode = False):
+        if test_mode:
+            self.archive_dir = helpers.get_project_path() + '/src/repository/data/conversation_archive/test_data/'
+        else:
+            self.archive_dir = helpers.get_project_path() + '/src/repository/data/conversation_archive/'
         self.archive_file_name = creation_date + '.csv'
         self.fieldnames = ['answer', 'question']
         self.is_ready = False
