@@ -3,7 +3,7 @@ import unittest
 from unittest.mock import patch
 
 import src.helpers.helpers.helpers as helpers
-from model.model.topic import TopicInferencer
+from model.model.topic_inference import TopicInferencer
 
 path = helpers.get_project_path() + '/src/model/language_models/'
 path_to_pretrained_mallet_model = path + 'mallet_topics/'
@@ -46,14 +46,11 @@ class TopicInferencerTest(unittest.TestCase):
         The preprocessed input is treated as one single document, therefore we always expect only one line of topic
         distributions --> one list element in list.
         """
-        topic_distributions = [[0.01, 0.1, 0.02, 0.3, 0.05, 0.45, 0.035, 0.01, 0.016, 0.009]]
+        relative_topic_weights = [0.01, 0.1, 0.02, 0.3, 0.05, 0.45, 0.035, 0.01, 0.016, 0.009]
         # check preconditions
-        self.assertEqual(1, sum(topic_distributions[0]))
-        self.assertEqual(10, len(topic_distributions[0]))
-        with patch.object(TopicInferencer, '_TopicInferencer__load_topic_distributions',
-                          return_value=topic_distributions) \
-                as __load_topic_distributions:
-            topic_list = topic = self.topic_inferencer.get_best_topics(3)
+        self.assertEqual(10, len(relative_topic_weights))
+        with patch.object(TopicInferencer, '_TopicInferencer__compute_relative_topic_weights', return_value=relative_topic_weights) as __compute_relative_topic_weights:
+            topic_list = self.topic_inferencer.get_best_topics(3)
             self.assertTrue(3, len(topic_list))
             self.assertTrue('mouth' in topic_list[0].topic_keys)
             self.assertTrue('chew' in topic_list[0].topic_keys)

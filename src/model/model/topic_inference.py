@@ -41,7 +41,11 @@ class TopicInferencer:
         self.topic_keys = self.__load_topic_keys(self.path_to_original_model +
                                                  'mallet.topic_keys.' +
                                                  str(self.number_of_pretrained_topics))
-        self.topic_distributions = None
+        self.topic_weights = self.__load_topic_weights(self.path_to_original_model
+                                  + 'mallet.topic_keys.'
+                                  + str(self.number_of_pretrained_topics))
+        self.inferred_topic_distributions = None
+
 
     def infer_topic(self, text_preprocessed):
         text = [text_preprocessed]
@@ -50,12 +54,15 @@ class TopicInferencer:
                             self.path_to_original_model + 'mallet.model.' + str(self.number_of_pretrained_topics),
                             self.path_to_new_model + 'training',
                             self.path_to_new_model + 'mallet.topic_distributions.' + str(self.number_of_topics))
-        self.topic_distributions = self.__load_topic_distributions(self.path_to_new_model +
+        self.inferred_topic_distributions = self.__load_topic_distributions(self.path_to_new_model +
                                                                    'mallet.topic_distributions.' +
-                                                                   str(self.number_of_topics))
+                                                                            str(self.number_of_topics))
 
     def __load_topic_keys(self, topic_keys_path):
         return [line.split('\t')[2].split() for line in open(topic_keys_path, 'r')]
+
+    def __load_topic_weights(self, topic_keys_path):
+        return [line.split('\t')[1] for line in open(topic_keys_path, 'r')]
 
     def __prepare_input_data(self, text):
         training_data_file = open(self.path_to_new_model + 'training.txt', 'w')
@@ -92,14 +99,16 @@ class TopicInferencer:
             print(i, '\t', ' '.join(t[:number]))
 
     def get_best_topics(self, number) -> List[Topic]:
-        # Only for test: self.topic_distributions in None then.
-        if not self.topic_distributions:
-            self.topic_distributions = self.__load_topic_distributions(self.path_to_new_model + 'mallet.topic_distributions.1')
-        # The preprocessed input is treated as one single document, therefore we always expect only one line of topic
-        # distributions --> one list element in list at index 0.
         indices = range(0,self.number_of_pretrained_topics)
+        relative_weights = self.__compute_relative_topic_weights()
         sorted_data = sorted([(_distribution, _topic, _index)
                               for _distribution, _topic, _index
-                              in zip(self.topic_distributions[0], self.topic_keys,indices)],
+                              in zip(relative_weights, self.topic_keys, indices)],
                              reverse=True)
         return [Topic(prob_topic[2], prob_topic[1], prob_topic[0]) for prob_topic in sorted_data[:number]]
+
+    def __compute_relative_topic_weights(self) -> List[float]:
+        # The preprocessed input is treated as one single document, therefore we always expect only one line of topic
+        # distributions --> one list element in list at index 0.
+        return [float(_distribution) / float(_weight.replace(',', '.'))
+                for _distribution, _weight in zip(self.inferred_topic_distributions[0] , self.topic_weights)]
