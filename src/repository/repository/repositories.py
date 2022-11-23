@@ -28,7 +28,7 @@ class AnswerRepository:
 
 @dataclass
 class TopicRepository:
-    topics: {} # key: topic number, value: Topic
+    topics: {} # key: topic number, value: Topic, maybe not used?
 
 @dataclass
 class QuestionIntroRepository:

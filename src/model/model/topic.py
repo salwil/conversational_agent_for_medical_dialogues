@@ -23,25 +23,31 @@ import os
 
 from typing import List
 
+import src.helpers.helpers.helpers as helpers
 from conversation_turn.conversation_turn.topic import Topic
 
+path = helpers.get_project_path() + '/src/model/language_models/'
+path_to_pretrained_mallet_model = path + 'mallet_topics/'
+path_to_mallet = path + 'mallet-2.0.8/bin/mallet'
+path_to_new_mallet_model = path + 'mallet_inferred_topics/'
+
 class TopicInferencer:
-    def __init__(self, path_to_mallet, path_to_pretrained_mallet_model, path_to_new_model):
+    def __init__(self, number_of_pretrained_topics):
         self.path_to_mallet = path_to_mallet
         self.path_to_original_model = path_to_pretrained_mallet_model
-        self.path_to_new_model = path_to_new_model
+        self.path_to_new_model = path_to_new_mallet_model
         self.number_of_topics = 1
-        self.number_of_topics_pretrained = 10
+        self.number_of_pretrained_topics = number_of_pretrained_topics
         self.topic_keys = self.__load_topic_keys(self.path_to_original_model +
                                                  'mallet.topic_keys.' +
-                                                 str(self.number_of_topics_pretrained))
+                                                 str(self.number_of_pretrained_topics))
         self.topic_distributions = None
 
     def infer_topic(self, text_preprocessed):
         text = [text_preprocessed]
         self.__prepare_input_data(text)
         self.__infer_topics(self.path_to_mallet,
-                            self.path_to_original_model + 'mallet.model.' + str(self.number_of_topics_pretrained),
+                            self.path_to_original_model + 'mallet.model.' + str(self.number_of_pretrained_topics),
                             self.path_to_new_model + 'training',
                             self.path_to_new_model + 'mallet.topic_distributions.' + str(self.number_of_topics))
         self.topic_distributions = self.__load_topic_distributions(self.path_to_new_model +
@@ -91,7 +97,7 @@ class TopicInferencer:
             self.topic_distributions = self.__load_topic_distributions(self.path_to_new_model + 'mallet.topic_distributions.1')
         # The preprocessed input is treated as one single document, therefore we always expect only one line of topic
         # distributions --> one list element in list at index 0.
-        indices = range(0,10)
+        indices = range(0,self.number_of_pretrained_topics)
         sorted_data = sorted([(_distribution, _topic, _index)
                               for _distribution, _topic, _index
                               in zip(self.topic_distributions[0], self.topic_keys,indices)],

@@ -24,7 +24,6 @@ import csv
 
 from src.conversation_turn.conversation_turn.conversation_element \
     import Question, PredefinedQuestion, Answer, QuestionIntro
-from src.conversation_turn.conversation_turn.topic import Topic
 from .repositories import QuestionType, QuestionRepository, AnswerRepository, QuestionIntroRepository
 import src.helpers.helpers.helpers as helpers
 
@@ -72,10 +71,11 @@ class DataLoader:
                 for question in question_reader:
                     p = PredefinedQuestion(question[1], 0, QuestionType.MANDATORY, question[2])
                     self.preprocessor.preprocess(p, self.preprocessing_parameters)
-                    if question[0] in self.mandatory_question_repo.questions:
-                        self.mandatory_question_repo.questions[question[0]].append(p)
+                    topic_number = int(question[0])
+                    if topic_number in self.mandatory_question_repo.questions:
+                        self.mandatory_question_repo.questions[topic_number].append(p)
                     else:
-                        self.mandatory_question_repo.questions[question[0]] = [p]
+                        self.mandatory_question_repo.questions[topic_number] = [p]
 
         elif repository is Repository.INTRO:
             with open(self.path_to_data + 'mental_states_with_intros.csv') as mental_states_file:
