@@ -14,22 +14,27 @@ Institute for Computational Linguistics
 
 """
 import time
+import warnings
 
-from src.conversation.conversation.termination_criterion import TerminationCriterionForConversation
-from src.conversation_turn.conversation_turn.turn import ConversationTurn
-from src.conversation.conversation.conversation import Conversation, Language
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    from src.conversation.conversation.termination_criterion import TerminationCriterionForConversation
+    from src.conversation_turn.conversation_turn.turn import ConversationTurn
+    from src.conversation.conversation.conversation import Conversation, Language
 
 def main():
-    conversation = Conversation()
-    cli = CLI(conversation)
-    cli.say_hello()
-    language = cli.select_language()
-    conversation.language = language
-    cli.introduce_user(language)
-    conversation.load_repositories()
-    # this could be done in a separate thread, meanwhile the conversation is started with profile questions.
-    conversation.load_models()
-    cli.maintain_conversation(conversation)
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        conversation = Conversation()
+        cli = CLI(conversation)
+        cli.say_hello()
+        language = cli.select_language()
+        conversation.language = language
+        cli.introduce_user(language)
+        conversation.load_repositories()
+        # this could be done in a separate thread, meanwhile the conversation is started with profile questions.
+        conversation.load_models()
+        cli.maintain_conversation(conversation)
 
 
 class CLI ():

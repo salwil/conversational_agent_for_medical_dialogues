@@ -81,7 +81,6 @@ class ConversationTurn:
         Create a question object and if it's not a predefined question, store it in the corresponding repository
         """
         if self.topic_number:
-            self.question = self.conversation.data_loader.mandatory_question_repo.questions[self.topic_number][0]
             self.generated_question = self.question.content
             #self.question = PredefinedQuestion(self.generated_question, 1, QuestionType.MANDATORY)
         else:
@@ -109,17 +108,21 @@ class ConversationTurn:
         topic_question_repo = self.conversation.data_loader.mandatory_question_repo.questions
         for topic in self.answer.topic_list:
             # when this condition is false all the questions associated to one of the three topics have already been covered
-            if topic.probability > 0.2 and \
+            if topic.probability > 5 and \
                     topic_question_repo[topic.topic_number][0].number_of_usage == 0:
                 self.topic_number = topic.topic_number
-        topic_question_repo[self.topic_number][0].number_of_usage += 1
-        # we sort the mandatory questions so that the ones that have not been used come first. This allows us to simply
-        # check the first question if it has been used so far and if yes, we can pick it, and if not we know, that there
-        # is no more question to pick for this topic.
-        topic_question_repo[self.topic_number].sort(key=lambda x: x.number_of_usage, reverse=False)
+                break
+        if self.topic_number: # at some point we won't find an unused topic question
+            topic_question_repo[self.topic_number][0].number_of_usage += 1
+            self.question = self.conversation.data_loader.mandatory_question_repo.questions[self.topic_number][0]
+            # we sort the mandatory questions so that the ones that have not been used come first. This allows us to
+            # simply check the first question if it has been used so far and if yes, we can pick it, and if not we know,
+            # that there is no more question to pick for this topic.
+            topic_question_repo[self.topic_number].sort(key=lambda x: x.number_of_usage, reverse=False)
 
     def __generate_question(self):
         if self.topic_number:
+            # we use a mandatory question
             pass
         elif self.turn_number % 3 == 0:
             self.generated_question = self.conversation.question_generator.generate()
