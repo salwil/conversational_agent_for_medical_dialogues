@@ -71,7 +71,7 @@ class QuestionGenerationTest(unittest.TestCase):
                                                              content_in_2nd_pers="You often have pain",
                                                              mental_state='afraid')\
             .conversation()
-        hl = "[HL] at the University Hospital [HL]."
+        hl = "[HL] at the hospital [HL]."
         with patch.object(QuestionGenerationRules,
                           '_QuestionGenerationRules__select_interrogative_pronoun_for_next_question',
                           return_value="where")\
@@ -122,7 +122,7 @@ class QuestionGenerationTest(unittest.TestCase):
                                                              content_in_2nd_pers=" hurts when you eat food",
                                                              mental_state='afraid')\
             .conversation()
-        hl = "[HL] Your jaw [HL]"
+        hl = "[HL] Something [HL]"
         with patch.object(QuestionGenerationRules,
                           '_QuestionGenerationRules__select_interrogative_pronoun_for_next_question',
                           return_value="what")\

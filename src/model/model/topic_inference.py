@@ -20,7 +20,6 @@ Institute for Computational Linguistics
 
 """
 import os
-
 from typing import List
 
 import src.helpers.helpers.helpers as helpers

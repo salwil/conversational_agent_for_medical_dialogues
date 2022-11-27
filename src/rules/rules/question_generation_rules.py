@@ -43,7 +43,8 @@ class QuestionGenerationRules:
         doc = self.nlp(self.answer.content)
         self.preprocessor.preprocess(self.answer, ['tokenize'])
         index = 0
-        forms = {'am': 'are', 'i': 'you', 'mine': 'yours', 'me': 'you', 'my': 'your', "'m": "'re"}  # More?
+        # we need the entry are: are for the first person plural: if someone writes
+        forms = {'am': 'are', 'i': 'you', 'mine': 'yours', 'me': 'you', 'my': 'your', "'m": "'re", "ours": "yours", "our": "your", "we": "you", "us": "you"}  # More?
         for token in doc:
             if len(token.morph.get("PronType")) > 0 and token.morph.get("Person") == ['1'] or \
                     len(token.morph.get("VerbForm")) > 0 and token.morph.get("Mood") == ['Ind']:
@@ -51,7 +52,7 @@ class QuestionGenerationRules:
                 try:
                     self.answer.content_tokenized[index] = forms[pronoun]
                 except KeyError:
-                    # the verb 'have' for example can remain as is
+                    # verbs except 'be' can remain as is, and also the plural form of be (we are --> you are)
                     pass
             index += 1
         self.answer.content_in_2nd_pers = " ".join(self.answer.content_tokenized)
