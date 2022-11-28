@@ -15,17 +15,11 @@ parts are aligned exclusively to the topic of orofacial pains.
 ## Getting started
 ### Prerequisites
 - Python 3.8 installed
-- Install the following Python packages with `pip3.8 install` command:
-    - `transformers 4.24.0`
-    - `spacy 3.4.3`
-    - `torch 1.13.0`
-    - `nltk3.7`
-    - `en_core_web_sm`
-    - `sentencepiece 0.1.97`
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-## Installation
+## Installation in virtual enrivonment
+
 - Open the command line window
 - Clone the repository with  
   `>> git clone git@github.com:salwil/conversational_agent_for_medical_dialogues.git`
@@ -35,10 +29,17 @@ parts are aligned exclusively to the topic of orofacial pains.
   `>> python3.8 -m venv .venv`
 - Activate the virtual environment:  
   `source venv/bin/activate`
+- Install the following Python packages with `pip3.8 install` command:
+    - `transformers 4.24.0`
+    - `spacy 3.4.3`
+    - `torch 1.13.0`
+    - `nltk3.7`
+    - `en_core_web_sm`
+    - `sentencepiece 0.1.97`
 - Go to the src directory:  
   `cd src`
-- Install the packages:  
-- 
+- Install the conversation package:  
+- --> todo
 - Run the unittests before you start, to make sure, everything is setup correctly:
 - `>> python3.8 -m unittest discover -s tests -p '*_test.py'`
 
@@ -57,6 +58,7 @@ If you want to set the system up according to specific needs, follow the instruc
 
 ## Configurability
 <div id="configurability"></div>
+
 ### Add profile questions
 - Profile questions have to be added in the `src/repository/data` folder in a csv file called `profile_questions.csv`. 
 - The first column contains the question in english, the third column contains the question in German. The second column
@@ -110,7 +112,7 @@ train the new model)
 
 ## Contact
 Salome Wildermuth, [salome.wildermuth@uzh.ch](salome.wildermuth@uzh.ch)  
-Project Link: https://github.com/salwil/conversational_agent_for_medical_dialogues
+Project Link: https://github.com/salwil/conversational_agent_for_medical_dialogues  
 Template: https://github.com/othneildrew/Best-README-Template/blob/master/README.md
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -118,5 +120,4 @@ Template: https://github.com/othneildrew/Best-README-Template/blob/master/README
 ## References
 
 <p align="right">(<a href="#top">back to top</a>)</p>
-
 
