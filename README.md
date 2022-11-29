@@ -6,7 +6,7 @@ This medical dialogue agent (MDA) is designed to assist in clinical consultation
 The MDA is a hybrid system, consisting of transformer- probability- and rulebased
 question generation. The dialogue management consists of finite-state, frame-based
 as well as agent-based components. The MDA is responsible to lead the conversation,
-it is a system-initiative architecture. The MDA is clearly a task-oriented dialogue
+it is a system-initiative architecture. The MDA is a task-oriented dialogue
 agent. The implemented rules as well as the predetermined questions and sentence
 parts are aligned exclusively to the topic of orofacial pains.
 
