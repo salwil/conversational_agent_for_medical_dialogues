@@ -47,8 +47,9 @@ parts are aligned exclusively to the topic of orofacial pains.
   `>> pip3.8 install preprocess/`  
   `>> pip3.8 install repository/`  
   `>> pip3.8 install rules/`  
-- Go back to the root directora and run the unittests before you start, to make sure, everything is setup correctly:  
-  `>> python3.8 -m unittest tests/*/*_test.py`
+- Go back to the root directora and run the unittests before you start, to make sure, everything is setup correctly (this may take 2-3 minutes):  
+  `>> python3.8 -m unittest tests/*/*_test.py`  
+  In the end you should see something like `Ran 49 tests in xxx.xxxs` without any errors.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -65,6 +66,9 @@ If you want to set the system up according to specific needs, follow the instruc
 
 ## Configurability
 <div id="configurability"></div>
+
+**Important Note:** To make changes in the configuration active, the repository package has to be installed again with
+`>> pip3.8 install repository/`
 
 ### Add profile questions
 - Profile questions have to be added in the `src/repository/data` folder in a csv file called `profile_questions.csv`. 
