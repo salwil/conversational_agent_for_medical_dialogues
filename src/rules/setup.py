@@ -1,17 +1,11 @@
 import setuptools
 
-setuptools.setup(name='conversation',
+setuptools.setup(name='rules',
 version='1.0',
-description='Conversation Package',
+description='Rules Package',
 url='https://github.com/salwil/conversational_agent_for_medical_dialogues',
 author='Salome Wildermuth',
 python_requires='>=3.8',
-install_requires=[
-    'en_core_web_sm'
-],
-entry_points={
-        'console_scripts': [
-            'mda = conversation.main:main']
-    },
+install_requires=[],
 author_email='salome.wildermuth@uzh.ch',
 packages=setuptools.find_packages())

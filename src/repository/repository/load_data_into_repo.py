@@ -22,11 +22,10 @@ from enum import Enum
 import sys
 import csv
 
-from src.conversation_turn.conversation_turn.conversation_element \
+from conversation_turn.conversation_element \
     import Question, PredefinedQuestion, Answer, QuestionIntro
-from .repositories import QuestionType, QuestionRepository, AnswerRepository, QuestionIntroRepository
-import src.helpers.helpers.helpers as helpers
-
+from repository.repositories import QuestionType, QuestionRepository, AnswerRepository, QuestionIntroRepository
+import helpers.helpers as helpers
 
 class Repository(Enum):
     QUESTIONS = 'question_repo'

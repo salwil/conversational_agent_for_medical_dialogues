@@ -18,9 +18,14 @@ import warnings
 
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
+    from .termination_criterion import TerminationCriterionForConversation
+    from conversation_turn.turn import ConversationTurn
+    from .conversation import Conversation, Language
+    """
     from src.conversation.conversation.termination_criterion import TerminationCriterionForConversation
     from src.conversation_turn.conversation_turn.turn import ConversationTurn
     from src.conversation.conversation.conversation import Conversation, Language
+    """
 
 def main():
     with warnings.catch_warnings():

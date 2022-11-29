@@ -23,7 +23,7 @@ Institute for Computational Linguistics
 
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize, RegexpTokenizer
-from src.conversation_turn.conversation_turn.conversation_element import ConversationElement
+from conversation_turn.conversation_element import ConversationElement
 
 class Preprocessor:
     def __init__(self, lemmatizer=None, nlp=None):

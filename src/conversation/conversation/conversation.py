@@ -20,14 +20,14 @@ from enum import Enum
 
 import en_core_web_sm
 
-from model.model.topic_inference import TopicInferencer
-from src.model.model.translation import TranslatorDeEn, TranslatorEnDe
-from src.model.model.sentiment_detection import SentimentDetector
-from src.model.model.question_generation import QuestionGenerator
-from src.repository.repository.load_data_into_repo import DataLoader, Repository
-from src.repository.repository.conversation_archive import ConversationArchival
-from src.preprocess.preprocess.lemmatize import EnglishLemmatizer
-from src.preprocess.preprocess.preprocess import Preprocessor
+from model.translation import TranslatorDeEn, TranslatorEnDe
+from model.sentiment_detection import SentimentDetector
+from model.question_generation import QuestionGenerator
+from model.topic_inference import TopicInferencer
+from repository.load_data_into_repo import DataLoader, Repository
+from repository.conversation_archive import ConversationArchival
+from preprocess.lemmatize import EnglishLemmatizer
+from preprocess.preprocess import Preprocessor
 
 class Language(Enum):
     ENGLISH = 'E',

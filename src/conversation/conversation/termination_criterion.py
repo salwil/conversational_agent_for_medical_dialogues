@@ -13,9 +13,9 @@ Institute for Computational Linguistics
 - Class for modeling termination criteria of a topic conversation or of the whole conversation
 
 """
-from conversation_turn.conversation_turn.topic import Topic
-from conversation_turn.conversation_turn.turn import ConversationTurn
 
+from conversation_turn.topic import Topic
+from conversation_turn.turn import ConversationTurn
 
 class TerminationCriterion:
     def __init__(self):

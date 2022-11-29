@@ -15,9 +15,9 @@ Institute for Computational Linguistics
 """
 import random
 
-from conversation_turn.conversation_turn.conversation_element import Answer
-from preprocess.preprocess.preprocess import Preprocessor
-from rules.rules.interrogative_pronouns import InterrogativePronoun, Position
+from conversation_turn.conversation_element import Answer
+from preprocess.preprocess import Preprocessor
+from rules.interrogative_pronouns import InterrogativePronoun, Position
 
 class QuestionGenerationRules:
     def __init__(self, preprocessor: Preprocessor, nlp, answer: Answer = None):

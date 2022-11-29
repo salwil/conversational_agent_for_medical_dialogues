@@ -14,7 +14,7 @@ Institute for Computational Linguistics
 
 """
 from dataclasses import dataclass
-from src.conversation_turn.conversation_turn.conversation_element import QuestionType
+from conversation_turn.conversation_element import QuestionType
 
 
 @dataclass

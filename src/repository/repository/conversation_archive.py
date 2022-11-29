@@ -17,7 +17,7 @@ from typing import TypedDict
 from enum import Enum
 import sys
 import csv
-import src.helpers.helpers.helpers as helpers
+import helpers.helpers as helpers
 
 class ArchiveRecord(TypedDict):
     answer: str
