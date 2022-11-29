@@ -7,6 +7,8 @@ class QuestionGenerationTest(unittest.TestCase):
     def setUp(self) -> None:
         self.de_en_translator = TranslatorDeEn()
         self.en_de_translator = TranslatorEnDe()
+        # This sentence was not translated properly by the original pretrained Helsinki-NLP model.
+        # (Kiefer was translated to pine)
         self.sentence_german = ["Kiefer tut weh, Kopfschmerzen"]
         self.sentence_english = ["After which accident did your chief complaint start?"]
 

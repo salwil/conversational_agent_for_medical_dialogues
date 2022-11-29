@@ -22,17 +22,14 @@ class SentimentDetector:
         # we don't want to predict the neutral state, this is only a default state, if no other fits
         if 'neutral' in self.candidate_labels:
             self.candidate_labels.remove('neutral')
-        print(self.candidate_labels)
         self.classifier = pipeline("zero-shot-classification",
                               model="facebook/bart-large-mnli")
 
     def predict_mental_state(self, sentence) -> str:
         mental_states = self.classifier(sentence, self.candidate_labels)
         scores = mental_states['scores']
-        print(mental_states)
         mx = max(scores)
         scores_2nd = mental_states['scores']
-        print(len(scores))
         if len(scores) > 4 and mx > 3/len(scores) or len(scores) < 5 and mx > 0.8:
             scores_2nd.remove(mx)
             if mx-max(scores_2nd) > 1/(len(scores)*7):
