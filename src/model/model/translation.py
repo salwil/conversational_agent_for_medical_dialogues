@@ -15,7 +15,7 @@ Institute for Computational Linguistics
 """
 
 from transformers import MarianMTModel, MarianTokenizer
-import src.helpers.helpers.helpers as helpers
+import helpers.helpers as helpers
 
 class Translator:
     def __init__(self, path_to_model: str):

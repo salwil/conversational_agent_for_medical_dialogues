@@ -16,10 +16,8 @@ Institute for Computational Linguistics
 """
 import random
 
-from src.conversation.conversation.conversation import Conversation, Language
-from src.conversation_turn.conversation_turn.conversation_element import Answer, Question, QuestionType, \
-    PredefinedQuestion
-
+from conversation.conversation import Conversation, Language
+from conversation_turn.conversation_element import Answer, Question, QuestionType, PredefinedQuestion
 
 class ConversationTurn:
     def __init__(self, turn_number:int, conversation: Conversation, patient_input: str):
@@ -126,7 +124,7 @@ class ConversationTurn:
     def __infer_topics(self):
         self.conversation.topic_inferencer.infer_topic(self.answer.content_preprocessed)
         self.answer.topic_list = self.conversation.topic_inferencer.get_best_topics(3)
-        print(self.answer.topic_list)
+        #print(self.answer.topic_list)
         topic_question_repo = self.conversation.data_loader.mandatory_question_repo.questions
         for topic in self.answer.topic_list:
             # when this condition is false all the questions associated to one of the three topics have already been covered

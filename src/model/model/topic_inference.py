@@ -22,8 +22,8 @@ Institute for Computational Linguistics
 import os
 from typing import List
 
-import src.helpers.helpers.helpers as helpers
-from conversation_turn.conversation_turn.topic import Topic
+import helpers.helpers as helpers
+from conversation_turn.topic import Topic
 
 path = helpers.get_project_path() + '/src/model/language_models/'
 path_to_pretrained_mallet_model = path + 'mallet_topics/'
@@ -93,15 +93,11 @@ class TopicInferencer:
                   + ' --inferencer "' + path_to_original_model + '"' \
                   + ' --output-doc-topics "' + path_to_new_topic_distributions + '"')
 
-    def __get_n_most_relevant_keywords(self, number):
-        for i, t in enumerate(self.topic_keys):
-            print(i, '\t', ' '.join(t[:number]))
-
     def get_best_topics(self, number) -> List[Topic]:
         indices = range(0,self.number_of_pretrained_topics)
         relative_weights = self.__compute_relative_topic_weights()
-        print(relative_weights)
-        print(self.inferred_topic_distributions)
+        #print(relative_weights)
+        #print(self.inferred_topic_distributions)
         sorted_data = sorted([(_distribution, _topic, _index)
                               for _distribution, _topic, _index
                               in zip(relative_weights, self.topic_keys, indices)],

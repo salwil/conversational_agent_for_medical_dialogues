@@ -15,8 +15,8 @@ Institute for Computational Linguistics
 """
 from enum import Enum
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, AutoModelForSequenceClassification
-import src.helpers.helpers.helpers as helpers
-from model.model.topic_inference import TopicInferencer
+import helpers.helpers as helpers
+from model.topic_inference import TopicInferencer
 
 
 class Model(Enum):

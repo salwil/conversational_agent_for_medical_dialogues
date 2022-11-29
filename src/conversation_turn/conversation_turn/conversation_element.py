@@ -17,7 +17,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import List
 
-from conversation_turn.conversation_turn.topic import Topic
+from conversation_turn.topic import Topic
 
 @dataclass
 class ConversationElement:

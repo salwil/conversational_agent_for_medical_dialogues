@@ -17,9 +17,9 @@ Institute for Computational Linguistics
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import torch
 
-from conversation_turn.conversation_turn.conversation_element import Answer
-from preprocess.preprocess.preprocess import Preprocessor
-from rules.rules.question_generation_rules import QuestionGenerationRules
+from conversation_turn.conversation_element import Answer
+from preprocess.preprocess import Preprocessor
+from rules.question_generation_rules import QuestionGenerationRules
 
 class QuestionGenerator:
     def __init__(self, preprocessor: Preprocessor, nlp, answer: Answer = None):
