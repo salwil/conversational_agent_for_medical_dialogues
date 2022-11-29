@@ -59,7 +59,7 @@ The system is ready to use without doing any special configurations. But they ar
 If you want to set the system up according to specific needs, follow the instructions in the
 <a href="#configurability">Configurability</a> chapter.
 - Command to start a new conversation:  
-  `>> conversation`
+  `>> mda`
 - Command to terminate a running conversation:  
   `>> q!` or `>> quit!`
 
