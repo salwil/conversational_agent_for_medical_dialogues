@@ -18,7 +18,7 @@ parts are aligned exclusively to the topic of orofacial pains.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-## Installation in virtual enrivonment
+## Installation in virtual environment
 
 - Open the command line window
 - Clone the repository with  
@@ -29,19 +29,26 @@ parts are aligned exclusively to the topic of orofacial pains.
   `>> python3.8 -m venv .venv`
 - Activate the virtual environment:  
   `source venv/bin/activate`
-- Install the following Python packages with `pip3.8 install` command:
-    - `transformers 4.24.0`
-    - `spacy 3.4.3`
-    - `torch 1.13.0`
-    - `nltk3.7`
-    - `en_core_web_sm`
-    - `sentencepiece 0.1.97`
+- Install the following Python packages with command:  
+  `>> pip3.8 install transformers 4.24.0`  
+  `>> pip3.8 install spacy 3.4.3`  
+  `>> python3.8 -m spacy download en_core_web_sm`  
+  `>> pip3.8 install torch 1.13.0`  
+  `>> pip3.8 install nltk3.7`  
+  `>> pip3.8 install en_core_web_sm`  
+  `>> pip3.8 install sentencepiece 0.1.97`  
 - Go to the src directory:  
   `cd src`
-- Install the conversation package:  
-- --> todo
-- Run the unittests before you start, to make sure, everything is setup correctly:
-- `>> python3.8 -m unittest discover -s tests -p '*_test.py'`
+- Install the MDA packages:  
+  `>> pip3.8 install conversation/`  
+  `>> pip3.8 install conversation_turn/`  
+  `>> pip3.8 install helpers/`  
+  `>> pip3.8 install model/`  
+  `>> pip3.8 install preprocess/`  
+  `>> pip3.8 install repository/`  
+  `>> pip3.8 install rules/`  
+- Go back to the root directora and run the unittests before you start, to make sure, everything is setup correctly:  
+  `>> python3.8 -m unittest tests/*/*_test.py`
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
