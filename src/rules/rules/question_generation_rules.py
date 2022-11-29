@@ -44,7 +44,7 @@ class QuestionGenerationRules:
         self.preprocessor.preprocess(self.answer, ['tokenize'])
         index = 0
         # we need the entry are: are for the first person plural: if someone writes
-        forms = {'am': 'are', 'i': 'you', 'mine': 'yours', 'me': 'you', 'my': 'your', "'m": "'re", "ours": "yours", "our": "your", "we": "you", "us": "you"}  # More?
+        forms = {'am': 'are', 'i': 'you', 'mine': 'yours', 'me': 'you', 'my': 'your', "'m": "'re", "ours": "yours", "our": "your", "we": "you", "us": "you", "was": "were"}  # More?
         for token in doc:
             if len(token.morph.get("PronType")) > 0 and token.morph.get("Person") == ['1'] or \
                     len(token.morph.get("VerbForm")) > 0 and token.morph.get("Mood") == ['Ind']:
