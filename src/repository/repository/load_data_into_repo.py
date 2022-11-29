@@ -24,7 +24,6 @@ import csv
 
 from src.conversation_turn.conversation_turn.conversation_element \
     import Question, PredefinedQuestion, Answer, QuestionIntro
-from .exception import DuplicateError
 from .repositories import QuestionType, QuestionRepository, AnswerRepository, QuestionIntroRepository
 import src.helpers.helpers.helpers as helpers
 
@@ -112,7 +111,7 @@ class DataLoader:
             self.answer_repo.answers[conversation_element.turn_number] = conversation_element
         elif repository == Repository.QUESTIONS.value:
             if conversation_element.content_preprocessed in self.generated_question_repo.questions:
-                raise DuplicateError("This question was already used.")
+                raise ValueError("Duplicate: Question was already used.")
             else:
                 self.generated_question_repo.questions[conversation_element.content_preprocessed] = conversation_element
         else:

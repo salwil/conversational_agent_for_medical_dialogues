@@ -16,7 +16,6 @@ Institute for Computational Linguistics
 """
 import random
 
-from repository.repository.exception import DuplicateError
 from src.conversation.conversation.conversation import Conversation, Language
 from src.conversation_turn.conversation_turn.conversation_element import Answer, Question, QuestionType, \
     PredefinedQuestion
@@ -108,7 +107,7 @@ class ConversationTurn:
                 self.conversation\
                     .data_loader\
                     .store_conversation_element('question_repo', self.question)
-            except DuplicateError:
+            except ValueError:
                 # we can't ask the generated question again, it was already asked
                 self.more_detail = True
 

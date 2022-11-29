@@ -119,11 +119,11 @@ class CLI ():
         if language is Language.GERMAN:
             print('Bitte warten Sie einen Moment, das System startet...')
             print('Inzwischen gebe ich Ihnen einige Vorinformationen:')
-            print("Wenn Sie die Unterhaltung verlassen wollen, geben Sie bitte 'q!' oder 'quit!' ein.")
+            print("Wenn immer Sie die Unterhaltung verlassen wollen, geben Sie bitte 'q!' oder 'quit!' ein.")
         else:
             print('Please wait a moment, the system is starting...')
             print('In the meantime I give you some introductions:')
-            print("When you want to stop and quit the conversation, enter 'q!' or 'quit!'")
+            print("Whenever you want to stop and quit the conversation, enter 'q!' or 'quit!'")
 
     def say_goodbye(self, language):
         if language is Language.GERMAN:

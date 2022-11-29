@@ -4,7 +4,6 @@ from typing import List
 
 import en_core_web_sm
 
-from repository.repository.exception import DuplicateError
 from src.preprocess.preprocess.lemmatize import EnglishLemmatizer
 from src.preprocess.preprocess.preprocess import Preprocessor
 from src.repository.repository.load_data_into_repo import DataLoader, Repository
@@ -116,6 +115,6 @@ class ConversationElementTest(unittest.TestCase):
         self.assertEqual(stored_questions['headache'].content, "When do you have headache?")
         self.assertEqual(stored_questions['headache'].number_of_usage, 1)
         # when we try to store the same question again, we expect a duplicate error
-        with self.assertRaises(Exception) as error:
+        with self.assertRaises(ValueError) as exception:
             self.data_loader.store_conversation_element('question_repo', question)
-        self.assertTrue("already used" in str(error.exception).lower())
+        self.assertTrue("already used" in str(exception.exception).lower())
