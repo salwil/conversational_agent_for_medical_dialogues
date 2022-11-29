@@ -32,7 +32,8 @@ class ConversationTurnTest(unittest.TestCase):
                           return_value=None) as mock_write_to_archive:
             with patch.object(self.conversation.question_generator, 'set_answer'):
                 self.conversation_turn.process_answer_and_profile_question(next_profile_question)
-                self.assertEqual(self.conversation_turn.answer.content, self.conversation.data_loader.answer_repo.answers[1].content)
+                self.assertEqual(self.conversation_turn.answer.content,
+                                 self.conversation.data_loader.answer_repo.answers[1].content)
                 self.assertEqual(next_profile_question, self.conversation_turn.generated_question)
                 mock_write_to_archive.assert_called_once_with({'question': next_profile_question,
                                                                'answer': last_answer})
@@ -42,6 +43,7 @@ class ConversationTurnTest(unittest.TestCase):
     # class or in activities of a conversation turn, this test should crash and has to be updated with the new
     # behavior such that it does not fail anymore. Unfortunately we have to build entire conversation object every
     # time new, to have clean objects for every new test case.
+
     def test_process_answer_and_mandatory_follow_up_question_no_translation(self):
         self.conversation = ConversationBuilder()\
             .with_repositories()\
@@ -69,6 +71,7 @@ class ConversationTurnTest(unittest.TestCase):
         self.assertTrue(conversation_turn.answer.topic_list)
         # topic derived questions are not stored in the generated_questions_repository
         self.assertFalse(self.conversation.question_generator.generated_questions_repository)
+
 
     def test_process_answer_and_mandatory_follow_up_question_with_translation(self):
         # the answer object is instantiated directly with english (the reason for that is that the answer object is
@@ -107,6 +110,7 @@ class ConversationTurnTest(unittest.TestCase):
         # topic derived questions are not stored in the generated_questions_repository
         self.assertFalse(self.conversation.question_generator.generated_questions_repository)
 
+
     def test_process_answer_and_generated_follow_up_question_english(self):
         self.conversation = ConversationBuilder()\
             .with_repositories()\
@@ -122,8 +126,29 @@ class ConversationTurnTest(unittest.TestCase):
             conversation_turn.process_answer_and_create_follow_up_question()
             self.assertTrue(conversation_turn.answer.mental_state)
             self.assertFalse(conversation_turn.topic_number)
-            qg_repo = self.conversation.question_generator.generated_questions_repository
             self.assertTrue(self.conversation.question_generator.generated_questions_repository)
             self.assertTrue(conversation_turn.question in
                             list(self.conversation.question_generator.generated_questions_repository.questions.values()))
             self.assertEqual(conversation_turn.question.content, conversation_turn.generated_question)
+
+    def test_process_answer_and_more_detail_question(self):
+        self.conversation = ConversationBuilder()\
+            .with_repositories()\
+            .with_question_generator()\
+            .with_sentiment_detector()\
+            .with_topic_inferencer()\
+            .with_question_generator()\
+            .with_answer(content_en="His grandfather grew up in San Francisco.")\
+            .conversation()
+        conversation_turn = ConversationTurn(1, self.conversation, self.conversation.question_generator.answer.content)
+        # when the more_detail flag is true, a question from the more_detail repo will be randomly selected
+        conversation_turn.more_detail = True
+        # we have to overrule the topic to set any topics and we will run into the question generation
+        with patch.object(ConversationTurn, '_ConversationTurn__infer_topics') as __infer_topics:
+            conversation_turn.process_answer_and_create_follow_up_question()
+            self.assertTrue(conversation_turn.answer.mental_state)
+            self.assertFalse(conversation_turn.topic_number)
+            # assert that the generated question is not stored
+            self.assertFalse(self.conversation.question_generator.generated_questions_repository)
+            # ...but instead the question is one of the moredetail_question_repo
+            self.assertTrue(conversation_turn.question.content_preprocessed in self.conversation.data_loader.modedetail_question_repo.questions)

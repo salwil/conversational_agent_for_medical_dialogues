@@ -4,12 +4,12 @@ from typing import List
 
 import en_core_web_sm
 
+from repository.repository.exception import DuplicateError
 from src.preprocess.preprocess.lemmatize import EnglishLemmatizer
 from src.preprocess.preprocess.preprocess import Preprocessor
 from src.repository.repository.load_data_into_repo import DataLoader, Repository
 from src.conversation_turn.conversation_turn.conversation_element import Question, PredefinedQuestion, QuestionType, \
     Answer
-from src.conversation_turn.conversation_turn.topic import Topic
 import src.helpers.helpers.helpers as helpers
 
 
@@ -28,11 +28,11 @@ class ConversationElementTest(unittest.TestCase):
         self.data_loader = DataLoader(preprocessing_parameters=preprocessing_parameters,
                                  preprocessor=preprocessor)
 
-    @unittest.skipIf(not pathlib.Path(path_to_files + 'questions.csv').exists(),
-                     "Please add the file questions.csv to the repository/data/ folder.")
+    @unittest.skipIf(not pathlib.Path(path_to_files + 'profile_questions.csv').exists(),
+                     "Please add the file profile_questions.csv to the repository/data/ folder.")
     def test_data_loader_profile_question(self):
         # Note: this test only works as long as the Question 'How do you feel today?' is available
-        # inside the questions.csv file!
+        # inside the profile_questions.csv file!
         qr = self.data_loader.profile_question_repo
         q_exp = PredefinedQuestion(content='What is your first name?',
                                    number_of_usage=0,
@@ -62,6 +62,20 @@ class ConversationElementTest(unittest.TestCase):
         self.assertGreater(len(ci.mental_states), 0)
         self.assertTrue('happy' in stored_intros)
 
+    @unittest.skipIf(not pathlib.Path(path_to_files + 'more_detail_questions.csv').exists(),
+                     "Please add the file more_detail_questions.csv to the repository/data/ folder.")
+    def test_data_loader_more_detail_questions(self):
+        mqr = self.data_loader.modedetail_question_repo
+        q_exp = PredefinedQuestion(content="Could you explain that a bit more detailed?",
+                                   number_of_usage=0,
+                                   question_type=QuestionType.MOREDETAIL,
+                                   content_in_german="Könnten Sie das ein wenig genauer erklären?")
+        self.data_loader.load_data_into_repository(Repository.MOREDETAIL)
+        self.assertEqual(3, len(mqr.questions))
+        print(mqr.questions)
+        self.assertEqual(q_exp.content_in_german, mqr.questions['could explain bit detailed'].content_in_german)
+        self.assertEqual(repr(q_exp), repr(mqr.questions['could explain bit detailed']))
+
     def test_data_loader_nothing_to_load(self):
         with self.assertWarns(ResourceWarning):
             self.data_loader.load_data_into_repository(Repository.ANSWERS)
@@ -84,8 +98,24 @@ class ConversationElementTest(unittest.TestCase):
         qr = self.data_loader.generated_question_repo
         self.data_loader.store_conversation_element('question_repo', question)
         stored_questions = qr.questions
-        print(stored_questions)
         self.assertEqual(1, len(stored_questions))
         self.assertTrue('headache' in stored_questions)
         self.assertEqual(stored_questions['headache'].content, "When do you have headache?")
         self.assertEqual(stored_questions['headache'].number_of_usage, 1)
+
+    def test_data_loader_duplicate_question_raises_error(self):
+        question = Question("When do you have headache?", 1, QuestionType.GENERATED)
+        question.content_preprocessed = "headache"
+        qr = self.data_loader.generated_question_repo
+        self.data_loader.store_conversation_element('question_repo', question)
+        stored_questions = qr.questions
+        print(stored_questions)
+        # assert, the first question was stored properly
+        self.assertEqual(1, len(stored_questions))
+        self.assertTrue('headache' in stored_questions)
+        self.assertEqual(stored_questions['headache'].content, "When do you have headache?")
+        self.assertEqual(stored_questions['headache'].number_of_usage, 1)
+        # when we try to store the same question again, we expect a duplicate error
+        with self.assertRaises(Exception) as error:
+            self.data_loader.store_conversation_element('question_repo', question)
+        self.assertTrue("already used" in str(error.exception).lower())

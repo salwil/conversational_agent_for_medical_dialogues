@@ -14,7 +14,9 @@ Institute for Computational Linguistics
 - Important: this class is nearly untested, as the effort for writing integration tests for the
  process_answer_and_create_follow_up_question method is far too big compared to what it helps.
 """
+import random
 
+from repository.repository.exception import DuplicateError
 from src.conversation.conversation.conversation import Conversation, Language
 from src.conversation_turn.conversation_turn.conversation_element import Answer, Question, QuestionType, \
     PredefinedQuestion
@@ -28,6 +30,7 @@ class ConversationTurn:
         self.answer: Answer = None
         self.question: Question or PredefinedQuestion = None
         self.topic_number: int = None
+        self.more_detail: bool = None
         self.conversation = conversation
         self.preprocessor = conversation.preprocessor
         self.nlp = conversation.nlp
@@ -41,54 +44,74 @@ class ConversationTurn:
         also the question must not be stored in the question repository, it was already loaded when the application
         started.
         """
-        self.__create_answer_object_and_store()
+        self.__create_answer_object()
+        self.__store_answer()
         self.generated_question = question
         self.__write_turn_to_archive()
 
     def process_answer_and_create_follow_up_question(self):
         if self.conversation.language is Language.GERMAN:
             self.__translate_patient_input_from_german_to_english()
-        self.__create_answer_object_and_store()
+        self.__create_answer_object()
+        self.__store_answer()
         self.__predict_mental_state()
         self.__infer_topics()
         self.__generate_question()
-        self.__create_question_object_and_store()
+        self.__create_question_object()
+        self.__store_question()
+        if self.more_detail:
+            self.__set_more_detail_question()
         self.__update_question_generation_object_with_newest_data()
         self.__write_turn_to_archive()
         # if we have detected a highly correlating topic, we use a predefined question for that topic and don't need to
         # translate, but just assign the german text of the question to the generated_question variable.
         if self.conversation.language is Language.GERMAN:
-            if self.topic_number:
+            if self.topic_number or self.more_detail:
                 self.generated_question = self.question.content_in_german
             else:
                 self.__translate_question_from_english_to_german()
 
 
-    def __create_answer_object_and_store(self):
-        """
-        Creates an answer object and stores it in the corresponding repository
-        """
+    def __create_answer_object(self):
         self.answer = Answer(self.patient_input, 1, self.turn_number)
         # as soon as we have created the answer object, we have to update the QuestionGenerator object with it
         self.conversation.question_generator.set_answer(self.answer)
         self.conversation.preprocessor.preprocess(self.answer, self.conversation.preprocessing_parameters)
+
+
+    def __store_answer(self):
+        """
+        Stores an object of type Answer in the corresponding repository.
+        """
         self.conversation\
             .data_loader\
             .store_conversation_element('answer_repo', self.answer)
 
-    def __create_question_object_and_store(self):
-        """
-        Create a question object and if it's not a predefined question, store it in the corresponding repository
-        """
+    def __create_question_object(self):
+        # The topic questions are available objects of type PredefinedQuestion, no Question object has to be created.
         if self.topic_number:
-            self.generated_question = self.question.content
-            #self.question = PredefinedQuestion(self.generated_question, 1, QuestionType.MANDATORY)
+            pass
         else:
             self.question = Question(self.generated_question, 1, QuestionType.GENERATED)
+
+    def __store_question(self):
+        """
+        Stores an object of type Question in the corresponding repository.
+        """
+        if self.topic_number:
+            # The topic questions are available in the topic question repository. No need for storing them again.
+            pass
+        else:
             self.conversation.preprocessor.preprocess(self.question, self.conversation.preprocessing_parameters)
-            self.conversation\
-                .data_loader\
-                .store_conversation_element('question_repo', self.question)
+            self.question.content_preprocessed += self.question.content[0]
+            try:
+                self.conversation\
+                    .data_loader\
+                    .store_conversation_element('question_repo', self.question)
+            except DuplicateError:
+                # we can't ask the generated question again, it was already asked
+                self.more_detail = True
+
 
     def __translate_patient_input_from_german_to_english(self):
         self.patient_input = self.conversation.translator_de_en.translate(self.patient_input)
@@ -119,6 +142,7 @@ class ConversationTurn:
             # simply check the first question if it has been used so far and if yes, we can pick it, and if not we know,
             # that there is no more question to pick for this topic.
             topic_question_repo[self.topic_number].sort(key=lambda x: x.number_of_usage, reverse=False)
+            self.generated_question = self.question.content
 
     def __generate_question(self):
         if self.topic_number:
@@ -143,8 +167,13 @@ class ConversationTurn:
     def __update_question_generation_object_with_newest_data(self):
         # only generated questions are stored in this repository, the mandatory questions that derive from a topic are
         # maintained in the mandatory_question_repository
-        if not self.topic_number:
+        if not self.topic_number and not self.more_detail:
             self.conversation.question_generator.update_generated_questions_repository(
                 self.conversation.data_loader.generated_question_repo)
             self.conversation.question_generator.update_question_intro_repository(
                 self.conversation.data_loader.question_intro_repo)
+
+    def __set_more_detail_question(self):
+        random_question_key = random.choice(list(self.conversation.data_loader.modedetail_question_repo.questions.keys()))
+        self.question = self.conversation.data_loader.modedetail_question_repo.questions[random_question_key]
+        self.generated_question = self.question.content

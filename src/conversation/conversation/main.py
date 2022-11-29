@@ -35,6 +35,7 @@ def main():
         # this could be done in a separate thread, meanwhile the conversation is started with profile questions.
         conversation.load_models()
         cli.maintain_conversation(conversation)
+        cli.say_goodbye(language)
 
 
 class CLI ():
@@ -71,9 +72,9 @@ class CLI ():
             answer = input()
             answer = self.__validate(answer)
         while not self.termination_criterion.given():
-            conversation_turn = ConversationTurn(turn_number, conversation, answer)
-            conversation_turn.process_answer_and_create_follow_up_question()
-            next_question = conversation_turn.generated_question
+            self.current_conversation_turn = ConversationTurn(turn_number, conversation, answer)
+            self.current_conversation_turn.process_answer_and_create_follow_up_question()
+            next_question = self.current_conversation_turn.generated_question
             print(next_question)
             answer = input()
             answer = self.__validate(answer)
@@ -123,6 +124,17 @@ class CLI ():
             print('Please wait a moment, the system is starting...')
             print('In the meantime I give you some introductions:')
             print("When you want to stop and quit the conversation, enter 'q!' or 'quit!'")
+
+    def say_goodbye(self, language):
+        if language is Language.GERMAN:
+            print('Vielen Dank für das Gespräch.')
+            print('Die Ärztin wird sich bald bei Ihnen melden.')
+            print('Bis da hin wünsche ich Ihnen gute Besserung.')
+        else:
+            print('Thank you for the conversation.')
+            print('The doctor will get back to you soon')
+            print('Until then, get well soon.')
+
 
     def __validate(self, user_input):
         while not user_input:

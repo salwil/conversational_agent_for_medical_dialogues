@@ -28,7 +28,6 @@ from src.repository.repository.load_data_into_repo import DataLoader, Repository
 from src.repository.repository.conversation_archive import ConversationArchival
 from src.preprocess.preprocess.lemmatize import EnglishLemmatizer
 from src.preprocess.preprocess.preprocess import Preprocessor
-import src.helpers.helpers.helpers as helpers
 
 class Language(Enum):
     ENGLISH = 'E',
@@ -60,6 +59,7 @@ class Conversation:
         self.data_loader.load_data_into_repository(Repository.QUESTIONS)
         self.data_loader.load_data_into_repository(Repository.TOPICS)
         self.data_loader.load_data_into_repository(Repository.INTRO)
+        self.data_loader.load_data_into_repository(Repository.MOREDETAIL)
 
     def load_models(self):
         self.translator_de_en = TranslatorDeEn()
@@ -68,7 +68,7 @@ class Conversation:
                                                      for mental_state
                                                      in self.data_loader.question_intro_repo.mental_states])
         self.question_generator = QuestionGenerator(self.preprocessor, self.nlp, None)
-        self.topic_inferencer = TopicInferencer(10)
+        self.topic_inferencer = TopicInferencer(number_of_pretrained_topics=10)
 
     def ask_questions_for_patient_instantiation(self):
         for question in self.data_loader.profile_question_repo.questions:

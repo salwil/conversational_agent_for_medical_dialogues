@@ -24,6 +24,7 @@ import csv
 
 from src.conversation_turn.conversation_turn.conversation_element \
     import Question, PredefinedQuestion, Answer, QuestionIntro
+from .exception import DuplicateError
 from .repositories import QuestionType, QuestionRepository, AnswerRepository, QuestionIntroRepository
 import src.helpers.helpers.helpers as helpers
 
@@ -33,6 +34,7 @@ class Repository(Enum):
     ANSWERS = 'answer_repo'
     TOPICS = 'topic_repo'
     INTRO = 'question_intro_repo'
+    MOREDETAIL = 'more_detail_repo'
 
 class DataLoader:
     def __init__(self, preprocessing_parameters: list, preprocessor=None):
@@ -52,7 +54,7 @@ class DataLoader:
     def load_data_into_repository(self, repository: Repository):
         if repository is Repository.QUESTIONS:
             if self.preprocessor:
-                with open(self.path_to_data + 'questions.csv') as questions_file:
+                with open(self.path_to_data + 'profile_questions.csv') as questions_file:
                     question_reader = csv.reader(questions_file, delimiter='\t', quotechar='"')
                     for question in question_reader:
                         question_type = self.determine_question_type(question[1])
@@ -87,6 +89,18 @@ class DataLoader:
                     else:
                         self.question_intro_repo.mental_states[mental_state[0]] = [i]
 
+        elif repository is Repository.MOREDETAIL:
+            if self.preprocessor:
+                with open(self.path_to_data + 'more_detail_questions.csv') as questions_file:
+                    question_reader = csv.reader(questions_file, delimiter='\t', quotechar='"')
+                    for question in question_reader:
+                        question_type = QuestionType.MOREDETAIL
+                        q = PredefinedQuestion(question[0], 0, question_type, question[1])
+                        self.preprocessor.preprocess(q, self.preprocessing_parameters)
+                        self.select_repository(question_type=question_type).questions[q.content_preprocessed] = q
+            else:
+                raise Exception("Please provide a valid preprocessor instance for loading questions into repository.")
+
         else:
             warnings.warn('There is no data to load for this repository: ' + repository.value, ResourceWarning)
 
@@ -97,7 +111,10 @@ class DataLoader:
             #self.preprocessor.preprocess(a, self.preprocessing_parameters)
             self.answer_repo.answers[conversation_element.turn_number] = conversation_element
         elif repository == Repository.QUESTIONS.value:
-            self.generated_question_repo.questions[conversation_element.content_preprocessed] = conversation_element
+            if conversation_element.content_preprocessed in self.generated_question_repo.questions:
+                raise DuplicateError("This question was already used.")
+            else:
+                self.generated_question_repo.questions[conversation_element.content_preprocessed] = conversation_element
         else:
             warnings.warn('Repository: ' + repository + ' is not foreseen to store values other than from file.',
                           ResourceWarning)
