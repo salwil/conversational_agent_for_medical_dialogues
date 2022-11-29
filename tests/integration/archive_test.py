@@ -1,6 +1,6 @@
 import unittest
 import csv
-from src.repository.repository.conversation_archive import ConversationArchival, ArchiveOperation
+from repository.conversation_archive import ConversationArchival, ArchiveOperation
 
 
 class ConversationArchiveTest(unittest.TestCase):

@@ -1,6 +1,6 @@
 import unittest
 
-from src.model.model.load_model import Model, Seq2SeqModelLoader, SequenceClassificationModelLoader
+from model.load_model import Model, Seq2SeqModelLoader, SequenceClassificationModelLoader
 
 class ConversationElementTest(unittest.TestCase):
 

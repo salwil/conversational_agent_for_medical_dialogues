@@ -4,12 +4,11 @@ from typing import List
 
 import en_core_web_sm
 
-from src.preprocess.preprocess.lemmatize import EnglishLemmatizer
-from src.preprocess.preprocess.preprocess import Preprocessor
-from src.repository.repository.load_data_into_repo import DataLoader, Repository
-from src.conversation_turn.conversation_turn.conversation_element import Question, PredefinedQuestion, QuestionType, \
-    Answer
-import src.helpers.helpers.helpers as helpers
+from preprocess.lemmatize import EnglishLemmatizer
+from preprocess.preprocess import Preprocessor
+from repository.load_data_into_repo import DataLoader, Repository
+from conversation_turn.conversation_element import Question, PredefinedQuestion, QuestionType, Answer
+import helpers.helpers as helpers
 
 
 # load computation-intensive classes only once
@@ -117,4 +116,4 @@ class ConversationElementTest(unittest.TestCase):
         # when we try to store the same question again, we expect a duplicate error
         with self.assertRaises(ValueError) as exception:
             self.data_loader.store_conversation_element('question_repo', question)
-        self.assertTrue("already used" in str(exception.exception).lower())
+        self.assertTrue("duplicate" in str(exception.exception).lower())

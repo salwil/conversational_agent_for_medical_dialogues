@@ -1,9 +1,9 @@
 import unittest
 from unittest.mock import patch
 
-from conversation.conversation.conversation import Conversation, Language
-from conversation_turn.conversation_turn.turn import ConversationTurn
-from util.conversation_builder import ConversationBuilder
+from conversation.conversation import Conversation, Language
+from conversation_turn.turn import ConversationTurn
+from tests.util.conversation_builder import ConversationBuilder
 
 class ConversationTurnTest(unittest.TestCase):
 

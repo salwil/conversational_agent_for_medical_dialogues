@@ -1,15 +1,14 @@
 import unittest
-from unittest.mock import MagicMock
 
 import en_core_web_sm
 
-from conversation_turn.conversation_turn.conversation_element import QuestionIntro
-from preprocess.preprocess.lemmatize import EnglishLemmatizer
-from preprocess.preprocess.preprocess import Preprocessor
-from repository.repository.repositories import QuestionIntroRepository
+from conversation_turn.conversation_element import QuestionIntro
+from preprocess.lemmatize import EnglishLemmatizer
+from preprocess.preprocess import Preprocessor
+from repository.repositories import QuestionIntroRepository
 
 # load computation-intensive classes only once
-from util.conversation_builder import ConversationBuilder
+from tests.util.conversation_builder import ConversationBuilder
 
 nlp = en_core_web_sm.load()
 preprocessor = Preprocessor(EnglishLemmatizer(nlp), nlp)

@@ -1,9 +1,8 @@
 import unittest
 
-from conversation.conversation.termination_criterion import TerminationCriterionForConversation
-from conversation_turn.conversation_turn.turn import ConversationTurn
-from util.conversation_builder import ConversationBuilder
-
+from conversation.termination_criterion import TerminationCriterionForConversation
+from conversation_turn.turn import ConversationTurn
+from tests.util.conversation_builder import ConversationBuilder
 
 class TerminationCriterionTest(unittest.TestCase):
 

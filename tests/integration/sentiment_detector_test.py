@@ -1,6 +1,6 @@
 import unittest
 
-from src.model.model.sentiment_detection import SentimentDetector
+from model.sentiment_detection import SentimentDetector
 
 
 class SentimentDetectionTest(unittest.TestCase):

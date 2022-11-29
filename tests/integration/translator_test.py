@@ -1,6 +1,6 @@
 import unittest
 
-from src.model.model.translation import TranslatorDeEn, TranslatorEnDe
+from model.translation import TranslatorDeEn, TranslatorEnDe
 
 class QuestionGenerationTest(unittest.TestCase):
 

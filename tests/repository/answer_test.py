@@ -1,5 +1,5 @@
 import unittest
-from src.conversation_turn.conversation_turn.conversation_element import Answer
+from conversation_turn.conversation_element import Answer
 
 class ConversationElementTest(unittest.TestCase):
 

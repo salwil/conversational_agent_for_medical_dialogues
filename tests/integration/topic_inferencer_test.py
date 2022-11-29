@@ -2,8 +2,8 @@ import pathlib
 import unittest
 from unittest.mock import patch
 
-import src.helpers.helpers.helpers as helpers
-from model.model.topic_inference import TopicInferencer
+import helpers.helpers as helpers
+from model.topic_inference import TopicInferencer
 
 path = helpers.get_project_path() + '/src/model/language_models/'
 path_to_pretrained_mallet_model = path + 'mallet_topics/'

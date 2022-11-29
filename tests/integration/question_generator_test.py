@@ -3,10 +3,10 @@ from unittest.mock import patch, MagicMock
 
 import en_core_web_sm
 
-from rules.rules.question_generation_rules import QuestionGenerationRules
+from rules.question_generation_rules import QuestionGenerationRules
 
 # load computation-intensive classes only once
-from util.conversation_builder import ConversationBuilder
+from tests.util.conversation_builder import ConversationBuilder
 
 nlp = en_core_web_sm.load()
 

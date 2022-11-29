@@ -16,12 +16,12 @@ Institute for Computational Linguistics
 from abc import ABC
 from unittest.mock import MagicMock
 
-from model.model.question_generation import QuestionGenerator
-from model.model.sentiment_detection import SentimentDetector
-from model.model.topic_inference import TopicInferencer
-from model.model.translation import TranslatorDeEn, TranslatorEnDe
-from src.conversation.conversation.conversation import Conversation, Language
-from src.conversation_turn.conversation_turn.conversation_element import PredefinedQuestion, QuestionType, \
+from model.question_generation import QuestionGenerator
+from model.sentiment_detection import SentimentDetector
+from model.topic_inference import TopicInferencer
+from model.translation import TranslatorDeEn, TranslatorEnDe
+from conversation.conversation import Conversation
+from conversation_turn.conversation_element import PredefinedQuestion, QuestionType, \
     Answer, QuestionIntro
 
 
