@@ -26,17 +26,17 @@ parts are aligned exclusively to the topic of orofacial pains.
 - Visit the root directory:  
   `>> cd conversational_agent_for_medical_dialogues`
 - Create a virtual environment with Python >= 3.8:  
-  `>> python3.8 -m venv .venv`
+  `>> python3.8 -m venv venv`
 - Activate the virtual environment:  
   `source venv/bin/activate`
 - Install the following Python packages with command:  
-  `>> pip3.8 install transformers 4.24.0`  
-  `>> pip3.8 install spacy 3.4.3`  
+  `>> pip3.8 install transformers==4.24.0`  
+  `>> pip3.8 install spacy==3.4.3`  
   `>> python3.8 -m spacy download en_core_web_sm`  
-  `>> pip3.8 install torch 1.13.0`  
-  `>> pip3.8 install nltk3.7`  
+  `>> pip3.8 install torch==1.13.0`  
+  `>> pip3.8 install nltk==3.7`  
   `>> pip3.8 install en_core_web_sm`  
-  `>> pip3.8 install sentencepiece 0.1.97`  
+  `>> pip3.8 install sentencepiece==0.1.97`  
 - Go to the src directory:  
   `cd src`
 - Install the MDA packages:  
