@@ -39,7 +39,7 @@ class DataLoader:
         self.profile_question_repo = QuestionRepository(QuestionType.PROFILE, {})
         self.mandatory_question_repo = QuestionRepository(QuestionType.MANDATORY, {})
         self.fallback_question_repo = QuestionRepository(QuestionType.FALLBACK, {})
-        self.modedetail_question_repo = QuestionRepository(QuestionType.MOREDETAIL, {})
+        self.more_detail_question_repo = QuestionRepository(QuestionType.MOREDETAIL, {})
         self.generated_question_repo = QuestionRepository(QuestionType.GENERATED, {})
         self.question_intro_repo = QuestionIntroRepository({})
         self.answer_repo = AnswerRepository({})
@@ -137,6 +137,6 @@ class DataLoader:
         elif question_type is QuestionType.FALLBACK:
             return self.mandatory_question_repo
         elif question_type is QuestionType.MOREDETAIL:
-            return self.modedetail_question_repo
+            return self.more_detail_question_repo
         else:
             sys.exit("No repo found for this question type: " + question_type.value)

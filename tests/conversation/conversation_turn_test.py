@@ -83,6 +83,7 @@ class ConversationTurnTest(unittest.TestCase):
             .with_sentiment_detector()\
             .with_topic_inferencer()\
             .with_question_generator()\
+            .with_translators_de_en()\
             .with_answer(content_en="My teeth hurt when chewing hard food.") \
             .conversation()
         self.conversation.language = Language.GERMAN
@@ -96,7 +97,8 @@ class ConversationTurnTest(unittest.TestCase):
             conversation_turn.topic_number in self.conversation.data_loader.mandatory_question_repo.questions)
         topic_questions = \
             self.conversation.data_loader.mandatory_question_repo.questions[conversation_turn.topic_number]
-        self.assertTrue(conversation_turn.generated_question in [q.content for q in topic_questions])
+        #print(conversation_turn.generated_question)
+        self.assertTrue(conversation_turn.generated_question in [q.content_in_german for q in topic_questions])
         # at least the last-most question in the list must have number_of_usage = 1, because we just used it within
         # the current conversation turn
         self.assertEqual(1, topic_questions[len(topic_questions) - 1].number_of_usage)
@@ -151,4 +153,4 @@ class ConversationTurnTest(unittest.TestCase):
             # assert that the generated question is not stored
             self.assertFalse(self.conversation.question_generator.generated_questions_repository)
             # ...but instead the question is one of the moredetail_question_repo
-            self.assertTrue(conversation_turn.question.content_preprocessed in self.conversation.data_loader.modedetail_question_repo.questions)
+            self.assertTrue(conversation_turn.question.content_preprocessed in self.conversation.data_loader.more_detail_question_repo.questions)

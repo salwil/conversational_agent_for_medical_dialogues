@@ -171,6 +171,6 @@ class ConversationTurn:
                 self.conversation.data_loader.question_intro_repo)
 
     def __set_more_detail_question(self):
-        random_question_key = random.choice(list(self.conversation.data_loader.modedetail_question_repo.questions.keys()))
-        self.question = self.conversation.data_loader.modedetail_question_repo.questions[random_question_key]
+        random_question_key = random.choice(list(self.conversation.data_loader.more_detail_question_repo.questions.keys()))
+        self.question = self.conversation.data_loader.more_detail_question_repo.questions[random_question_key]
         self.generated_question = self.question.content

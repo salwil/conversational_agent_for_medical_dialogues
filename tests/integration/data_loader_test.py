@@ -63,7 +63,7 @@ class ConversationElementTest(unittest.TestCase):
     @unittest.skipIf(not pathlib.Path(path_to_files + 'more_detail_questions.csv').exists(),
                      "Please add the file more_detail_questions.csv to the repository/data/ folder.")
     def test_data_loader_more_detail_questions(self):
-        mqr = self.data_loader.modedetail_question_repo
+        mqr = self.data_loader.moredetail_question_repo
         q_exp = PredefinedQuestion(content="Could you explain that a bit more detailed?",
                                    number_of_usage=0,
                                    question_type=QuestionType.MOREDETAIL,
