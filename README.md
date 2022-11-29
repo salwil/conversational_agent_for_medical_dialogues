@@ -65,8 +65,8 @@ If you want to set the system up according to specific needs, follow the instruc
 contains the identifier `profile`.
 - All three columns are mandatory fields.
 - The csv columns are delimited by tabulator quote character is `"` 
-- You can work with the default inventory of questions or you can add, remove and change entries, but make sure, there 
-is at least one entry in the file and that you do not delete the file. Otherwise the system crashes.
+- You can work with the default inventory of questions or you can add, remove and change entries, but make sure, there is at least one entry in the file and that you do not delete the file. Otherwise the system may
+behave unpredictable
 
 ### Add mental states and empathic phrases
 - Empathic phrases have to be added in the `src/repository/data` folder in a csv file called `mental_states_with_intros.csv`.
@@ -75,7 +75,18 @@ the third column contains the corresponding empathic phrase in German.
 - All three columns are mandatory fields.
 - The csv columns are delimited by tabulator quote character is `"` 
 - You can work with the default inventory of mental states and empathic phrases or you can add, remove and change entries,
-- but make sure, there is at least one entry in the file and that you do not delete the file. Otherwise the system crashes.
+but make sure, there is at least one entry in the file and that you do not delete the file. Otherwise the system may
+behave unpredictable
+
+### Add questions that ask for more details
+- Empathic phrases have to be added in the `src/repository/data` folder in a csv file called `more_detail_questions.csv`.
+- The first column contains the question in English, the second column contains the corresponding empathic phrase in
+German
+- Both columns are mandatory fields.
+- The csv columns are delimited by tabulator quote character is `"` 
+- You can work with the default inventory of more-detail questions or you can add, remove and change entries, 
+but make sure, there is at least one entry in the file and that you do not delete the file. Otherwise the system may
+behave unpredictable
 
 ### Add topic questions
 - Topic questions have to be added in the `src/repository/data` folder in a csv file called `questions_for_topics_x.csv`,
@@ -84,9 +95,8 @@ with x referring to the number of topics from the linked topic model.
 contains the question in German.
 - All three columns are mandatory fields.
 - The csv columns are delimited by tabulator quote character is `"` 
-- You can work with the default inventory of questions or you can add, remove and change entries, but make sure, there 
-is at least one entry in the file and that you do not delete the file. Otherwise the system crashes.
-
+- You can work with the default inventory of questions or you can add, remove and change entries, but make sure, there is at least one entry in the file and that you do not delete the file. Otherwise the system may
+behave unpredictable
 ### Add more topics
 - If you want to use the available topic model but with another number of topics, you have to make a little
 change at the code.
