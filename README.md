@@ -35,11 +35,12 @@ parts are aligned exclusively to the topic of orofacial pains.
   `>> python3.8 -m spacy download en_core_web_sm`  
   `>> pip3.8 install torch==1.13.0`  
   `>> pip3.8 install nltk==3.7`  
-  `>> pip3.8 install en_core_web_sm`  
+  `>> python3.8 -m nltk.downloader stopwords`  
+  `>> python3.8 -m nltk.downloader punkt`  
   `>> pip3.8 install sentencepiece==0.1.97`  
 - Go to the src directory:  
   `cd src`
-- Install the MDA packages:  
+- Install the MDA packages (**don't forget slash at the end**):  
   `>> pip3.8 install conversation/`  
   `>> pip3.8 install conversation_turn/`  
   `>> pip3.8 install helpers/`  
