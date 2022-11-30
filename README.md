@@ -24,7 +24,7 @@ parts are aligned exclusively to the topic of orofacial pains.
 - Clone the repository with  
   `>> git clone git@github.com:salwil/conversational_agent_for_medical_dialogues.git`
 - Visit the [link](https://www.dropbox.com/sh/h6dodcm4x6bpl5p/AAA_Gu9pLUWxRAvd4ahMtGcja?dl=0) to download the language_model
-folder. Unzip the language_model folder and place it into the `src/model` directory.
+folder. Unzip the language_model folder and place it (incl. all its subfolders) into the `src/model` directory.
 - Visit the root directory:  
   `>> cd conversational_agent_for_medical_dialogues`
 - Create a virtual environment with Python >= 3.8:  
@@ -60,6 +60,8 @@ folder. Unzip the language_model folder and place it into the `src/model` direct
 The system is ready to use without doing any special configurations. But they are default configurations.
 If you want to set the system up according to specific needs, follow the instructions in the
 <a href="#configurability">Configurability</a> chapter.
+- Make sure the virtual environment is activated:  
+`>> source venv/bin/activate`
 - Command to start a new conversation:  
   `>> mda`
 - Command to terminate a running conversation:  
@@ -83,7 +85,7 @@ contains the identifier `profile`.
 behave unpredictable
 
 ### Add mental states and empathic phrases
-- Empathic phrases have to be added in the `src/repository/data` folder in a csv file called `mental_states_with_intros.csv`.
+- Empathic phrases have to be added in the `src/repository/data` folder in a csv file called `mental_states_with_empathic_phrases.csv`.
 - The first column contains a mental state, the second column contains the corresponding empathic phrase in English and 
 the third column contains the corresponding empathic phrase in German.
 - All three columns are mandatory fields.

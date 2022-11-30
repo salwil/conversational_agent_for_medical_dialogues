@@ -70,6 +70,16 @@ class CLI ():
                 turn_number += 1
         if not self.termination_criterion.given():
             if conversation.language is Language.GERMAN:
+                next_question = 'Wie möchten Sie gerne angesprochen werden?'
+            else:
+                next_question = 'How would you like to be addressed?'
+            print(next_question)
+            salutation = input()
+            salutation = self.__validate(salutation)
+            self.conversation.set_patient_salutation(salutation)
+            turn_number += 1
+        if not self.termination_criterion.given():
+            if conversation.language is Language.GERMAN:
                 next_question = 'Würden Sie mir kurz erklären, warum Sie hier sind?'
             else:
                 next_question = 'Would you introduce me briefly, why you seek consultation?'
@@ -147,7 +157,6 @@ class CLI ():
         self.termination_criterion.check_user_terminate(user_input)
         self.termination_criterion.update(current_turn=self.current_conversation_turn)
         return user_input
-
 
 if __name__ == "__main__":
     main()

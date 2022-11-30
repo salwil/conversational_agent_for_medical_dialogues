@@ -1,27 +1,28 @@
-sad	I understand.	Ich verstehe.
+sad	I understand, [salutation].	Ich verstehe, [salutation].
 sad	I‘m sorry about that.	Das tut mir leid.
 neutral	I see.	Ich sehe.
 neutral	Ok.	Ok.
 sad	I‘m sure you will overcome this.	Ich bin sicher, Sie werden das schaffen.
 neutral	Alright.	In Ordnung.
 neutral	Mhmm.	Mhmm.
-neutral	I agree with you.	Ich bin mit Ihnen einverstanden.
+neutral	I agree with you, [salutation].	Ich bin mit Ihnen einverstanden, [salutation],
 surprised	What a surprise.	Was für eine Überraschung.
 sad	This must be hard.	Das muss hart sein.
 afraid	Don‘t be afraid. It soon will get better.	Haben Sie keine Angst, es wird bald besser.
 sad	Don‘t worry, it soon will get better.	Machen Sie sich keine Sorgen, es wird bald besser.
 confused	Let‘s think about how we can solve this.	Überlegen wir, wie wir das lösen können.
 disgusted	Mhmm.	Mhmm.
-angry	I understand your anger.	Ich verstehe Ihren Ärger.
+angry	I understand your anger, [salutation].	Ich verstehe Ihren Ärger [salutation].
 happy	That sounds positive.	Das tönt positiv.
 happy	Good.	Gut.
 neutral	Right.	Richtig.
 confused	We will clarify this.	Wir werden das klären.
 neutral	And... 	Und...
-neutral	Do you have an idea	Haben Sie eine Idee
+neutral	Do you have an idea, [salutation], 	Haben Sie eine Idee, [salutation], 
 neutral	So	Also
 neutral	Hmm.	Hmm.
 angry	That must be frustrating.	Das muss frustrierend sein.
-angry	I'm sorry about that.	Das tut mir leid.
+angry	I'm sorry about that, [salutation].	Das tut mir leid, [salutation].
 ill	Ok.	Ok.
 ill	And...	Und...
+neutral	[salutation], 	[salutation], 

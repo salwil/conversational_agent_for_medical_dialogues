@@ -78,7 +78,7 @@ class DataLoader:
                         self.mandatory_question_repo.questions[topic_number] = [p]
 
         elif repository is Repository.INTRO:
-            with open(self.path_to_data + 'mental_states_with_intros.csv') as mental_states_file:
+            with open(self.path_to_data + 'mental_states_with_empathic_phrases.csv') as mental_states_file:
                 mental_states_reader = csv.reader(mental_states_file, delimiter='\t', quotechar='"')
                 for mental_state in mental_states_reader:
                     i = QuestionIntro(mental_state[1], 0, mental_state[2], mental_state[0])
