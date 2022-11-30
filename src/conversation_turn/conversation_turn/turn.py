@@ -109,7 +109,6 @@ class ConversationTurn:
                 # we can't ask the generated question again, it was already asked
                 self.more_detail = True
 
-
     def __translate_patient_input_from_german_to_english(self):
         self.patient_input = self.conversation.translator_de_en.translate(self.patient_input)
 
@@ -124,10 +123,11 @@ class ConversationTurn:
     def __infer_topics(self):
         self.conversation.topic_inferencer.infer_topic(self.answer.content_preprocessed)
         self.answer.topic_list = self.conversation.topic_inferencer.get_best_topics(3)
-        #print(self.answer.topic_list)
+        print(self.answer.topic_list)
         topic_question_repo = self.conversation.data_loader.mandatory_question_repo.questions
         for topic in self.answer.topic_list:
-            # when this condition is false all the questions associated to one of the three topics have already been covered
+            # when this condition is false all the questions associated to one of the three topics have already been
+            # covered
             if topic.probability > 5 and \
                     topic_question_repo[topic.topic_number][0].number_of_usage == 0:
                 self.topic_number = topic.topic_number

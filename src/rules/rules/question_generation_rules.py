@@ -57,7 +57,9 @@ class QuestionGenerationRules:
             index += 1
         self.answer.content_in_2nd_pers = " ".join(self.answer.content_tokenized)
 
-    def select_question_intro(self):
+    def select_question_intro(self, patient_salutation=None):
+        if not patient_salutation:
+            patient_salutation = ' '
         try:
             matching_intros = self.question_intro_repository.mental_states[self.answer.mental_state]
             self.question_intro = matching_intros[0]
@@ -65,6 +67,7 @@ class QuestionGenerationRules:
             # sort list of intros ascending by their usage --> we can just always pick the first one, which has been the
             # one not used for the longest time.
             matching_intros.sort(key=lambda x: x.number_of_usage, reverse=False)
+            self.question_intro.content = self.question_intro.content.replace('[salutation]', patient_salutation)
         except KeyError:
             self.question_intro = None
 
@@ -91,4 +94,3 @@ class QuestionGenerationRules:
             self.allowed_pronouns = [p for p in self.interrogative_pronouns.interrogative_pronouns_with_trigger.keys()
                                      if p not in not_allowed_pronouns_flat]
         return random.choice(self.allowed_pronouns)
-

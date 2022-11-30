@@ -72,7 +72,6 @@ class ConversationTurnTest(unittest.TestCase):
         # topic derived questions are not stored in the generated_questions_repository
         self.assertFalse(self.conversation.question_generator.generated_questions_repository)
 
-
     def test_process_answer_and_mandatory_follow_up_question_with_translation(self):
         # the answer object is instantiated directly with english (the reason for that is that the answer object is
         # created after the translation from german to english in the conversation turn, it does not care about the
@@ -111,7 +110,6 @@ class ConversationTurnTest(unittest.TestCase):
         self.assertTrue(conversation_turn.answer.topic_list)
         # topic derived questions are not stored in the generated_questions_repository
         self.assertFalse(self.conversation.question_generator.generated_questions_repository)
-
 
     def test_process_answer_and_generated_follow_up_question_english(self):
         self.conversation = ConversationBuilder()\

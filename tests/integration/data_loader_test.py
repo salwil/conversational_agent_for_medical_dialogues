@@ -51,8 +51,8 @@ class ConversationElementTest(unittest.TestCase):
         self.assertIsInstance(mqr.questions[4], list)
         self.assertIsInstance(mqr.questions[4][0], PredefinedQuestion)
 
-    @unittest.skipIf(not pathlib.Path(path_to_files + 'mental_states_with_intros.csv').exists(),
-                     "Please add the file mental_states_with_intros.csv to the repository/data/ folder.")
+    @unittest.skipIf(not pathlib.Path(path_to_files + 'mental_states_with_empathic_phrases.csv').exists(),
+                     "Please add the file mental_states_with_empathic_phrases.csv to the repository/data/ folder.")
     def test_data_loader_mental_states(self):
         self.data_loader.load_data_into_repository(Repository.INTRO)
         ci = self.data_loader.question_intro_repo
@@ -63,7 +63,7 @@ class ConversationElementTest(unittest.TestCase):
     @unittest.skipIf(not pathlib.Path(path_to_files + 'more_detail_questions.csv').exists(),
                      "Please add the file more_detail_questions.csv to the repository/data/ folder.")
     def test_data_loader_more_detail_questions(self):
-        mqr = self.data_loader.moredetail_question_repo
+        mqr = self.data_loader.more_detail_question_repo
         q_exp = PredefinedQuestion(content="Could you explain that a bit more detailed?",
                                    number_of_usage=0,
                                    question_type=QuestionType.MOREDETAIL,

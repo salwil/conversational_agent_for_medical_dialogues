@@ -111,6 +111,20 @@ class QuestionGenerationRulesTest(unittest.TestCase):
                                          .content)
         self.assertEqual("I am sorry about how you feel", conversation.question_generator.rules.question_intro.content)
 
+    def test_select_question_intro_with_salutation(self):
+        conversation = self.conversation_builder.with_answer(
+            "I often have headache. I also have jaw tension.", 1).conversation()
+        self.create_question_intro_repository(conversation.question_generator.rules)
+        self.assertEqual("I agree with you, [salutation].", conversation.question_generator
+                                                         .rules
+                                                         .question_intro_repository
+                                                         .mental_states['neutral'][0]
+                                                         .content)
+        conversation.question_generator.rules.answer.mental_state = 'neutral'
+        salutation = 'Andrea'
+        conversation.question_generator.rules.select_question_intro(salutation)
+        self.assertEqual("I agree with you, Andrea.", conversation.question_generator.rules.question_intro.content)
+
     def test_select_question_intro_mental_state_not_found(self):
         conversation = self.conversation_builder.with_answer("I often have headache. Sometimes I also have jaw tension."
                                                              " Especially during the night.",
@@ -122,10 +136,24 @@ class QuestionGenerationRulesTest(unittest.TestCase):
 
     # Helper
     def create_question_intro_repository(self, question_generation_rules):
-        intro_sad_1 = QuestionIntro("I am sorry about how you feel", 0, "Es tut mir leid, wie Sie sich fühlen.", 'sad')
-        intro_sad_2 = QuestionIntro("Don't worry.", 0, "Machen Sie sich keine Sorgen.", 'sad')
-        intro_happy = QuestionIntro("I'm happy that you feel better.", 0, "Es freut mich, dass es Ihnen besser geht.", 'happy')
+        intro_sad_1 = QuestionIntro("I am sorry about how you feel",
+                                    0,
+                                    "Es tut mir leid, wie Sie sich fühlen.",
+                                    'sad')
+        intro_sad_2 = QuestionIntro("Don't worry.",
+                                    0,
+                                    "Machen Sie sich keine Sorgen.",
+                                    'sad')
+        intro_happy = QuestionIntro("I'm happy that you feel better.",
+                                    0,
+                                    "Es freut mich, dass es Ihnen besser geht.",
+                                    'happy')
+        intro_neutral = QuestionIntro("I agree with you, [salutation].",
+                                      0,
+                                      "Ich bin mit Ihnen einverstanden, [salutation].",
+                                      'neutral')
         question_generation_rules.question_intro_repository = QuestionIntroRepository({})
         question_generation_rules.question_intro_repository.mental_states['sad'] = [intro_sad_1]
         question_generation_rules.question_intro_repository.mental_states['sad'].append(intro_sad_2)
         question_generation_rules.question_intro_repository.mental_states['happy'] = [intro_happy]
+        question_generation_rules.question_intro_repository.mental_states['neutral'] = [intro_neutral]

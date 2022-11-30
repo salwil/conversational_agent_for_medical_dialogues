@@ -105,24 +105,6 @@ class ConversationBuilder(ABC):
         self._conversation.topic_inferencer = TopicInferencer(number_of_topics)
         return self
 
-
-    """ Das wird alles gemacht mit QuestionGenerator Instantiierung
-    def with_question_generation_rules(self, preprocessor = None, nlp = None):
-        answer = self._conversation.question_generator.answer
-        if preprocessor:
-            if nlp:
-                self._conversation.question_generator.question_generation_rules = \
-                    QuestionGenerationRules(preprocessor, nlp, answer)
-            else:
-                self._conversation.question_generator.question_generation_rules = \
-                    QuestionGenerationRules(preprocessor, MagicMock())
-        else:
-            self._conversation.question_generator.question_generation_rules = \
-                QuestionGenerationRules(MagicMock(), MagicMock())
-
-        return self
-        """
-
     def with_answer(self, content_en: str,
                     number_of_usage = None,
                     content_in_2nd_pers = None,
