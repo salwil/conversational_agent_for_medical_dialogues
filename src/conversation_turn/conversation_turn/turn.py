@@ -33,8 +33,8 @@ class ConversationTurn:
         self.preprocessor = conversation.preprocessor
         self.nlp = conversation.nlp
         # the question generation object requires access to the question intro repository
-        self.conversation.question_generator.update_question_intro_repository(
-            self.conversation.data_loader.question_intro_repo)
+        self.conversation.question_generator.update_empathic_phrase_repository(
+            self.conversation.data_loader.empathic_phrase_repo)
 
     def process_answer_and_profile_question(self, question: str):
         """
@@ -167,8 +167,8 @@ class ConversationTurn:
         if not self.topic_number and not self.more_detail:
             self.conversation.question_generator.update_generated_questions_repository(
                 self.conversation.data_loader.generated_question_repo)
-            self.conversation.question_generator.update_question_intro_repository(
-                self.conversation.data_loader.question_intro_repo)
+            self.conversation.question_generator.update_empathic_phrase_repository(
+                self.conversation.data_loader.empathic_phrase_repo)
 
     def __set_more_detail_question(self):
         random_question_key = random.choice(

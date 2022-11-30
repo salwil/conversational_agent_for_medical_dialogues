@@ -58,9 +58,9 @@ class QuestionGenerationRules:
             index += 1
         self.answer.content_in_2nd_pers = " ".join(self.answer.content_tokenized)
 
-    def select_empathic_phrase(self, patient_salutation=None):
-        if not patient_salutation:
-            patient_salutation = ' '
+    def select_empathic_phrase(self, form_of_address=None):
+        if not form_of_address:
+            form_of_address = ' '
         try:
             matching_phrases = self.empathic_phrase_repo.mental_states[self.answer.mental_state]
             self.empathic_phrase = matching_phrases[0]
@@ -68,7 +68,7 @@ class QuestionGenerationRules:
             # sort list of intros ascending by their usage --> we can just always pick the first one, which has been the
             # one not used for the longest time.
             matching_phrases.sort(key=lambda x: x.number_of_usage, reverse=False)
-            self.empathic_phrase.content = self.empathic_phrase.content.replace('[salutation]', patient_salutation)
+            self.empathic_phrase.content = self.empathic_phrase.content.replace('[address form]', form_of_address)
         except KeyError:
             self.empathic_phrase = None
 

@@ -29,11 +29,11 @@ class QuestionGenerator:
         self.rules = QuestionGenerationRules(preprocessor, nlp, answer)
         self.generated_questions_repository = None
         self.empathic_phrase_repository = None
-        self.patient_salutation = None
+        self.form_of_address = None
 
     def generate(self):
         self.rules.create_2nd_person_sentence_from_1st_person()
-        self.rules.select_empathic_phrase(self.patient_salutation)
+        self.rules.select_empathic_phrase(self.form_of_address)
         input_ids = self.tokenizer.encode(self.answer.content_in_2nd_pers)
         question_ids = self.model.generate(torch.tensor([input_ids]))
         decode = self.tokenizer.decode(question_ids.squeeze().tolist(), skip_special_tokens=True)
@@ -46,7 +46,7 @@ class QuestionGenerator:
     def generate_with_highlight(self):
         self.rules.create_2nd_person_sentence_from_1st_person()
         self.rules.generate_highlight()
-        self.rules.select_empathic_phrase(self.patient_salutation)
+        self.rules.select_empathic_phrase(self.form_of_address)
         input_ids = self.tokenizer.encode(self.answer.content_with_hl)
         question_ids = self.model.generate(torch.tensor([input_ids]))
         decode = self.tokenizer.decode(question_ids.squeeze().tolist(), skip_special_tokens=True)
@@ -77,6 +77,6 @@ class QuestionGenerator:
         self.empathic_phrase_repository = empathic_phrase_repository
         self.rules.empathic_phrase_repo = empathic_phrase_repository
 
-    def set_patient_salutation(self, salutation: str):
-        self.patient_salutation = salutation
+    def set_form_of_address(self, form_of_address: str):
+        self.form_of_address = form_of_address
 

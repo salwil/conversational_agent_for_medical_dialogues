@@ -72,5 +72,5 @@ class Conversation:
         self.question_generator = QuestionGenerator(self.preprocessor, self.nlp, None)
         self.topic_inferencer = TopicInferencer(number_of_pretrained_topics=10)
 
-    def set_patient_salutation(self, salutation: str):
-        self.question_generator.set_patient_salutation(salutation)
+    def set_form_of_address(self, form_of_address: str):
+        self.question_generator.set_form_of_address(form_of_address)

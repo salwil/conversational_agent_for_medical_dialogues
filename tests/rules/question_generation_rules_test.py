@@ -111,18 +111,18 @@ class QuestionGenerationRulesTest(unittest.TestCase):
                                          .content)
         self.assertEqual("I am sorry about how you feel", conversation.question_generator.rules.empathic_phrase.content)
 
-    def test_select_question_intro_with_salutation(self):
+    def test_select_question_intro_with_personal_form_of_address(self):
         conversation = self.conversation_builder.with_answer(
             "I often have headache. I also have jaw tension.", 1).conversation()
         self.create_empathic_phrase_repository(conversation.question_generator.rules)
-        self.assertEqual("I agree with you, [salutation].", conversation.question_generator
+        self.assertEqual("I agree with you, [address form].", conversation.question_generator
                                                          .rules
                                                          .empathic_phrase_repo
                                                          .mental_states['neutral'][0]
                                                          .content)
         conversation.question_generator.rules.answer.mental_state = 'neutral'
-        salutation = 'Andrea'
-        conversation.question_generator.rules.select_empathic_phrase(salutation)
+        form_of_address = 'Andrea'
+        conversation.question_generator.rules.select_empathic_phrase(form_of_address)
         self.assertEqual("I agree with you, Andrea.", conversation.question_generator.rules.empathic_phrase.content)
 
     def test_select_empathic_phrase_mental_state_not_found(self):
@@ -148,9 +148,9 @@ class QuestionGenerationRulesTest(unittest.TestCase):
                                     0,
                                     "Es freut mich, dass es Ihnen besser geht.",
                                     'happy')
-        intro_neutral = QuestionIntro("I agree with you, [salutation].",
+        intro_neutral = QuestionIntro("I agree with you, [address form].",
                                       0,
-                                      "Ich bin mit Ihnen einverstanden, [salutation].",
+                                      "Ich bin mit Ihnen einverstanden, [address form].",
                                       'neutral')
         question_generation_rules.empathic_phrase_repo = EmpathicPhraseRepository({})
         question_generation_rules.empathic_phrase_repo.mental_states['sad'] = [intro_sad_1]
