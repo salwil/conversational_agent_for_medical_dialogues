@@ -2,6 +2,7 @@
 <div id="top"></div>
 
 ## About
+
 This medical dialogue agent (MDA) is designed to assist in clinical consultation in the orofacial complaints domain.
 The MDA is a hybrid system, consisting of transformer- probability- and rulebased
 question generation. The dialogue management consists of finite-state, frame-based
@@ -69,7 +70,7 @@ If you want to set the system up according to specific needs, follow the instruc
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-## Configurability
+## System Configurability
 <div id="configurability"></div>
 
 **Important Note:** To make changes in the configuration active, the repository package has to be installed again with
@@ -136,14 +137,18 @@ train the new model)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-## Contact
+## References
+Some methods in the `topic_inference.py` module have been inspired by the [Little Mallet Wrapper](https://github.com/maria-antoniak/little-mallet-wrapper).
+Some of the wrapper methods have been copied from the lmw and implemented with small adaptions towards the MDA specific 
+needs in the `TopicInferencer` class.
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+## Varia
+
 Salome Wildermuth, [salome.wildermuth@uzh.ch](salome.wildermuth@uzh.ch)  
 Project Link: https://github.com/salwil/conversational_agent_for_medical_dialogues  
-Template: https://github.com/othneildrew/Best-README-Template/blob/master/README.md
+README template: https://github.com/othneildrew/Best-README-Template/blob/master/README.md
+
 
 <p align="right">(<a href="#top">back to top</a>)</p>
-
-## References
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
