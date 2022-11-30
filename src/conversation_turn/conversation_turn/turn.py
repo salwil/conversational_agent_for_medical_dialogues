@@ -19,8 +19,9 @@ import random
 from conversation.conversation import Conversation, Language
 from conversation_turn.conversation_element import Answer, Question, QuestionType, PredefinedQuestion
 
+
 class ConversationTurn:
-    def __init__(self, turn_number:int, conversation: Conversation, patient_input: str):
+    def __init__(self, turn_number: int, conversation: Conversation, patient_input: str):
         self.turn_number = turn_number
         self.patient_input = patient_input
         self.generated_question: str = None
@@ -68,20 +69,18 @@ class ConversationTurn:
             else:
                 self.__translate_question_from_english_to_german()
 
-
     def __create_answer_object(self):
         self.answer = Answer(self.patient_input, 1, self.turn_number)
         # as soon as we have created the answer object, we have to update the QuestionGenerator object with it
         self.conversation.question_generator.set_answer(self.answer)
         self.conversation.preprocessor.preprocess(self.answer, self.conversation.preprocessing_parameters)
 
-
     def __store_answer(self):
         """
         Stores an object of type Answer in the corresponding repository.
         """
-        self.conversation\
-            .data_loader\
+        self.conversation \
+            .data_loader \
             .store_conversation_element('answer_repo', self.answer)
 
     def __create_question_object(self):
@@ -102,8 +101,8 @@ class ConversationTurn:
             self.conversation.preprocessor.preprocess(self.question, self.conversation.preprocessing_parameters)
             self.question.content_preprocessed += self.question.content[0]
             try:
-                self.conversation\
-                    .data_loader\
+                self.conversation \
+                    .data_loader \
                     .store_conversation_element('question_repo', self.question)
             except ValueError:
                 # we can't ask the generated question again, it was already asked
@@ -123,16 +122,17 @@ class ConversationTurn:
     def __infer_topics(self):
         self.conversation.topic_inferencer.infer_topic(self.answer.content_preprocessed)
         self.answer.topic_list = self.conversation.topic_inferencer.get_best_topics(3)
-        print(self.answer.topic_list)
+        # if you're interested to see which topics have been inferred, uncomment the below line
+        # print(self.answer.topic_list)
         topic_question_repo = self.conversation.data_loader.mandatory_question_repo.questions
         for topic in self.answer.topic_list:
             # when this condition is false all the questions associated to one of the three topics have already been
             # covered
-            if topic.probability > 5 and \
+            if topic.relative_topic_weight > 5 and \
                     topic_question_repo[topic.topic_number][0].number_of_usage == 0:
                 self.topic_number = topic.topic_number
                 break
-        if self.topic_number: # at some point we won't find an unused topic question
+        if self.topic_number:  # at some point we won't find an unused topic question
             topic_question_repo[self.topic_number][0].number_of_usage += 1
             self.question = self.conversation.data_loader.mandatory_question_repo.questions[self.topic_number][0]
             # we sort the mandatory questions so that the ones that have not been used come first. This allows us to
@@ -171,6 +171,7 @@ class ConversationTurn:
                 self.conversation.data_loader.question_intro_repo)
 
     def __set_more_detail_question(self):
-        random_question_key = random.choice(list(self.conversation.data_loader.more_detail_question_repo.questions.keys()))
+        random_question_key = random.choice(
+            list(self.conversation.data_loader.more_detail_question_repo.questions.keys()))
         self.question = self.conversation.data_loader.more_detail_question_repo.questions[random_question_key]
         self.generated_question = self.question.content

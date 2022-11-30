@@ -13,10 +13,11 @@ Institute for Computational Linguistics
 - Data class for topic
 
 """
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 @dataclass
 class Topic:
     topic_number: int
     topic_keys: list
-    probability: float
+    relative_topic_weight: float
+    topic_weight: float = field(init=False, repr=False)
