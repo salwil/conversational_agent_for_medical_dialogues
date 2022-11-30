@@ -5,7 +5,7 @@ import en_core_web_sm
 from conversation_turn.conversation_element import QuestionIntro
 from preprocess.lemmatize import EnglishLemmatizer
 from preprocess.preprocess import Preprocessor
-from repository.repositories import QuestionIntroRepository
+from repository.repositories import EmpathicPhraseRepository
 
 # load computation-intensive classes only once
 from tests.util.conversation_builder import ConversationBuilder
@@ -19,8 +19,8 @@ class QuestionGenerationRulesTest(unittest.TestCase):
         # the preprocessor is needed for pronoun replacement only, but this is tested in question_generation_rules and
         # therefore we mock the preprocessor (and also the pronoun replacement method in the below tests)
         self.conversation_builder = ConversationBuilder()\
-            .with_question_intro_repository()\
-            .with_question_intro('sad', "I'm sorry.", "Das tut mir leid.")\
+            .with_empathic_phrase_repository()\
+            .with_empathic_phrase('sad', "I'm sorry.", "Das tut mir leid.")\
             .with_question_generator(preprocessor, nlp)
         #self.current_turn_last = ConversationTurn(21, self.conversation, 'When have you been to the doctor?')
 
@@ -93,49 +93,49 @@ class QuestionGenerationRulesTest(unittest.TestCase):
         self.assertEqual("I often have headache. Sometimes I also have jaw tension. Especially during the night."
                          , conversation.question_generator.rules.answer.content)
 
-    def test_select_question_intro(self):
+    def test_select_empathic_phrase(self):
         conversation = self.conversation_builder.with_answer("I often have headache. Sometimes I also have jaw tension."
                                                              " Especially during the night.",
                                                              1).conversation()
-        self.create_question_intro_repository(conversation.question_generator.rules)
+        self.create_empathic_phrase_repository(conversation.question_generator.rules)
         self.assertEqual("I am sorry about how you feel", conversation.question_generator
                                                          .rules
-                                                         .question_intro_repository
+                                                         .empathic_phrase_repo
                                                          .mental_states['sad'][0]
                                                          .content)
         conversation.question_generator.rules.answer.mental_state = 'sad'
-        conversation.question_generator.rules.select_question_intro()
+        conversation.question_generator.rules.select_empathic_phrase()
         self.assertEqual("Don't worry.", conversation.question_generator
-                                         .rules.question_intro_repository
+                                         .rules.empathic_phrase_repo
                                          .mental_states['sad'][0]
                                          .content)
-        self.assertEqual("I am sorry about how you feel", conversation.question_generator.rules.question_intro.content)
+        self.assertEqual("I am sorry about how you feel", conversation.question_generator.rules.empathic_phrase.content)
 
     def test_select_question_intro_with_salutation(self):
         conversation = self.conversation_builder.with_answer(
             "I often have headache. I also have jaw tension.", 1).conversation()
-        self.create_question_intro_repository(conversation.question_generator.rules)
+        self.create_empathic_phrase_repository(conversation.question_generator.rules)
         self.assertEqual("I agree with you, [salutation].", conversation.question_generator
                                                          .rules
-                                                         .question_intro_repository
+                                                         .empathic_phrase_repo
                                                          .mental_states['neutral'][0]
                                                          .content)
         conversation.question_generator.rules.answer.mental_state = 'neutral'
         salutation = 'Andrea'
-        conversation.question_generator.rules.select_question_intro(salutation)
-        self.assertEqual("I agree with you, Andrea.", conversation.question_generator.rules.question_intro.content)
+        conversation.question_generator.rules.select_empathic_phrase(salutation)
+        self.assertEqual("I agree with you, Andrea.", conversation.question_generator.rules.empathic_phrase.content)
 
-    def test_select_question_intro_mental_state_not_found(self):
+    def test_select_empathic_phrase_mental_state_not_found(self):
         conversation = self.conversation_builder.with_answer("I often have headache. Sometimes I also have jaw tension."
                                                              " Especially during the night.",
                                                              1).conversation()
-        self.create_question_intro_repository(conversation.question_generator.rules)
+        self.create_empathic_phrase_repository(conversation.question_generator.rules)
         conversation.question_generator.rules.answer.mental_state = 'confused'
-        conversation.question_generator.rules.select_question_intro()
-        self.assertIsNone(conversation.question_generator.rules.question_intro)
+        conversation.question_generator.rules.select_empathic_phrase()
+        self.assertIsNone(conversation.question_generator.rules.empathic_phrase)
 
     # Helper
-    def create_question_intro_repository(self, question_generation_rules):
+    def create_empathic_phrase_repository(self, question_generation_rules):
         intro_sad_1 = QuestionIntro("I am sorry about how you feel",
                                     0,
                                     "Es tut mir leid, wie Sie sich fühlen.",
@@ -152,8 +152,8 @@ class QuestionGenerationRulesTest(unittest.TestCase):
                                       0,
                                       "Ich bin mit Ihnen einverstanden, [salutation].",
                                       'neutral')
-        question_generation_rules.question_intro_repository = QuestionIntroRepository({})
-        question_generation_rules.question_intro_repository.mental_states['sad'] = [intro_sad_1]
-        question_generation_rules.question_intro_repository.mental_states['sad'].append(intro_sad_2)
-        question_generation_rules.question_intro_repository.mental_states['happy'] = [intro_happy]
-        question_generation_rules.question_intro_repository.mental_states['neutral'] = [intro_neutral]
+        question_generation_rules.empathic_phrase_repo = EmpathicPhraseRepository({})
+        question_generation_rules.empathic_phrase_repo.mental_states['sad'] = [intro_sad_1]
+        question_generation_rules.empathic_phrase_repo.mental_states['sad'].append(intro_sad_2)
+        question_generation_rules.empathic_phrase_repo.mental_states['happy'] = [intro_happy]
+        question_generation_rules.empathic_phrase_repo.mental_states['neutral'] = [intro_neutral]

@@ -29,7 +29,8 @@ class QuestionGenerationRules:
         self.preprocessor = preprocessor
         self.nlp = nlp
         self.generated_questions_repository = None
-        self.question_intro_repository = None
+        self.empathic_phrase_repo = None
+        self.empathic_phrase = None
 
     def generate_highlight(self) -> str:
         pronoun = self.__select_interrogative_pronoun_for_next_question()
@@ -57,19 +58,19 @@ class QuestionGenerationRules:
             index += 1
         self.answer.content_in_2nd_pers = " ".join(self.answer.content_tokenized)
 
-    def select_question_intro(self, patient_salutation=None):
+    def select_empathic_phrase(self, patient_salutation=None):
         if not patient_salutation:
             patient_salutation = ' '
         try:
-            matching_intros = self.question_intro_repository.mental_states[self.answer.mental_state]
-            self.question_intro = matching_intros[0]
-            matching_intros[0].number_of_usage += 1
+            matching_phrases = self.empathic_phrase_repo.mental_states[self.answer.mental_state]
+            self.empathic_phrase = matching_phrases[0]
+            matching_phrases[0].number_of_usage += 1
             # sort list of intros ascending by their usage --> we can just always pick the first one, which has been the
             # one not used for the longest time.
-            matching_intros.sort(key=lambda x: x.number_of_usage, reverse=False)
-            self.question_intro.content = self.question_intro.content.replace('[salutation]', patient_salutation)
+            matching_phrases.sort(key=lambda x: x.number_of_usage, reverse=False)
+            self.empathic_phrase.content = self.empathic_phrase.content.replace('[salutation]', patient_salutation)
         except KeyError:
-            self.question_intro = None
+            self.empathic_phrase = None
 
     def __determine_sentence_ne(self, text: str) -> None:
         doc = self.nlp(text)

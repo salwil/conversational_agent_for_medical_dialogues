@@ -25,8 +25,8 @@ class QuestionGenerationTest(unittest.TestCase):
         # therefore we mock the preprocessor (and also the pronoun replacement method in the below tests)
         self.preprocessor = MagicMock()
         self.conversation_builder = ConversationBuilder()\
-            .with_question_intro_repository()\
-            .with_question_intro('sad', "I'm sorry.", "Das tut mir leid.")\
+            .with_empathic_phrase_repository()\
+            .with_empathic_phrase('sad', "I'm sorry.", "Das tut mir leid.")\
             .with_question_generator()
 
     """Why is temporarily removed from interrogative pronouns, as it is already generated quite often by the QG

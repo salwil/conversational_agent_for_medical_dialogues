@@ -28,17 +28,17 @@ class QuestionGenerator:
         self.answer = answer
         self.rules = QuestionGenerationRules(preprocessor, nlp, answer)
         self.generated_questions_repository = None
-        self.question_intro_repository = None
+        self.empathic_phrase_repository = None
         self.patient_salutation = None
 
     def generate(self):
         self.rules.create_2nd_person_sentence_from_1st_person()
-        self.rules.select_question_intro(self.patient_salutation)
+        self.rules.select_empathic_phrase(self.patient_salutation)
         input_ids = self.tokenizer.encode(self.answer.content_in_2nd_pers)
         question_ids = self.model.generate(torch.tensor([input_ids]))
         decode = self.tokenizer.decode(question_ids.squeeze().tolist(), skip_special_tokens=True)
-        if self.rules.question_intro:
-            question = self.rules.question_intro.content + ' ' + decode
+        if self.rules.empathic_phrase:
+            question = self.rules.empathic_phrase.content + ' ' + decode
         else:
             question = decode
         return question
@@ -46,12 +46,12 @@ class QuestionGenerator:
     def generate_with_highlight(self):
         self.rules.create_2nd_person_sentence_from_1st_person()
         self.rules.generate_highlight()
-        self.rules.select_question_intro(self.patient_salutation)
+        self.rules.select_empathic_phrase(self.patient_salutation)
         input_ids = self.tokenizer.encode(self.answer.content_with_hl)
         question_ids = self.model.generate(torch.tensor([input_ids]))
         decode = self.tokenizer.decode(question_ids.squeeze().tolist(), skip_special_tokens=True)
-        if self.rules.question_intro:
-            question = self.rules.question_intro.content + ' ' + decode
+        if self.rules.empathic_phrase:
+            question = self.rules.empathic_phrase.content + ' ' + decode
         else:
             question = decode
         return question
@@ -70,12 +70,12 @@ class QuestionGenerator:
         self.generated_questions_repository = generated_question_repository
         self.rules.generated_questions_repository = generated_question_repository
 
-    def update_question_intro_repository(self, question_intro_repository: {}):
+    def update_empathic_phrase_repository(self, empathic_phrase_repository: {}):
         # meanwhile the QuestionGeneration object is instantiated once during the conversation lifecycle, the repo
         # has to be replaced by the updated repository for every conversation turn in this object as well as in the
         # QuestionGenerationRules object.
-        self.question_intro_repository = question_intro_repository
-        self.rules.question_intro_repository = question_intro_repository
+        self.empathic_phrase_repository = empathic_phrase_repository
+        self.rules.empathic_phrase_repo = empathic_phrase_repository
 
     def set_patient_salutation(self, salutation: str):
         self.patient_salutation = salutation

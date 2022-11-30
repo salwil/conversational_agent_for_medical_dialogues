@@ -54,8 +54,8 @@ class ConversationElementTest(unittest.TestCase):
     @unittest.skipIf(not pathlib.Path(path_to_files + 'mental_states_with_empathic_phrases.csv').exists(),
                      "Please add the file mental_states_with_empathic_phrases.csv to the repository/data/ folder.")
     def test_data_loader_mental_states(self):
-        self.data_loader.load_data_into_repository(Repository.INTRO)
-        ci = self.data_loader.question_intro_repo
+        self.data_loader.load_data_into_repository(Repository.EMPATHY)
+        ci = self.data_loader.empathic_phrase_repo
         stored_intros = ci.mental_states
         self.assertGreater(len(ci.mental_states), 0)
         self.assertTrue('happy' in stored_intros)

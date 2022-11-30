@@ -24,14 +24,14 @@ import csv
 
 from conversation_turn.conversation_element \
     import Question, PredefinedQuestion, Answer, QuestionIntro
-from repository.repositories import QuestionType, QuestionRepository, AnswerRepository, QuestionIntroRepository
+from repository.repositories import QuestionType, QuestionRepository, AnswerRepository, EmpathicPhraseRepository
 import helpers.helpers as helpers
 
 class Repository(Enum):
     QUESTIONS = 'question_repo'
     ANSWERS = 'answer_repo'
     TOPICS = 'topic_repo'
-    INTRO = 'question_intro_repo'
+    EMPATHY = 'empathic_phrase_repo'
     MOREDETAIL = 'more_detail_repo'
 
 class DataLoader:
@@ -41,7 +41,7 @@ class DataLoader:
         self.fallback_question_repo = QuestionRepository(QuestionType.FALLBACK, {})
         self.more_detail_question_repo = QuestionRepository(QuestionType.MOREDETAIL, {})
         self.generated_question_repo = QuestionRepository(QuestionType.GENERATED, {})
-        self.question_intro_repo = QuestionIntroRepository({})
+        self.empathic_phrase_repo = EmpathicPhraseRepository({})
         self.answer_repo = AnswerRepository({})
         self.path_to_data = helpers.get_project_path() + '/src/repository/data/'
         self.path_to_topic_model = helpers.get_project_path() + '/src/model/language_models/mallet_topics/'
@@ -77,15 +77,15 @@ class DataLoader:
                     else:
                         self.mandatory_question_repo.questions[topic_number] = [p]
 
-        elif repository is Repository.INTRO:
+        elif repository is Repository.EMPATHY:
             with open(self.path_to_data + 'mental_states_with_empathic_phrases.csv') as mental_states_file:
                 mental_states_reader = csv.reader(mental_states_file, delimiter='\t', quotechar='"')
                 for mental_state in mental_states_reader:
                     i = QuestionIntro(mental_state[1], 0, mental_state[2], mental_state[0])
-                    if mental_state[0] in self.question_intro_repo.mental_states:
-                        self.question_intro_repo.mental_states[mental_state[0]].append(i)
+                    if mental_state[0] in self.empathic_phrase_repo.mental_states:
+                        self.empathic_phrase_repo.mental_states[mental_state[0]].append(i)
                     else:
-                        self.question_intro_repo.mental_states[mental_state[0]] = [i]
+                        self.empathic_phrase_repo.mental_states[mental_state[0]] = [i]
 
         elif repository is Repository.MOREDETAIL:
             if self.preprocessor:

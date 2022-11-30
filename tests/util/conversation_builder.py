@@ -57,17 +57,18 @@ class ConversationBuilder(ABC):
             = mandatory_question
         return self
 
-    def with_question_intro_repository(self):
-        self._conversation.data_loader.question_intro_repo.mental_states = {}
+    def with_empathic_phrase_repository(self):
+        self._conversation.data_loader.empathic_phrase_repo.mental_states = {}
         return self
 
-    def with_question_intro(self, mental_state: str, question_intro_de: str, question_intro_en: str) -> None:
-        question_intro = QuestionIntro(question_intro_en, 0, question_intro_de, mental_state)
-        self._conversation.data_loader.question_intro_repo.mental_states[mental_state] = [question_intro]
+    def with_empathic_phrase(self, mental_state: str, empathic_phrase_de: str, empathic_phrase_en: str) -> None:
+        empathic_phrase = QuestionIntro(empathic_phrase_en, 0, empathic_phrase_de, mental_state)
+        self._conversation.data_loader.empathic_phrase_repo.mental_states[mental_state] = [empathic_phrase]
         return self
 
+    """
     def with_conversation_archive(self):
-        self.conversation_archive
+        self.conversation_archive"""
 
     def with_question_generator(self, preprocessor = None, nlp = None):
         if preprocessor:
@@ -77,9 +78,9 @@ class ConversationBuilder(ABC):
                 self._conversation.question_generator = QuestionGenerator(preprocessor, MagicMock())
         else:
             self._conversation.question_generator = QuestionGenerator(MagicMock(), MagicMock())
-        if self._conversation.data_loader.question_intro_repo.mental_states:
-            self._conversation.question_generator.update_question_intro_repository(
-                self._conversation.data_loader.question_intro_repo)
+        if self._conversation.data_loader.empathic_phrase_repo.mental_states:
+            self._conversation.question_generator.update_empathic_phrase_repository(
+                self._conversation.data_loader.empathic_phrase_repo)
         if self._conversation.data_loader.generated_question_repo.questions:
             self._conversation.question_generator.update_generated_questions_repository(
                 self._conversation.data_loader.generated_question_repo)
@@ -129,18 +130,3 @@ class ConversationBuilder(ABC):
             answer.topic_list = topic_list
         self._conversation.question_generator.set_answer(answer)
         return self
-
-
-
-    """
-    def with_generated_question(self, question_en: str, preprocessed_en) -> None:
-        generated_question = Question(question_en, 0, QuestionType.GENERATED)
-        generated_question.content_preprocessed = preprocessed_en
-        self._conversation.data_loader.generated_question_repo.questions[generated_question.content_preprocessed] \
-            = generated_question
-        return self
-        """
-
-
-
-

@@ -31,6 +31,6 @@ class TopicRepository:
     topics: {} # key: topic number, value: Topic, maybe not used?
 
 @dataclass
-class QuestionIntroRepository:
+class EmpathicPhraseRepository:
     # repo contains question intros per mental state
     mental_states: {}

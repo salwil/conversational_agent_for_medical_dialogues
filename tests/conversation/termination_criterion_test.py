@@ -9,8 +9,8 @@ class TerminationCriterionTest(unittest.TestCase):
     def setUp(self) -> None:
         self.termination_criterion = TerminationCriterionForConversation()
         self.conversation = ConversationBuilder()\
-            .with_question_intro_repository()\
-            .with_question_intro('sad', 'Es tut mir leid, das zu hören', 'I am sorry to hear that.')\
+            .with_empathic_phrase_repository()\
+            .with_empathic_phrase('sad', 'Es tut mir leid, das zu hören', 'I am sorry to hear that.')\
             .with_question_generator()\
             .conversation()
         self.current_turn_last = ConversationTurn(21, self.conversation, 'When have you been to the doctor?')

@@ -29,17 +29,19 @@ from repository.conversation_archive import ConversationArchival
 from preprocess.lemmatize import EnglishLemmatizer
 from preprocess.preprocess import Preprocessor
 
+
 class Language(Enum):
     ENGLISH = 'E',
     GERMAN = 'D'
 
+
 class Conversation:
-    def __init__(self, test_mode = False):
+    def __init__(self, test_mode=False):
         self.language: Language = Language.ENGLISH
         self.preprocessing_parameters = ['lemmatize', 'tokenize', 'remove_punctuation', 'remove_stopwords']
         try:
             self.nlp = en_core_web_sm.load()
-        except(IOError):
+        except IOError:
             traceback.print_exc()
             sys.exit("Have you downloaded en_core_web_sm to your environment?")
         self.english_lemmatizer = EnglishLemmatizer(self.nlp)
@@ -58,7 +60,7 @@ class Conversation:
     def load_repositories(self):
         self.data_loader.load_data_into_repository(Repository.QUESTIONS)
         self.data_loader.load_data_into_repository(Repository.TOPICS)
-        self.data_loader.load_data_into_repository(Repository.INTRO)
+        self.data_loader.load_data_into_repository(Repository.EMPATHY)
         self.data_loader.load_data_into_repository(Repository.MOREDETAIL)
 
     def load_models(self):
@@ -66,7 +68,7 @@ class Conversation:
         self.translator_en_de = TranslatorEnDe()
         self.sentiment_detector = SentimentDetector([mental_state
                                                      for mental_state
-                                                     in self.data_loader.question_intro_repo.mental_states])
+                                                     in self.data_loader.empathic_phrase_repo.mental_states])
         self.question_generator = QuestionGenerator(self.preprocessor, self.nlp, None)
         self.topic_inferencer = TopicInferencer(number_of_pretrained_topics=10)
 

@@ -21,11 +21,13 @@ with warnings.catch_warnings():
     from .termination_criterion import TerminationCriterionForConversation
     from conversation_turn.turn import ConversationTurn
     from .conversation import Conversation, Language
+
     """
     from src.conversation.conversation.termination_criterion import TerminationCriterionForConversation
     from src.conversation_turn.conversation_turn.turn import ConversationTurn
     from src.conversation.conversation.conversation import Conversation, Language
     """
+
 
 def main():
     with warnings.catch_warnings():
@@ -43,12 +45,11 @@ def main():
         cli.say_goodbye(language)
 
 
-class CLI ():
+class CLI:
     def __init__(self, conversation: Conversation):
         self.conversation = conversation
         self.termination_criterion = TerminationCriterionForConversation()
-        self.current_conversation_turn: ConversationTurn()
-
+        self.current_conversation_turn: ConversationTurn = None
 
     def maintain_conversation(self, conversation):
         turn_number = 1
@@ -150,13 +151,13 @@ class CLI ():
             print('The doctor will get back to you soon')
             print('Until then, get well soon.')
 
-
     def __validate(self, user_input):
         while not user_input:
             user_input = input()
         self.termination_criterion.check_user_terminate(user_input)
         self.termination_criterion.update(current_turn=self.current_conversation_turn)
         return user_input
+
 
 if __name__ == "__main__":
     main()
