@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# topic.py
+# topic_inference.py
 
 """
 Bachelor-Thesis: Conversational agent for querying orofacial pain patients

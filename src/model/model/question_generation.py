@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# qusetion_generation.py
+# question_generation.py
 
 """
 Bachelor-Thesis: Conversational agent for querying orofacial pain patients
