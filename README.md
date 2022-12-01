@@ -78,11 +78,11 @@ If you want to set the system up according to specific needs, follow the instruc
 
 ### Add profile questions
 - Profile questions have to be added in the `src/repository/data` folder in a csv file called `profile_questions.csv`. 
-- The first column contains the question in english, the third column contains the question in German. The second column
-contains the identifier `profile`.
-- All three columns are mandatory fields.
+- The first column contains the question in english, the second column contains the question in German.
+- Both columns are mandatory fields.
 - The csv columns are delimited by tabulator quote character is `"` 
-- You can work with the default inventory of questions or you can add, remove and change entries, but make sure, there is at least one entry in the file and that you do not delete the file. Otherwise the system may
+- You can work with the default inventory of questions or you can add, remove and change entries, but make sure, there 
+- is at least one entry in the file and that you do not delete the file. Otherwise the system may
 behave unpredictable
 
 ### Add mental states and empathic phrases
@@ -152,3 +152,4 @@ README template: https://github.com/othneildrew/Best-README-Template/blob/master
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
+
