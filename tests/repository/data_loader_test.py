@@ -1,6 +1,5 @@
 import pathlib
 import unittest
-from typing import List
 
 import en_core_web_sm
 

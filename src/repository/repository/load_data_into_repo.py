@@ -55,11 +55,8 @@ class DataLoader:
                 with open(self.path_to_data + 'profile_questions.csv') as questions_file:
                     question_reader = csv.reader(questions_file, delimiter='\t', quotechar='"')
                     for question in question_reader:
-                        question_type = self.determine_question_type(question[1])
-                        if question_type is QuestionType.PROFILE:
-                            q = PredefinedQuestion(question[0], 0, question_type, question[2])
-                        else:
-                            q = Question(question[0], 0, question_type)
+                        question_type = QuestionType.PROFILE
+                        q = PredefinedQuestion(question[0], 0, question_type, question[1])
                         self.preprocessor.preprocess(q, self.preprocessing_parameters)
                         self.select_repository(question_type=question_type).questions[q.content_preprocessed] = q
             else:
