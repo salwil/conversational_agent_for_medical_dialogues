@@ -67,6 +67,8 @@ If you want to set the system up according to specific needs, follow the instruc
   `>> mda`
 - Command to terminate a running conversation:  
   `>> q!` or `>> quit!`
+- The conversation files are saved in the `src/repository/data/conversation_archive/` folder. The name of the file 
+consists of date and time, when the file was created.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
