@@ -53,7 +53,7 @@ folder. Unzip the language_model folder and place it (incl. all its subfolders) 
   `>> pip3.8 install rules/`  
 - Go back to the root directory and run the unittests before you start, to make sure, everything is setup correctly (this may take 2-3 minutes):  
   `>> python3.8 -m unittest tests/*/*_test.py`  
-  In the end you should see something like `Ran 50 tests in xxx.xxxs` without any errors.
+  In the end you should see something like `Ran 47 tests in xxx.xxxs` without any errors.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
