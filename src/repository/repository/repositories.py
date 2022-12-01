@@ -10,7 +10,7 @@ Matrikel-Nr: 10-289-544
 University of Zurich
 Institute for Computational Linguistics
 
-- Repository containing questions
+- Repository structures for answers, questions and empathic phrases
 
 """
 from dataclasses import dataclass

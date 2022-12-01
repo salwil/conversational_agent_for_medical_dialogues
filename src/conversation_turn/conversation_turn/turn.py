@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# question.py
+# turn.py
 
 """
 Bachelor-Thesis: Conversational agent for querying orofacial pain patients
@@ -14,6 +14,7 @@ Institute for Computational Linguistics
 - Important: this class is nearly untested, as the effort for writing integration tests for the
  process_answer_and_create_follow_up_question method is far too big compared to what it helps.
 """
+
 import random
 
 from conversation.conversation import Conversation, Language

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# conversation_element.py
+# interrogative_pronouns.py
 
 """
 Bachelor-Thesis: Conversational agent for querying orofacial pain patients
@@ -23,6 +23,7 @@ class Position(Enum):
 @dataclass
 class InterrogativePronoun():
     interrogative_pronouns_with_trigger = {
+        # impression that BART-large-mnli model already produces enough why questions without enforcement
         #'why': ('because', Position.EOS),
         'when': ('during', Position.EOS),
         'where': ('at the hospital', Position.EOS),

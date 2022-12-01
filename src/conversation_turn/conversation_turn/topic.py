@@ -15,6 +15,7 @@ Institute for Computational Linguistics
 """
 from dataclasses import dataclass, field
 
+
 @dataclass
 class Topic:
     topic_number: int

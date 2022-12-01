@@ -19,12 +19,14 @@ from typing import List
 
 from conversation_turn.topic import Topic
 
+
 @dataclass
 class ConversationElement:
     content: str
     content_preprocessed: list = field(init=False, repr=False)
     content_tokenized: list = field(init=False, repr=False)
     number_of_usage: int
+
 
 @dataclass
 class Answer(ConversationElement):
@@ -37,11 +39,13 @@ class Answer(ConversationElement):
     topic_list: List[Topic] = field(init=False, repr=False)
     mental_state: str = field(init=False, repr=False)
 
+
 @dataclass
 class QuestionIntro(ConversationElement):
     content_in_german: str
-    #mental state that asks for this intro
+    # mental state that asks for this intro
     mental_state: str
+
 
 class QuestionType(Enum):
     PROFILE = 'profile'
@@ -50,17 +54,18 @@ class QuestionType(Enum):
     MOREDETAIL = 'moredetail'
     GENERATED = 'generated'
 
+
 @dataclass
 class Question(ConversationElement):
-    probability: float = field(init = False, repr = False)
+    probability: float = field(init=False, repr=False)
     generated = False
     asked = False
     question_type: QuestionType
 
     # References to other objects
-    intro: QuestionIntro = field(init = False, repr = False)
-    answer: Answer = field(init = False, repr = False)
-    #follow_up_question: Question = field(init = False, repr = False)
+    intro: QuestionIntro = field(init=False, repr=False)
+    answer: Answer = field(init=False, repr=False)
+    # follow_up_question: Question = field(init = False, repr = False)
 
 
 @dataclass

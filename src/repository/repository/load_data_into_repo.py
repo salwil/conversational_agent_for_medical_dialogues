@@ -11,10 +11,13 @@ University of Zurich
 Institute for Computational Linguistics
 
 - Class for loading data into memory
-- Containers for questions, topics and mental states are called repositories.
-- question_repo provides collection of questions (datatype Question)
-- topic_repo provides collection of topics (datatype Topic)
-- mental_state_repo provides collection of mental states (datatype mentalState)
+- Containers for answers, questions, topics and mental states with empathic phrases are called repositories.
+- answer_repo stores all the given answers
+- profile_question_repo provides collection of profile questions
+- more_detail_question_repo provides collection of questions asking for more details
+- generated_question_repo stores all the generated questions
+- topic_repo provides collection of topics with appropriate topic questions
+- mental_state_repo provides collection of mental states with appropriate empathic phrases
 
 """
 import warnings
@@ -113,7 +116,7 @@ class DataLoader:
         else:
             warnings.warn('Repository: ' + repository + ' is not foreseen to store values other than from file.',
                           ResourceWarning)
-
+    """
     def determine_question_type(self, question_type: str):
         if question_type == QuestionType.PROFILE.value:
             return QuestionType.PROFILE
@@ -124,7 +127,7 @@ class DataLoader:
         elif question_type == QuestionType.MOREDETAIL.value:
             return QuestionType.MOREDETAIL
         else:
-            sys.exit("No repo found for this question type: " + question_type)
+            sys.exit("No repo found for this question type: " + question_type)"""
 
     def select_repository(self, question_type: QuestionType):
         if question_type is QuestionType.PROFILE:
