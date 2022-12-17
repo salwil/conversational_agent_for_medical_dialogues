@@ -24,6 +24,9 @@ parts are aligned exclusively to the topic of orofacial pains.
 - Open the command line window
 - Clone the repository with  
   `>> git clone git@github.com:salwil/conversational_agent_for_medical_dialogues.git`
+- *Make sure the name of the root directory is called `conversational_agent_for_medical_dialogues` and not different.*
+  (this is especially relevant if you download and unzip the code base, as it will have a postfix -main for the main branch
+then, which you have to remove)
 - Visit the [link](https://www.dropbox.com/sh/h6dodcm4x6bpl5p/AAA_Gu9pLUWxRAvd4ahMtGcja?dl=0) to download the language_model
 folder. Unzip the language_model folder and place it (incl. all its subfolders) into the `src/model` directory.
 - Visit the root directory:  

@@ -77,7 +77,7 @@ class CLI:
             print(next_question)
             salutation = input()
             salutation = self.__validate(salutation)
-            self.conversation.set_patient_salutation(salutation)
+            self.conversation.set_form_of_address(salutation)
             turn_number += 1
         if not self.termination_criterion.given():
             if conversation.language is Language.GERMAN:
